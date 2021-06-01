@@ -14,6 +14,12 @@ public class CooldownUI : MonoBehaviour
     [SerializeField, Guarded] private Text amountText;
     [SerializeField, Guarded] private ICooldownOwner cooldownHolder;
 
+    public static void Attach(ICooldownOwner owner, CooldownUI prefab, Transform parent)
+    {
+        CooldownUI coolUI = Instantiate(prefab, parent);
+        coolUI.Bind(owner);
+    }
+
     public void Bind(ICooldownOwner cooldownHolder)
     {
         this.cooldownHolder = cooldownHolder;

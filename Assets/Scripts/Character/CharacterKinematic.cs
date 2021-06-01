@@ -16,6 +16,7 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
     [Header("Parameters")]
     [SerializeField] private float movementSpeed = 5F;
     [Header("Dodge")]
+    [SerializeField] private float dodgeForce = 900F;
     [SerializeField] private float dodgeDuration = 0.3F;
     [SerializeField] private int invulnerabilityTimeSteps = 10;
     private Vector2 traslation;
@@ -125,7 +126,7 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
             case Inputs.InputType.DODGE:
                 if (IsDodging) return;
                 Inputs.DirectionInputData dodgeDir = data as Inputs.DirectionInputData;
-                Rigidbody.AddForce(dodgeDir.Direction * 40F, ForceMode2D.Impulse);
+                Rigidbody.AddForce(dodgeDir.Direction * dodgeForce, ForceMode2D.Impulse);
                 dodgeTimer = dodgeDuration;
                 invulnerabilityCurrentSteps = invulnerabilityTimeSteps;
                 Invulnerability(true);

@@ -172,9 +172,9 @@ MonoBehaviour:
   abilityUpdateTime:
     min: 1.5
     max: 2.5
-  abilities:
-  - {fileID: 11400000, guid: 4aa0e59b55144a54ea54594d3b0a73b7, type: 2}
-  - {fileID: 11400000, guid: 3c087f1646d053743be0a47d5f82cdf9, type: 2}
+  abilitiesPrefabs:
+  - {fileID: 8091657948389907, guid: 9e6c49a823ad1a34ea27f30c0f105e9b, type: 3}
+  - {fileID: 2322230498075898872, guid: 392409c0b4e89394d99e7408a6462d5b, type: 3}
 --- !u!1101 &-884066782771047891
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -376,11 +376,11 @@ MonoBehaviour:
   abilityUpdateTime:
     min: 1.5
     max: 3
-  abilities:
-  - {fileID: 11400000, guid: 4aa0e59b55144a54ea54594d3b0a73b7, type: 2}
-  - {fileID: 11400000, guid: f99ce6df6d78e9740a4b52191d4bd465, type: 2}
-  - {fileID: 11400000, guid: 3c087f1646d053743be0a47d5f82cdf9, type: 2}
-  gapCloser: {fileID: 11400000, guid: be8cff93297f5394c9231da9666db3c7, type: 2}
+  abilitiesPrefabs:
+  - {fileID: 2823483088263690575, guid: ed3533ebab2005742a096e64cf9f4bc6, type: 3}
+  - {fileID: 2322230498075898872, guid: 392409c0b4e89394d99e7408a6462d5b, type: 3}
+  - {fileID: 8091657948389907, guid: 9e6c49a823ad1a34ea27f30c0f105e9b, type: 3}
+  gapCloserPrefab: {fileID: 7255686803220885411, guid: d947fa55c71448745aa1227ff6bcc553, type: 3}
 --- !u!1101 &5221602339113149281
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

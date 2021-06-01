@@ -20,7 +20,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
     [SerializeField] private float senseRadius = 12F;
     [SerializeField] private float attackCooldown = 0.3F;
     [SerializeField] private Sword.Slash.Builder baseSlash;
-    [SerializeField, Guarded] private Ability<CharacterManager> defaultAbility;
+    [SerializeField, Guarded] private GameObject defaultAbility;
     [Header("UI")]
     [SerializeField, Guarded] private ValueContainerBar healthBar;
     private Sword sword;
@@ -81,7 +81,6 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
                 attackTimer = 0F;
             }
         }
-        EquippedAbility.Step(deltaTime);
     }
 
     public IAgent.FactionRelation GetFactionRelation() => IAgent.FactionRelation.FRIENDLY;
@@ -119,16 +118,20 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
         healthSystem.OnExhaust += Die;
         healthSystem.OnExhaust += OnDeath;
         healthSystem.OnExhaust += () => EventChannel.BroadcastOnGameEnded(false);
+    }
 
-        if (Assets.Abilities.TryGetAbilityById(Character.GetEquippedAbility(), out Ability<CharacterManager> ability))
+    protected override void Start()
+    {
+        base.Start();
+        if (Assets.Abilities.TryGetAbilityPrefabById(Character.GetEquippedAbility(), out GameObject ability))
         {
-            EquippedAbility = ability;
+            EquippedAbility = Ability<CharacterManager>.Attach(ability, Manager);
         }
         else
         {
-            EquippedAbility = defaultAbility;
+            EquippedAbility = Ability<CharacterManager>.Attach(defaultAbility, Manager);
         }
-        EquippedAbility.ResetCooldown();
+        Manager.GUI.BindCooldown(EquippedAbility);
     }
 
     protected override void OnEnable()
@@ -169,7 +172,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
                 break;
 
             case Inputs.InputType.PRIMARY_ABILITY:
-                EquippedAbility.Perform(Manager);
+                EquippedAbility.Perform();
                 break;
         }
     }

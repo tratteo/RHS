@@ -38,13 +38,11 @@ public class Assets : MonoSingleton<Assets>
     [System.Serializable]
     public class AbilitiesAssets
     {
-        [SerializeField] private List<Ability<CharacterManager>> characterAbilities;
+        [SerializeField] private List<GameObject> characterAbilities;
 
-        public List<Ability<CharacterManager>> Character => characterAbilities;
-
-        public bool TryGetAbilityById(string id, out Ability<CharacterManager> ability)
+        public bool TryGetAbilityPrefabById(string id, out GameObject ability)
         {
-            ability = characterAbilities.Find(a => a.GetId().Equals(id));
+            ability = characterAbilities.Find(a => a.GetComponent<IDescribable>().GetId().Equals(id));
             if (ability == null)
             {
                 return false;

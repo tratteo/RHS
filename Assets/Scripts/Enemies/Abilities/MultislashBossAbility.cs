@@ -8,7 +8,6 @@ using GibFrame;
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MultislashBossAbility", menuName = "Scriptable Objects/Bosses/Abilities/Multi Slash", order = 0)]
 public class MultislashBossAbility : Ability<BossEnemy>
 {
     [SerializeField] private float channelTime = 1F;
@@ -16,15 +15,15 @@ public class MultislashBossAbility : Ability<BossEnemy>
     [SerializeField] private Multislash[] slashes;
     private int parried = 0;
 
-    public override bool CanPerform(BossEnemy parent)
+    public override bool CanPerform()
     {
-        return base.CanPerform(parent) && (slashes.Length > 0);
+        return base.CanPerform() && (slashes.Length > 0);
     }
 
-    protected override IEnumerator Execute_C(BossEnemy parent)
+    protected override IEnumerator Execute_C()
     {
         parried = 0;
-        Weapon weapon = parent.GetWeapon();
+        Weapon weapon = Parent.GetWeapon();
         if (weapon is Sword sword)
         {
             bool wasBlocking = sword.IsBlocking;
@@ -36,23 +35,23 @@ public class MultislashBossAbility : Ability<BossEnemy>
             yield return new WaitForSeconds(channelTime);
             foreach (Multislash multislash in slashes)
             {
-                parent.Move(Vector2.zero);
-                parent.Rigidbody.velocity = Vector2.zero;
-                multislash.Slash.OnStart(() => parent.SetInteraction(Assets.Sprites.Exclamation));
-                multislash.Slash.OnComplete(() => parent.SetInteraction());
+                Parent.Move(Vector2.zero);
+                Parent.Rigidbody.velocity = Vector2.zero;
+                multislash.Slash.OnStart(() => Parent.SetInteraction(Assets.Sprites.Exclamation));
+                multislash.Slash.OnComplete(() => Parent.SetInteraction());
                 yield return new WaitForSeconds(multislash.Delay);
-                yield return new WaitForSeconds(AdjustPosition(parent, multislash.Slash));
+                yield return new WaitForSeconds(AdjustPosition(Parent, multislash.Slash));
                 sword.TriggerSlash(multislash.Slash);
                 yield return new WaitForSeconds(multislash.Slash.Build().Duration);
             }
-            parent.Rigidbody.velocity = Vector2.zero;
-            parent.Move(Vector2.zero);
+            Parent.Rigidbody.velocity = Vector2.zero;
+            Parent.Move(Vector2.zero);
             sword.OnBlocked -= OnBlock;
             if (parried >= slashes.Length)
             {
-                parent.SetInteraction(Assets.Sprites.Stun);
+                Parent.SetInteraction(Assets.Sprites.Stun);
                 yield return new WaitForSeconds(vulnerabilityTime);
-                parent.SetInteraction();
+                Parent.SetInteraction();
             }
             if (wasBlocking)
             {
@@ -62,10 +61,10 @@ public class MultislashBossAbility : Ability<BossEnemy>
         Complete();
     }
 
-    protected override void OnStopped(BossEnemy parent)
+    protected override void OnStopped()
     {
-        base.OnStopped(parent);
-        Weapon weapon = parent.GetWeapon();
+        base.OnStopped();
+        Weapon weapon = Parent.GetWeapon();
         if (weapon is Sword sword)
         {
             sword.OnBlocked -= OnBlock;

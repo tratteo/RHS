@@ -4,11 +4,12 @@
 //
 // All Rights Reserved
 
+using GibFrame.Performance;
 using System;
 using System.Collections;
 using UnityEngine;
 
-public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDescribable where TParent : MonoBehaviour
+public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescribable, ICommonUpdate where TParent : MonoBehaviour
 {
     [SerializeField] private SerializedDescribable describable;
     [SerializeField] private float cooldown;
@@ -17,13 +18,42 @@ public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDesc
 
     public bool IsPerforming { get; private set; } = false;
 
+    public TParent Parent { get; private set; }
+
     public event Action OnComplete = delegate { };
 
     public event Action OnPerform = delegate { };
 
+    public static Ability<TParent> Attach(GameObject abilityPrefab, TParent parent)
+    {
+        Ability<TParent> ability;
+        GameObject obj = Instantiate(abilityPrefab);
+        if ((ability = obj.GetComponent<Ability<TParent>>()) != null)
+        {
+            ability.Parent = parent;
+            Transform holder;
+            if (!(holder = parent.transform.Find("AbilitiesHolder")))
+            {
+                GameObject holderObj = new GameObject
+                {
+                    name = "AbilitiesHolder"
+                };
+                holderObj.transform.SetParent(parent.transform);
+                holder = holderObj.transform;
+            }
+            obj.transform.SetParent(holder);
+            return ability;
+        }
+        else
+        {
+            Debug.LogError("Unable to get the right type of TParent from ability prefab");
+            return null;
+        }
+    }
+
     public bool IsInCooldown() => cooldownTimer > 0F;
 
-    public virtual bool CanPerform(TParent parent)
+    public virtual bool CanPerform()
     {
         return !IsInCooldown() && !IsPerforming;
     }
@@ -32,22 +62,20 @@ public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDesc
 
     public float GetCooldownPercentage() => cooldownTimer / cooldown;
 
-    public Sprite GetIcon() => describable.GetIcon();
-
-    public void HardStop(TParent parent)
+    public void HardStop()
     {
         if (coroutine != null)
         {
-            parent.StopCoroutine(coroutine);
-            OnStopped(parent);
+            StopCoroutine(coroutine);
+            OnStopped();
         }
     }
 
-    public bool Perform(TParent parent)
+    public bool Perform()
     {
-        if (CanPerform(parent))
+        if (CanPerform())
         {
-            coroutine = parent.StartCoroutine(Execute_C(parent));
+            coroutine = StartCoroutine(Execute_C());
             IsPerforming = true;
             OnPerform?.Invoke();
             OnPerform = null;
@@ -56,7 +84,24 @@ public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDesc
         return false;
     }
 
-    public void Step(float deltaTime)
+    #region Describable
+
+    public string GetId() => describable.GetId();
+
+    public Sprite GetIcon() => describable.GetIcon();
+
+    public string GetName() => describable.GetName();
+
+    public string GetDescription() => describable.GetDescription();
+
+    #endregion Describable
+
+    public void ResetCooldown()
+    {
+        cooldownTimer = 0F;
+    }
+
+    public virtual void CommonUpdate(float deltaTime)
     {
         if (cooldownTimer > 0)
         {
@@ -68,26 +113,7 @@ public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDesc
         }
     }
 
-    public string GetId() => describable.GetId();
-
-    public string GetName() => describable.GetName();
-
-    public void Reset()
-    {
-        ResetCooldown();
-        OnPerform = null;
-        OnComplete = null;
-        IsPerforming = false;
-    }
-
-    public void ResetCooldown()
-    {
-        cooldownTimer = 0F;
-    }
-
-    public string GetDescription() => describable.GetDescription();
-
-    protected virtual void OnStopped(TParent parent)
+    protected virtual void OnStopped()
     {
         Complete();
     }
@@ -101,11 +127,15 @@ public abstract class Ability<TParent> : ScriptableObject, ICooldownOwner, IDesc
         cooldownTimer = cooldown;
     }
 
-    protected abstract IEnumerator Execute_C(TParent parent);
+    protected abstract IEnumerator Execute_C();
 
     private void OnEnable()
     {
-        IsPerforming = false;
-        ResetCooldown();
+        CommonUpdateManager.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        CommonUpdateManager.Unregister(this);
     }
 }

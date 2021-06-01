@@ -1445,7 +1445,7 @@ MonoBehaviour:
       range: 4.5
       isParriable: 1
       offset: {x: 0, y: 0, z: 0}
-  defaultAbility: {fileID: 11400000, guid: 427eeab2a50e93740960a5e53f4aed8b, type: 2}
+  defaultAbility: {fileID: 4943380845929579821, guid: efdfe9af4f129324ab32683771faf589, type: 3}
   healthBar: {fileID: 2911757010127835240}
 --- !u!114 &5050283754137473923
 MonoBehaviour:

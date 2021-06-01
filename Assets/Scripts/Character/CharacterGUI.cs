@@ -42,6 +42,11 @@ public class CharacterGUI : CharacterComponent
         interactionIndicator.color = Color.white;
     }
 
+    public void BindCooldown(ICooldownOwner owner)
+    {
+        CooldownUI.Attach(owner, cooldownUIPrefab, cooldownsParent);
+    }
+
     protected override void OnGameEnded(bool win)
     {
         base.OnGameEnded(win);
@@ -53,19 +58,12 @@ public class CharacterGUI : CharacterComponent
     {
         base.Start();
         BindInput();
-        BindCooldowns();
     }
 
     private void BindInput()
     {
-        dodgeButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction * 40F))));
+        dodgeButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction))));
         attackButton.AddOnLongPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.PRIMARY_ABILITY))));
         attackButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.BASE_ATTACK))));
-    }
-
-    private void BindCooldowns()
-    {
-        CooldownUI coolUI = Instantiate(cooldownUIPrefab, cooldownsParent);
-        coolUI.Bind(Manager.Combat.EquippedAbility);
     }
 }

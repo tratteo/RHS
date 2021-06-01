@@ -17,7 +17,9 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     [Header("Combat")]
     [Range(0F, 10F)] [SerializeField] private float damageMultiplier = 1F;
     [SerializeField] private RandomizedFloat abilityUpdateTime;
-    [SerializeField] private List<Ability<BossEnemy>> abilities;
+    [SerializeField] private List<GameObject> abilitiesPrefabs;
+
+    private List<Ability<BossEnemy>> abilities;
 
     private bool isPerformingAbility = false;
     private float movementTimer = 0F;
@@ -30,14 +32,16 @@ public abstract class BossPhaseStateMachine : BossStateMachine
         Owner.MovementSpeedMultiplier(movementSpeedMultiplier);
         Owner.AccelerationMultiplier = accelerationMultiplier;
         movementTimer = movementUpdate;
-        abilities.ForEach(a => a.Reset());
         isPerformingAbility = false;
         abilityTimer = 0F;
+
+        abilities = new List<Ability<BossEnemy>>();
+        abilitiesPrefabs.ForEach(p => abilities.Add(Ability<BossEnemy>.Attach(p, Owner)));
     }
 
-    public bool TryGetAbility(BossEnemy enemy, out Ability<BossEnemy> ability)
+    public bool TryGetAbility(out Ability<BossEnemy> ability)
     {
-        List<Ability<BossEnemy>> match = abilities.FindAll(a => a.CanPerform(enemy));
+        List<Ability<BossEnemy>> match = abilities.FindAll(a => a.CanPerform());
         if (match.Count <= 0)
         {
             ability = null;
@@ -60,9 +64,9 @@ public abstract class BossPhaseStateMachine : BossStateMachine
             }
             else
             {
-                if (TryGetAbility(Owner, out Ability<BossEnemy> ability))
+                if (TryGetAbility(out Ability<BossEnemy> ability))
                 {
-                    if (ability.Perform(Owner))
+                    if (ability.Perform())
                     {
                         Owner.EnableSelfMovement = false;
                         isPerformingAbility = true;
@@ -91,7 +95,6 @@ public abstract class BossPhaseStateMachine : BossStateMachine
                 }
             }
         }
-        abilities.ForEach(a => a.Step(Time.deltaTime));
     }
 
     public bool CanExecute()
@@ -102,7 +105,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
-        abilities.ForEach(a => a.HardStop(Owner));
+        abilities.ForEach(a => a.HardStop());
     }
 
     protected abstract float GetAttackRange();

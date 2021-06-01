@@ -10,8 +10,9 @@ using UnityEngine;
 public class SlayerPhaseII : BossPhaseStateMachine
 {
     [Header("Slayer II")]
-    [SerializeField, Guarded] private GapCloserBossAbility gapCloser;
+    [SerializeField, Guarded] private GameObject gapCloserPrefab;
     private Sword sword;
+    private GapCloserBossAbility gapCloser;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -23,6 +24,7 @@ public class SlayerPhaseII : BossPhaseStateMachine
         {
             Debug.LogError("Slayer is not equipped with a sword!");
         }
+        gapCloser = (GapCloserBossAbility)Ability<BossEnemy>.Attach(gapCloserPrefab, Owner);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -30,9 +32,9 @@ public class SlayerPhaseII : BossPhaseStateMachine
         base.OnStateUpdate(animator, stateInfo, layerIndex);
         if (CanExecute())
         {
-            if (gapCloser.CanPerform(Owner))
+            if (gapCloser.CanPerform())
             {
-                gapCloser.Perform(Owner);
+                gapCloser.Perform();
             }
         }
     }
