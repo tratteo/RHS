@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455cbb53f10f4bf4a9867126cf1e77bb, type: 3}
+  m_Name: MultislashBossAbility
+  m_EditorClassIdentifier: 
+  describable:
+    id: 
+    name: 
+    icon: {fileID: 0}
+    description: 
+  cooldown: 0
+  channelTime: 0
+  vulnerabilityTime:
+    min: 0.25
+    max: 0.75
+  slashes:
+  - delay:
+      min: 0.1
+      max: 0.6
+    slash:
+      slash:
+        duration: 0.2
+        damageMultiplier: 1
+        range: 5
+        isParriable: 1
+        offset: {x: 0, y: 0, z: 0}
+  - delay:
+      min: 0.1
+      max: 0.6
+    slash:
+      slash:
+        duration: 0.2
+        damageMultiplier: 1
+        range: 5
+        isParriable: 1
+        offset: {x: 0, y: 0, z: 0}
+  - delay:
+      min: 0.1
+      max: 0.6
+    slash:
+      slash:
+        duration: 0.2
+        damageMultiplier: 1
+        range: 6
+        isParriable: 1
+        offset: {x: 0, y: 0, z: 0}

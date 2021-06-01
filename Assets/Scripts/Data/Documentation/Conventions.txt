@@ -1,0 +1,40 @@
+Coding Conventions
+
+SYNTHAX
+
+Functions / Methods / Classes / Structs / Enums / Properties
+Caps on each word letter
+IE:
+DrawTrajectoryLine(...)
+CustomComponent
+FieldStruct
+LaunchType
+NodeNumber
+
+Fields
+Initial low cap and then cap for all consecutive words
+IE: launchProjectileVelocity
+
+CLASSES ORDERING
+Download and use CodeMaid for visual studio, it reorders the class evey time you save
+
+1. Enums / Structs / Classes
+2. public fields
+3. editor exposed fields
+4. private fields
+5. properties
+6. unity methods
+7. methods
+8. interfaces methods
+
+CODING PATTERNS
+
+1. Always make variables and methods private, use the public word only when strictly necessary. To expose variables to the inspector use [SerializeField]
+2. Opt for getters and setters properties instead of exposing a public variable
+3. If a field is read only, make a public get and private set property
+4. DO NOT mess with spaghetti reference code. Access a reference of another script only when necessary and try to use the event listener pattern.
+5. Modify the GibFrame library only if needed and ask Trat
+6. The game development pattern used is: the consumed object is in charge to pass itself to the consumer.
+   IE. when the donut collides with the cop, it gets a reference of the cop from the collider and pass itself to it
+7. Do not write reduntant code and if possible always reuse existing code, better maintainability and bug fixing is easier
+8. Every code structure aims to be modular, especially code describing behaviour that is sure to be expanded in future (ie. paths, cops, donuts)

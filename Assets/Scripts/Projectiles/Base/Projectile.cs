@@ -1,0 +1,100 @@
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : Projectile.cs
+//
+// All Rights Reserved
+
+using GibFrame.ObjectPooling;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
+{
+    private List<StatusEffect> onHitEffects;
+    private List<string> collideTagExceptions;
+    private float counterAttackDamageMultiplier = 1F;
+    private bool critical = false;
+    private float criticalMultiplier;
+
+    public bool Grounded { get; private set; }
+
+    protected Rigidbody Rigidbody { get; private set; } = null;
+
+    private float Damage { get; set; } = 1F;
+
+    public void AddEffects(params StatusEffect[] effects)
+    {
+        onHitEffects.AddRange(effects);
+    }
+
+    public void SetCounterAttack(float counterAttackDamageMultiplier = 2F)
+    {
+        this.counterAttackDamageMultiplier = counterAttackDamageMultiplier;
+    }
+
+    public void ClearTagExceptions()
+    {
+        collideTagExceptions.Clear();
+    }
+
+    public void SetDamage(float damage)
+    {
+        Damage = damage;
+    }
+
+    public void DamageMultiplier(float multiplier)
+    {
+        Damage *= multiplier;
+    }
+
+    public virtual void OnObjectSpawn()
+    {
+        Rigidbody.velocity = Vector3.zero;
+        collideTagExceptions.Clear();
+        onHitEffects.Clear();
+        Damage = 1F;
+        critical = false;
+        criticalMultiplier = 1F;
+    }
+
+    public void AddTagException(string tag)
+    {
+        if (!collideTagExceptions.Contains(tag))
+        {
+            collideTagExceptions.Add(tag);
+        }
+    }
+
+    protected virtual void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        onHitEffects = new List<StatusEffect>();
+        collideTagExceptions = new List<string>();
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject);
+        if (!collideTagExceptions.Contains(collision.collider.tag))
+        {
+            IHealthHolder healthHolder;
+            if ((healthHolder = collision.gameObject.GetComponent<IHealthHolder>()) != null)
+            {
+                healthHolder.Damage(GetDamage());
+            }
+            IEffectsReceiverHolder effectReceiver;
+            if ((effectReceiver = collision.gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
+            {
+                effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
+            }
+            gameObject.SetActive(false);
+        }
+    }
+
+    protected float GetDamage()
+    {
+        float damage = critical ? Damage * criticalMultiplier * counterAttackDamageMultiplier : Damage * counterAttackDamageMultiplier;
+        counterAttackDamageMultiplier = 1F;
+        return damage;
+    }
+}
