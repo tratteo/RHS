@@ -16,7 +16,7 @@ public class GapCloserBossAbility : Ability<BossEnemy>
 
     protected override IEnumerator Execute_C()
     {
-        float duration = Parent.Dash(Parent.TargetContext.Transform.position - Parent.transform.position, 2F);
+        float duration = Parent.Dash(Parent.TargetContext.Transform.position - Parent.transform.position, 2.5F);
         yield return new WaitForSeconds(duration);
         Complete();
     }

@@ -19,7 +19,7 @@ public class SlayerPhaseII : BossPhaseStateMachine
         base.OnStateEnter(animator, stateInfo, layerIndex);
         Owner.Move(Vector2.zero);
         sword = Owner.GetWeapon() as Sword;
-        sword.ToggleBlock(true, 1F);
+        sword.ToggleBlock(true, 0F);
         if (!sword)
         {
             Debug.LogError("Slayer is not equipped with a sword!");

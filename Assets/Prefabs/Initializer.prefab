@@ -86,4 +86,4 @@ MonoBehaviour:
     stun: {fileID: 21300000, guid: cfbd264e02cfa5d4e804da500a419a0d, type: 3}
   abilities:
     characterAbilities:
-    - {fileID: 11400000, guid: 427eeab2a50e93740960a5e53f4aed8b, type: 2}
+    - {fileID: 4943380845929579821, guid: efdfe9af4f129324ab32683771faf589, type: 3}

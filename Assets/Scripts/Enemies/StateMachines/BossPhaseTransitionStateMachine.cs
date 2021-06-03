@@ -23,5 +23,6 @@ public class BossPhaseTransitionStateMachine : BossStateMachine
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+        Owner.HealthSystem.Refull();
     }
 }

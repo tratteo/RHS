@@ -54,6 +54,6 @@ MonoBehaviour:
     slash:
       duration: 0.02
       damageMultiplier: 3
-      range: 4
+      range: 6.5
       isParriable: 0
       offset: {x: 0, y: 0, z: 0}

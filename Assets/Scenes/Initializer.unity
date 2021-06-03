@@ -502,10 +502,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5803829066754800794, guid: c892d8605f1e06946af2bee3d381625d, type: 3}
-      propertyPath: abilities.characterAbilities.Array.data[0]
-      value: 
-      objectReference: {fileID: 4943380845929579821, guid: efdfe9af4f129324ab32683771faf589, type: 3}
     - target: {fileID: 5803829066754800798, guid: c892d8605f1e06946af2bee3d381625d, type: 3}
       propertyPath: m_Name
       value: Initializer

@@ -51,36 +51,36 @@ MonoBehaviour:
   cooldown: 0
   channelTime: 0
   vulnerabilityTime:
-    min: 0.75
-    max: 1.75
+    min: 1
+    max: 2.5
   slashes:
   - delay:
-      min: 0.2
-      max: 0.75
-    slash:
-      slash:
-        duration: 0.25
-        damageMultiplier: 5
-        range: 0
-        isParriable: 1
-        offset: {x: 0, y: 0, z: 0}
-  - delay:
-      min: 0.2
-      max: 0.75
-    slash:
-      slash:
-        duration: 0.25
-        damageMultiplier: 5
-        range: 0
-        isParriable: 1
-        offset: {x: 0, y: 0, z: 0}
-  - delay:
-      min: 0.2
-      max: 0.75
+      min: 0.1
+      max: 0.6
     slash:
       slash:
         duration: 0.25
         damageMultiplier: 1
-        range: 6
+        range: 5
+        isParriable: 1
+        offset: {x: 0, y: 0, z: 0}
+  - delay:
+      min: 0.1
+      max: 0.6
+    slash:
+      slash:
+        duration: 0.25
+        damageMultiplier: 1
+        range: 5
+        isParriable: 1
+        offset: {x: 0, y: 0, z: 0}
+  - delay:
+      min: 0.25
+      max: 1
+    slash:
+      slash:
+        duration: 0.25
+        damageMultiplier: 2
+        range: 7
         isParriable: 1
         offset: {x: 0, y: 0, z: 0}

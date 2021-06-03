@@ -16,6 +16,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     [SerializeField] private RandomizedFloat movementUpdate;
     [Header("Combat")]
     [Range(0F, 10F)] [SerializeField] private float damageMultiplier = 1F;
+    [SerializeField] private float abilityInitialTime = 4F;
     [SerializeField] private RandomizedFloat abilityUpdateTime;
     [SerializeField] private List<GameObject> abilitiesPrefabs;
 
@@ -28,6 +29,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+        Owner.Collider.enabled = true;
         Owner.GetWeapon().BaseDamage = Owner.GetWeapon().BaseDamage * damageMultiplier;
         Owner.MovementSpeedMultiplier(movementSpeedMultiplier);
         Owner.AccelerationMultiplier = accelerationMultiplier;
@@ -62,7 +64,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
             {
                 abilityTimer -= Time.deltaTime;
             }
-            else
+            else if ((abilityInitialTime -= Time.deltaTime) <= 0)
             {
                 if (TryGetAbility(out Ability<BossEnemy> ability))
                 {
@@ -105,6 +107,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+        Owner.Collider.enabled = false;
         abilities.ForEach(a => a.HardStop());
     }
 

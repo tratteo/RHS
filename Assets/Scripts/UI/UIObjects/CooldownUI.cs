@@ -12,7 +12,7 @@ public class CooldownUI : MonoBehaviour
 {
     [SerializeField, Guarded] private Image image;
     [SerializeField, Guarded] private Text amountText;
-    [SerializeField, Guarded] private ICooldownOwner cooldownHolder;
+    private ICooldownOwner cooldownHolder;
 
     public static void Attach(ICooldownOwner owner, CooldownUI prefab, Transform parent)
     {

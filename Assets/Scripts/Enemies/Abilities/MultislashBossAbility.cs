@@ -78,17 +78,17 @@ public class MultislashBossAbility : Ability<BossEnemy>
 
     private float AdjustPosition(BossEnemy parent, Sword.Slash currentSlash)
     {
+        Vector2 directionToTarget = parent.TargetContext.Transform.position - parent.transform.position;
         if (parent.CurrentStatus == Enemy.Status.ATTACKING && parent.TargetContext != null)
         {
             float distance = Vector2.Distance(parent.transform.position, parent.TargetContext.Transform.position);
             if (distance > currentSlash.Range)
             {
-                return parent.Dash(parent.TargetContext.Transform.position - parent.transform.position, 2.25F);
+                return parent.Dash(directionToTarget.Perturbate((Quaternion.AngleAxis(90F, Vector3.forward) * directionToTarget).normalized, currentSlash.Range * 0.75F).normalized * directionToTarget.magnitude, 2.75F);
             }
             else
             {
-                Vector2 axis = parent.transform.position - parent.TargetContext.Transform.position;
-                return parent.Dash(axis.Perturbate(Quaternion.AngleAxis(90F, Vector3.forward) * axis, 1F).normalized, (currentSlash.Range - distance) * 2.5F);
+                return parent.Dash((-directionToTarget).Perturbate((Quaternion.AngleAxis(90F, Vector3.forward) * (-directionToTarget)).normalized, currentSlash.Range * 0.75F).normalized, (currentSlash.Range - distance) * 2.75F);
             }
         }
         else

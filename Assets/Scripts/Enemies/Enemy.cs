@@ -33,7 +33,6 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     private float currentMovementSpeedMultiplier = 1F;
     private UpdateJob senseJob;
     private IHealthHolder targetHealth;
-    private Vector2 targetVelocity;
 
     public Collider2D Collider { get; private set; }
 
@@ -51,7 +50,9 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public Rigidbody2D Rigidbody { get; private set; }
 
-    protected ValueContainerSystem HealthSystem { get; private set; }
+    public ValueContainerSystem HealthSystem { get; private set; }
+
+    protected Vector2 TargetVelocity { get; private set; }
 
     public event Action<bool> OnChangeGroundedState;
 
@@ -93,7 +94,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
         }
         if (!IsDashing)
         {
-            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, targetVelocity, 0.15F * AccelerationMultiplier);
+            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, TargetVelocity, 0.15F * AccelerationMultiplier);
         }
     }
 
@@ -142,7 +143,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public virtual void Move(Vector2 direction)
     {
-        targetVelocity = direction.normalized * movementSpeed;
+        TargetVelocity = direction.normalized * movementSpeed;
     }
 
     protected virtual void OnEnable()

@@ -7,13 +7,15 @@
 using GibFrame;
 using UnityEngine;
 
-public class CharacterAnimator : MonoBehaviour
+public class AnimatorDriver : MonoBehaviour
 {
     public const string RUN = "run";
     public const string IDLE = "idle";
+    public const string DASH = "dash";
     private Animator animator;
     [Header("Channels")]
     [SerializeField, Guarded] private AnimationChannelEvent animationChannelEvent;
+    [SerializeField] private int animationLayerIndex = 0;
 
     private int speedHash;
     private string currentPlaying;
@@ -47,7 +49,7 @@ public class CharacterAnimator : MonoBehaviour
             case IDLE:
                 break;
         }
-        animator.Play(data.Id);
+        animator.Play(data.Id, animationLayerIndex);
         currentPlaying = data.Id;
     }
 }

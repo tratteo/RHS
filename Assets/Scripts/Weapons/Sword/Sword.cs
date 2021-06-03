@@ -157,33 +157,31 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     {
         effectFlipped = !effectFlipped;
 
-        if (CollidersCast())
+        CollidersCast();
+        if (defaultSlashEffect)
         {
-            if (defaultSlashEffect)
+            if (effectFlipped)
             {
-                if (effectFlipped)
-                {
-                    effectRenderer.flip = new Vector3(1, 0, 0);
-                }
-                else
-                {
-                    effectRenderer.flip = new Vector3(0, 0, 0);
-                }
-                defaultSlashEffect.transform.localScale = new Vector3(1F, 0.75F, 1F) * LastSlash.Range;
-
-                if (Target != null)
-                {
-                    defaultSlashEffect.transform.right = Target.GetSightPoint() - OwnerObj.transform.position;
-                }
-                else
-                {
-                    Vector3 newScale = Vector3.Scale(new Vector3(ScaleSign, 1F, 1F), defaultSlashEffect.transform.localScale);
-                    defaultSlashEffect.transform.localScale = newScale;
-                    defaultSlashEffect.transform.right = OwnerObj.transform.right;
-                }
-                defaultSlashEffect.transform.localPosition = LastSlash.Offset;
-                defaultSlashEffect.Play();
+                effectRenderer.flip = new Vector3(1, 0, 0);
             }
+            else
+            {
+                effectRenderer.flip = new Vector3(0, 0, 0);
+            }
+            defaultSlashEffect.transform.localScale = new Vector3(1F, 0.75F, 1F) * LastSlash.Range;
+
+            if (Target != null)
+            {
+                defaultSlashEffect.transform.right = Target.GetSightPoint() - OwnerObj.transform.position;
+            }
+            else
+            {
+                Vector3 newScale = Vector3.Scale(new Vector3(ScaleSign, 1F, 1F), defaultSlashEffect.transform.localScale);
+                defaultSlashEffect.transform.localScale = newScale;
+                defaultSlashEffect.transform.right = OwnerObj.transform.right;
+            }
+            defaultSlashEffect.transform.localPosition = LastSlash.Offset;
+            defaultSlashEffect.Play();
         }
     }
 
@@ -191,7 +189,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     ///   Setup the polygon collider points and perform the collider cast to process the hitted objects
     /// </summary>
     /// <returns> True if the hit is not blocked, false if the hit is blocked </returns>
-    private bool CollidersCast()
+    private void CollidersCast()
     {
         castCollider.offset = LastSlash.Offset;
         if (colliderPoints.Length != colliderQuality + 1)
@@ -242,7 +240,6 @@ public partial class Sword : Weapon, ICommonFixedUpdate
                 }
             }
         }
-        return true;
     }
 
     private void OnEnable()

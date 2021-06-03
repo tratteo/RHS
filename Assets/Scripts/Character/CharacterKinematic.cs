@@ -5,10 +5,11 @@
 // All Rights Reserved
 
 using GibFrame;
+using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterKinematic : CharacterComponent, IShadowOwner
+public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldownOwner
 {
     [Header("Channels")]
     [SerializeField, Guarded] private AnimationChannelEvent animationChannelEvent;
@@ -16,13 +17,17 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
     [Header("Parameters")]
     [SerializeField] private float movementSpeed = 5F;
     [Header("Dodge")]
-    [SerializeField] private float dodgeForce = 900F;
+    [SerializeField] private float dodgeForce = 1400F;
     [SerializeField] private float dodgeDuration = 0.3F;
+    [SerializeField] private int dodgesCount = 3;
+    [SerializeField] private float dodgeCooldown = 4F;
     [SerializeField] private int invulnerabilityTimeSteps = 10;
     private Vector2 traslation;
     private float dodgeTimer = 0F;
     private int invulnerabilityCurrentSteps;
     private float startJumpY = 0F;
+    private UpdateJob rechargeDodgesJob;
+    private int dodgesCharges = 0;
 
     public bool IsJumping { get; private set; } = false;
 
@@ -51,21 +56,21 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
         }
         if (Mathf.Approximately(Rigidbody.velocity.magnitude, 0F))
         {
-            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(CharacterAnimator.IDLE, null));
+            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
         }
         else
         {
-            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(CharacterAnimator.RUN, Rigidbody.velocity.magnitude));
+            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, Rigidbody.velocity.magnitude));
         }
 
-        if (IsJumping && startJumpY > transform.position.y)
-        {
-            transform.position = new Vector3(transform.position.x, startJumpY, transform.position.z);
-            Rigidbody.gravityScale = 0F;
-            IsJumping = false;
-            Rigidbody.velocity = Vector2.zero;
-            OnChangeGroundedState?.Invoke(true);
-        }
+        //if (IsJumping && startJumpY > transform.position.y)
+        //{
+        //    transform.position = new Vector3(transform.position.x, startJumpY, transform.position.z);
+        //    Rigidbody.gravityScale = 0F;
+        //    IsJumping = false;
+        //    Rigidbody.velocity = Vector2.zero;
+        //    OnChangeGroundedState?.Invoke(true);
+        //}
     }
 
     public void Move(Vector2 direction, float speedMultiplier = 1F)
@@ -81,20 +86,44 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
             if (dodgeTimer <= 0)
             {
                 dodgeTimer = 0F;
-                Move(Vector2.zero);
                 Invulnerability(false);
             }
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            Rigidbody.gravityScale = 3F;
-            IsJumping = true;
-            OnChangeGroundedState?.Invoke(false);
-            startJumpY = transform.position.y;
-            Vector2 verticalVel = Rigidbody.velocity * Vector2.up;
-            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 10F);
-            //Rigidbody.AddForce((Vector2.up - verticalVel.normalized) * 1000F, ForceMode2D.Impulse);
+            inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, transform.right));
+            //Rigidbody.gravityScale = 3F;
+            //IsJumping = true;
+            //OnChangeGroundedState?.Invoke(false);
+            //startJumpY = transform.position.y;
+            //Vector2 verticalVel = Rigidbody.velocity * Vector2.up;
+            //Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 10F);
+            ////Rigidbody.AddForce((Vector2.up - verticalVel.normalized) * 1000F, ForceMode2D.Impulse);
         }
+        rechargeDodgesJob.Step(deltaTime);
+        if (dodgesCharges >= dodgesCount) rechargeDodgesJob.Suspend();
+    }
+
+    public int GetResourcesAmount() => dodgesCharges;
+
+    public float GetCooldown() => dodgeCooldown;
+
+    public float GetCooldownPercentage()
+    {
+        if (dodgesCharges >= dodgesCount)
+        {
+            return 0;
+        }
+        return 1F - rechargeDodgesJob.GetUpdateProgress();
+    }
+
+    public Sprite GetIcon() => null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        rechargeDodgesJob = new UpdateJob(new Callback(RechargeDodge), dodgeCooldown);
+        dodgesCharges = dodgesCount;
     }
 
     protected override void OnEnable()
@@ -107,6 +136,14 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
     {
         base.OnDisable();
         inputChannel.OnEvent -= OnInput;
+    }
+
+    private void RechargeDodge()
+    {
+        if (dodgesCharges < dodgesCount)
+        {
+            dodgesCharges++;
+        }
     }
 
     private void Invulnerability(bool state)
@@ -124,12 +161,17 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner
                 break;
 
             case Inputs.InputType.DODGE:
-                if (IsDodging) return;
+                if (IsDodging || dodgesCharges < 1) return;
                 Inputs.DirectionInputData dodgeDir = data as Inputs.DirectionInputData;
                 Rigidbody.AddForce(dodgeDir.Direction * dodgeForce, ForceMode2D.Impulse);
                 dodgeTimer = dodgeDuration;
                 invulnerabilityCurrentSteps = invulnerabilityTimeSteps;
                 Invulnerability(true);
+                dodgesCharges--;
+                if (!rechargeDodgesJob.Active)
+                {
+                    rechargeDodgesJob.Resume();
+                }
                 break;
         }
     }

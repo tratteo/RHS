@@ -13,7 +13,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
     [Range(-90F, 90F)] [SerializeField] private float idleRotation;
     [SerializeField] private float baseDamage = 5F;
     [SerializeField, Guarded] private Transform weaponTransform;
-
+    private SpriteRenderer spriteRenderer;
     private float hitDamageMultiplier = 1F;
     private float offsetRotation;
     private float targetRotation;
@@ -87,6 +87,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         }
 
         WeaponTransform.localRotation = Quaternion.Euler(0F, 0F, targetRotation);
+        spriteRenderer.flipX = Flipped * ScaleSign > 0;
     }
 
     public void SetTarget(IElementOfInterest target)
@@ -112,6 +113,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     protected virtual void Awake()
     {
+        spriteRenderer = weaponTransform.GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Start()

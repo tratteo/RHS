@@ -49,11 +49,11 @@ MonoBehaviour:
     icon: {fileID: 0}
     description: 
   cooldown: 0
-  chargeTime: 0.6
+  chargeTime: 0.75
   slash:
     slash:
       duration: 0.02
-      damageMultiplier: 2.5
+      damageMultiplier: 3
       range: 8
       isParriable: 0
       offset: {x: 0, y: 0, z: 0}

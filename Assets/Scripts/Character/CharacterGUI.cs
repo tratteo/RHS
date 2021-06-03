@@ -58,6 +58,7 @@ public class CharacterGUI : CharacterComponent
     {
         base.Start();
         BindInput();
+        dodgeButton.gameObject.GetComponentInChildren<CooldownUI>(true).Bind(Manager.Kinematic);
     }
 
     private void BindInput()
