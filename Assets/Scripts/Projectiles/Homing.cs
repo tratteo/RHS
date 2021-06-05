@@ -29,7 +29,7 @@ public class Homing : Projectile
             transform.Translate((target.position + offset - transform.position) * speed * Time.fixedDeltaTime);
             if (Vector3.SqrMagnitude(target.position - transform.position) <= 5F)
             {
-                Rigidbody.AddForce(Vector3.down * 80F * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                Rigidbody.AddForce(Vector3.down * 80F * Time.fixedDeltaTime, ForceMode2D.Force);
             }
         }
     }

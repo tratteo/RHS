@@ -12,9 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: e75944ac79cf0ff49b6abef9474f9a95
   - enabled: 1
-    path: Assets/Scenes/Slayer.unity
+    path: Assets/Scenes/Yasuke.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/LevelSelector.unity
     guid: 4d6cf5e9760450f4bb1ab4c35efe24ce
+  - enabled: 1
+    path: Assets/Scenes/Bomber.unity
+    guid: 4389e870ae59bb044b14132246c52384
   m_configObjects: {}

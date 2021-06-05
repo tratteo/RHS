@@ -22,19 +22,21 @@ public abstract class BossPhaseStateMachine : BossStateMachine
 
     private List<Ability<BossEnemy>> abilities;
 
-    private bool isPerformingAbility = false;
     private float movementTimer = 0F;
+
     private float abilityTimer = 0F;
+
+    public bool IsPerformingAbility { get; private set; } = false;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         Owner.Collider.enabled = true;
-        Owner.GetWeapon().BaseDamage = Owner.GetWeapon().BaseDamage * damageMultiplier;
+        Owner.GetWeapon().GeneralDamageMultiplier = damageMultiplier;
         Owner.MovementSpeedMultiplier(movementSpeedMultiplier);
         Owner.AccelerationMultiplier = accelerationMultiplier;
         movementTimer = movementUpdate;
-        isPerformingAbility = false;
+        IsPerformingAbility = false;
         abilityTimer = 0F;
 
         abilities = new List<Ability<BossEnemy>>();
@@ -58,7 +60,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!isPerformingAbility && CanExecute())
+        if (!IsPerformingAbility && CanExecute())
         {
             if (abilityTimer > 0F)
             {
@@ -68,23 +70,24 @@ public abstract class BossPhaseStateMachine : BossStateMachine
             {
                 if (TryGetAbility(out Ability<BossEnemy> ability))
                 {
-                    if (ability.Perform())
+                    if (ability.CanPerform())
                     {
                         Owner.EnableSelfMovement = false;
-                        isPerformingAbility = true;
+                        IsPerformingAbility = true;
                         ability.OnComplete += () =>
                         {
-                            isPerformingAbility = false;
+                            IsPerformingAbility = false;
                             Owner.EnableSelfMovement = true;
                             movementTimer = movementUpdate;
                             abilityTimer = abilityUpdateTime;
                         };
+                        ability.Perform();
                     }
                 }
                 abilityTimer = abilityUpdateTime;
             }
 
-            if (!isPerformingAbility)
+            if (!IsPerformingAbility)
             {
                 if (movementTimer <= 0F)
                 {

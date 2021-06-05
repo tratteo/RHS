@@ -75,10 +75,10 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
     {
         if (CanPerform())
         {
-            coroutine = StartCoroutine(Execute_C());
             IsPerforming = true;
             OnPerform?.Invoke();
             OnPerform = null;
+            coroutine = StartCoroutine(Execute_C());
             return true;
         }
         return false;

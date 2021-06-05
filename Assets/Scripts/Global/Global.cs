@@ -8,10 +8,15 @@ public static class Layers
 {
     public static readonly string ENEMY_PROJECTILES = "EnemyProjectiles";
     public static readonly string PROJECTILES = "Projectiles";
-    public static readonly string CHARACTER = "Character";
-    public static readonly string ENEMIES = "Enemies";
+    public static readonly string FRIENDLIES = "Friendlies";
+    public static readonly string HOSTILES = "Hostiles";
     public static readonly string ENVIROMENT = "Enviroment";
     public static readonly string WEAPONS = "Weapons";
+}
+
+public static class Categories
+{
+    public static readonly string PROJECTILES = "Projectiles";
 }
 
 public static class UIPrefs

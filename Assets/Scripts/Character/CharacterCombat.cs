@@ -30,6 +30,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
     private ValueContainerSystem healthSystem;
     private float attackTimer = 0F;
     private bool canBeDamaged = true;
+    private float lookSign = 1F;
 
     public Ability<CharacterManager> EquippedAbility { get; private set; }
 
@@ -43,17 +44,17 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
     {
         if (focusedTarget == null)
         {
-            if (Rigidbody.velocity != Vector2.zero)
-            {
-                if (Rigidbody.velocity.x < 0F)
-                {
-                    transform.localScale = new Vector3(-1F, 1F, 1F);
-                }
-                else
-                {
-                    transform.localScale = new Vector3(1F, 1F, 1F);
-                }
-            }
+            transform.localScale = new Vector3(lookSign, 1F, 1F);
+            //if (Rigidbody.velocity != Vector2.zero)
+            //{
+            //    if (Rigidbody.velocity.x < 0F)
+            //    {
+            //    }
+            //    else
+            //    {
+            //        transform.localScale = new Vector3(1F, 1F, 1F);
+            //    }
+            //}
             sword.ClearTarget();
         }
         else if (focusedTarget as Component)
@@ -173,6 +174,14 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
 
             case Inputs.InputType.PRIMARY_ABILITY:
                 EquippedAbility.Perform();
+                break;
+
+            case Inputs.InputType.MOVE:
+                Inputs.DirectionInputData dirData = data as Inputs.DirectionInputData;
+                if (!Mathf.Approximately(dirData.Direction.magnitude, 0F))
+                {
+                    lookSign = dirData.Direction.x > 0 ? 1F : -1F;
+                }
                 break;
         }
     }

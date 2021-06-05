@@ -11,11 +11,11 @@ TagManager:
   - Enviroment
   - Water
   - UI
-  - Character
-  - Enemies
+  - Friendlies
+  - Hostiles
   - Weapons
-  - 
-  - 
+  - EnemyProjectiles
+  - Projectiles
   - 
   - 
   - 

@@ -10,21 +10,36 @@ using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 {
-    private List<StatusEffect> onHitEffects;
-    private List<string> collideTagExceptions;
+    protected List<StatusEffect> onHitEffects;
+    protected List<string> collideTagExceptions;
+    [SerializeField] private float baseDamage = 1F;
     private float counterAttackDamageMultiplier = 1F;
     private bool critical = false;
     private float criticalMultiplier;
+    private float damage;
 
     public bool Grounded { get; private set; }
 
-    protected Rigidbody Rigidbody { get; private set; } = null;
+    protected Collider2D Collider { get; private set; } = null;
 
-    private float Damage { get; set; } = 1F;
+    protected Rigidbody2D Rigidbody { get; private set; } = null;
 
     public void AddEffects(params StatusEffect[] effects)
     {
         onHitEffects.AddRange(effects);
+    }
+
+    public int GetActionLayer()
+    {
+        if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES)))
+        {
+            return LayerMask.NameToLayer(Layers.FRIENDLIES);
+        }
+        else if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.PROJECTILES)))
+        {
+            return LayerMask.NameToLayer(Layers.HOSTILES);
+        }
+        return ~0;
     }
 
     public void SetCounterAttack(float counterAttackDamageMultiplier = 2F)
@@ -32,19 +47,27 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         this.counterAttackDamageMultiplier = counterAttackDamageMultiplier;
     }
 
+    public void SetupLayer(IAgent spawner)
+    {
+        if (spawner.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
+        {
+            gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
+        }
+        else if (spawner.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
+        {
+            gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
+        }
+        Collider.enabled = true;
+    }
+
     public void ClearTagExceptions()
     {
         collideTagExceptions.Clear();
     }
 
-    public void SetDamage(float damage)
-    {
-        Damage = damage;
-    }
-
     public void DamageMultiplier(float multiplier)
     {
-        Damage *= multiplier;
+        damage *= multiplier;
     }
 
     public virtual void OnObjectSpawn()
@@ -52,7 +75,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         Rigidbody.velocity = Vector3.zero;
         collideTagExceptions.Clear();
         onHitEffects.Clear();
-        Damage = 1F;
+        damage = baseDamage;
         critical = false;
         criticalMultiplier = 1F;
     }
@@ -67,14 +90,15 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 
     protected virtual void Awake()
     {
-        Rigidbody = GetComponent<Rigidbody>();
+        Rigidbody = GetComponent<Rigidbody2D>();
+        Collider = GetComponent<Collider2D>();
         onHitEffects = new List<StatusEffect>();
         collideTagExceptions = new List<string>();
+        damage = baseDamage;
     }
 
-    protected virtual void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject);
         if (!collideTagExceptions.Contains(collision.collider.tag))
         {
             IHealthHolder healthHolder;
@@ -93,7 +117,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 
     protected float GetDamage()
     {
-        float damage = critical ? Damage * criticalMultiplier * counterAttackDamageMultiplier : Damage * counterAttackDamageMultiplier;
+        float damage = critical ? this.damage * criticalMultiplier * counterAttackDamageMultiplier : this.damage * counterAttackDamageMultiplier;
         counterAttackDamageMultiplier = 1F;
         return damage;
     }

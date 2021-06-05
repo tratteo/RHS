@@ -6,16 +6,16 @@
 
 using GibFrame;
 using GibFrame.Performance;
-using System;
 using UnityEngine;
 
-public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldownOwner
+public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody
 {
     [Header("Channels")]
     [SerializeField, Guarded] private AnimationChannelEvent animationChannelEvent;
     [SerializeField, Guarded] private InputChannelEvent inputChannel;
-    [Header("Parameters")]
+    [Header("Physics")]
     [SerializeField] private float movementSpeed = 5F;
+    [Range(0F, 1F)] [SerializeField] private float dampening = 0.1F;
     [Header("Dodge")]
     [SerializeField] private float dodgeForce = 1400F;
     [SerializeField] private float dodgeDuration = 0.3F;
@@ -25,21 +25,19 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
     private Vector2 traslation;
     private float dodgeTimer = 0F;
     private int invulnerabilityCurrentSteps;
-    private float startJumpY = 0F;
     private UpdateJob rechargeDodgesJob;
     private int dodgesCharges = 0;
-
-    public bool IsJumping { get; private set; } = false;
+    private Vector3 externVelocity = Vector2.zero;
 
     private bool IsDodging => dodgeTimer > 0F;
 
-    public event Action<bool> OnChangeGroundedState;
-
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
-        if (!IsDodging && !IsJumping)
+        externVelocity = Vector2.Lerp(externVelocity, Vector2.zero, dampening);
+        Rigidbody.velocity = externVelocity;
+        if (!IsDodging)
         {
-            Rigidbody.velocity = traslation;
+            Rigidbody.velocity += traslation;
             invulnerabilityCurrentSteps = 0;
         }
         else
@@ -50,27 +48,10 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
             }
             else if (invulnerabilityCurrentSteps == 0)
             {
-                Invulnerability(false);
+                EventChannel.BroadcastInvulnerability(false);
                 invulnerabilityCurrentSteps = -1;
             }
         }
-        if (Mathf.Approximately(Rigidbody.velocity.magnitude, 0F))
-        {
-            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
-        }
-        else
-        {
-            animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, Rigidbody.velocity.magnitude));
-        }
-
-        //if (IsJumping && startJumpY > transform.position.y)
-        //{
-        //    transform.position = new Vector3(transform.position.x, startJumpY, transform.position.z);
-        //    Rigidbody.gravityScale = 0F;
-        //    IsJumping = false;
-        //    Rigidbody.velocity = Vector2.zero;
-        //    OnChangeGroundedState?.Invoke(true);
-        //}
     }
 
     public void Move(Vector2 direction, float speedMultiplier = 1F)
@@ -86,22 +67,19 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
             if (dodgeTimer <= 0)
             {
                 dodgeTimer = 0F;
-                Invulnerability(false);
+                EventChannel.BroadcastInvulnerability(false);
             }
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, transform.right));
-            //Rigidbody.gravityScale = 3F;
-            //IsJumping = true;
-            //OnChangeGroundedState?.Invoke(false);
-            //startJumpY = transform.position.y;
-            //Vector2 verticalVel = Rigidbody.velocity * Vector2.up;
-            //Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 10F);
-            ////Rigidbody.AddForce((Vector2.up - verticalVel.normalized) * 1000F, ForceMode2D.Impulse);
-        }
+
         rechargeDodgesJob.Step(deltaTime);
         if (dodgesCharges >= dodgesCount) rechargeDodgesJob.Suspend();
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            //externVelocity += new Vector2(transform.right.x, transform.right.y) * 20F;
+            // Rigidbody.AddForce(transform.right * 2000F, ForceMode2D.Impulse);
+            inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, transform.right));
+        }
     }
 
     public int GetResourcesAmount() => dodgesCharges;
@@ -118,6 +96,11 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
     }
 
     public Sprite GetIcon() => null;
+
+    public void AddExternalForce(Vector3 force)
+    {
+        externVelocity += force;
+    }
 
     protected override void Awake()
     {
@@ -146,11 +129,6 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
         }
     }
 
-    private void Invulnerability(bool state)
-    {
-        EventChannel.BroadcastInvulnerability(state);
-    }
-
     private void OnInput(Inputs.InputData data)
     {
         switch (data.Type)
@@ -158,15 +136,24 @@ public class CharacterKinematic : CharacterComponent, IShadowOwner, IMultiCooldo
             case Inputs.InputType.MOVE:
                 Inputs.DirectionInputData directionData = data as Inputs.DirectionInputData;
                 Move(directionData.Direction);
+                if (Mathf.Approximately(directionData.Direction.magnitude, 0F))
+                {
+                    animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
+                }
+                else
+                {
+                    animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, directionData.Direction.magnitude));
+                }
                 break;
 
             case Inputs.InputType.DODGE:
                 if (IsDodging || dodgesCharges < 1) return;
                 Inputs.DirectionInputData dodgeDir = data as Inputs.DirectionInputData;
-                Rigidbody.AddForce(dodgeDir.Direction * dodgeForce, ForceMode2D.Impulse);
+                AddExternalForce(dodgeDir.Direction * dodgeForce);
+                //Rigidbody.AddForce(dodgeDir.Direction * dodgeForce, ForceMode2D.Impulse);
                 dodgeTimer = dodgeDuration;
                 invulnerabilityCurrentSteps = invulnerabilityTimeSteps;
-                Invulnerability(true);
+                EventChannel.BroadcastInvulnerability(true);
                 dodgesCharges--;
                 if (!rechargeDodgesJob.Active)
                 {

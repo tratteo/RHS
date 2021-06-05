@@ -11,6 +11,7 @@ using UnityEngine;
 public partial class Sword : Weapon, ICommonFixedUpdate
 {
     [Header("Sword")]
+    [SerializeField] private float damage = 50F;
     [SerializeField] private Blocker blocker;
     [SerializeField] private ProjectileDeflector deflector;
     [SerializeField] private ParticleSystem defaultSlashEffect;
@@ -21,7 +22,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     private CircleCollider2D parryCollider;
     private PolygonCollider2D castCollider;
     private bool effectFlipped = false;
-
+    private float hitDamageMultiplier = 1F;
     private int slashTicks = 0;
 
     private ParticleSystemRenderer effectRenderer;
@@ -34,7 +35,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
 
     public bool IsSlashing { get; private set; } = false;
 
-    public float ClashPower => GetDamage();
+    public float ClashPower => GetDamage() / 2F;
 
     public event Action<Clash> OnBlocked = delegate { };
 
@@ -53,9 +54,9 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         }
     }
 
-    public override void SetOwner(IAgent owner, float damage)
+    public virtual void SetOwner(IAgent owner, float damage)
     {
-        base.SetOwner(owner, damage);
+        base.SetOwner(owner);
         if (deflector)
         {
             deflector.Setup(owner);
@@ -71,6 +72,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         parryCollider.radius = LastSlash.Range;
         parryCollider.enabled = true;
         slash.OnStart?.Invoke();
+        SetupPolygonCollider();
         if (deflector)
         {
             deflector.StartDeflecting(colliderPoints);
@@ -112,6 +114,16 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         }
     }
 
+    public virtual void SetHitDamageMultiplier(float multiplier = 1F)
+    {
+        hitDamageMultiplier = multiplier;
+    }
+
+    protected float GetDamage()
+    {
+        return GetDamageMultiplier() * damage * GeneralDamageMultiplier;
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -122,6 +134,13 @@ public partial class Sword : Weapon, ICommonFixedUpdate
             effectRenderer = defaultSlashEffect.GetComponent<ParticleSystemRenderer>();
         }
         colliderPoints = new Vector2[colliderQuality + 1];
+    }
+
+    private float GetDamageMultiplier()
+    {
+        float res = hitDamageMultiplier;
+        hitDamageMultiplier = 1F;
+        return res;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -168,7 +187,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
             {
                 effectRenderer.flip = new Vector3(0, 0, 0);
             }
-            defaultSlashEffect.transform.localScale = new Vector3(1F, 0.75F, 1F) * LastSlash.Range;
+            defaultSlashEffect.transform.localScale = new Vector3(1F, 0.7F, 1F) * LastSlash.Range;
 
             if (Target != null)
             {
@@ -185,11 +204,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         }
     }
 
-    /// <summary>
-    ///   Setup the polygon collider points and perform the collider cast to process the hitted objects
-    /// </summary>
-    /// <returns> True if the hit is not blocked, false if the hit is blocked </returns>
-    private void CollidersCast()
+    private void SetupPolygonCollider()
     {
         castCollider.offset = LastSlash.Offset;
         if (colliderPoints.Length != colliderQuality + 1)
@@ -220,7 +235,14 @@ public partial class Sword : Weapon, ICommonFixedUpdate
             axis = Quaternion.AngleAxis(stride, Vector3.forward) * axis;
         }
         castCollider.SetPath(0, colliderPoints);
+    }
 
+    /// <summary>
+    ///   Setup the polygon collider points and perform the collider cast to process the hitted objects
+    /// </summary>
+    /// <returns> True if the hit is not blocked, false if the hit is blocked </returns>
+    private void CollidersCast()
+    {
         RaycastHit2D[] res = new RaycastHit2D[8];
         castCollider.enabled = true;
         int amount = castCollider.Cast(Vector2.right, res, 0F);

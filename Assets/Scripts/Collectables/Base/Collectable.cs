@@ -41,7 +41,7 @@ public abstract class Collectable<Target> : MonoBehaviour, ICollectable<Target> 
 
     private void FixedUpdate()
     {
-        if (!Grounded && Physics.Raycast(transform.position, Vector3.down, 0.85F/*, LayerMask.GetMask(Global.Layers.ENVIROMENT_LAYER)*/))
+        if (!Grounded && Physics2D.Raycast(transform.position, Vector3.down, 0.85F/*, LayerMask.GetMask(Global.Layers.ENVIROMENT_LAYER)*/))
         {
             Grounded = true;
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0F, rigidbody.velocity.z);
@@ -53,7 +53,7 @@ public abstract class Collectable<Target> : MonoBehaviour, ICollectable<Target> 
         }
         else
         {
-            rigidbody.AddForce(Physics.gravity * 4F, ForceMode.Acceleration);
+            rigidbody.AddForce(Physics2D.gravity * 4F, ForceMode.Acceleration);
         }
     }
 

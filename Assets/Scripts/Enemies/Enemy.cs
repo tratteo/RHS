@@ -10,11 +10,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, IElementOfInterest, IAgent, IHealthHolder, IShadowOwner
+public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, IElementOfInterest, IAgent, IHealthHolder, IDescribable
 {
     public enum Status { ATTACKING, IDLING }
 
     private readonly Collider2D[] senseBuffer = new Collider2D[8];
+    [SerializeField] private SerializedDescribable describable;
     [Header("Parameters")]
     [SerializeField] private float maxHealth;
     [SerializeField] private float senseRadius = 5F;
@@ -46,15 +47,13 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public Status CurrentStatus { get; private set; }
 
-    public virtual float ThresholdDistance => 10F;
+    public virtual float ThresholdDistance => 20F;
 
     public Rigidbody2D Rigidbody { get; private set; }
 
     public ValueContainerSystem HealthSystem { get; private set; }
 
     protected Vector2 TargetVelocity { get; private set; }
-
-    public event Action<bool> OnChangeGroundedState;
 
     public event Action OnDeath;
 
@@ -146,6 +145,14 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
         TargetVelocity = direction.normalized * movementSpeed;
     }
 
+    public string GetId() => describable.GetId();
+
+    public string GetName() => describable.GetName();
+
+    public Sprite GetIcon() => describable.GetIcon();
+
+    public string GetDescription() => describable.GetDescription();
+
     protected virtual void OnEnable()
     {
         CommonUpdateManager.Register(this);
@@ -212,28 +219,28 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     protected virtual void DetectBounds()
     {
         RaycastHit2D hit;
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.right, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.ENEMIES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.right, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.left, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.ENEMIES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.left, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.up, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.ENEMIES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.up, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.down, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.ENEMIES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.down, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {

@@ -31,6 +31,6 @@ public class Linear : Projectile, IDeflectable
     {
         base.OnObjectSpawn();
         Rigidbody.velocity = Vector3.zero;
-        Rigidbody.AddForce(transform.forward * speed, ForceMode.VelocityChange);
+        Rigidbody.AddForce(transform.right * speed, ForceMode2D.Impulse);
     }
 }

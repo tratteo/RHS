@@ -51,7 +51,7 @@ MonoBehaviour:
   cooldown: 0
   channelTime: 0
   vulnerabilityTime:
-    min: 1
+    min: 1.5
     max: 2.5
   slashes:
   - delay:

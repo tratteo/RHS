@@ -12,7 +12,7 @@ public class Shooter : Weapon
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject projectilePrefab;
 
-    public void TriggerShoot()
+    public Projectile TriggerShoot()
     {
         // Debug.Log(firePoint == null);
         GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, projectilePrefab.name, firePoint.position, firePoint.rotation);
@@ -23,16 +23,10 @@ public class Shooter : Weapon
         }
         else
         {
-            projectile.SetDamage(GetDamage());
-            if (Owner.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
-            {
-                projectile.gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
-            }
-            else if (Owner.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
-            {
-                projectile.gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
-            }
+            projectile.DamageMultiplier(GeneralDamageMultiplier);
+            projectile.SetupLayer(Owner);
         }
+        return projectile;
     }
 
     protected override void Start()

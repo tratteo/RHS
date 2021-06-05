@@ -11,23 +11,22 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour, ICommonUpdate
 {
     [Range(-90F, 90F)] [SerializeField] private float idleRotation;
-    [SerializeField] private float baseDamage = 5F;
     [SerializeField, Guarded] private Transform weaponTransform;
     private SpriteRenderer spriteRenderer;
-    private float hitDamageMultiplier = 1F;
+
     private float offsetRotation;
     private float targetRotation;
     private float returnToIdleTimer = 0F;
 
     public bool IsActive { get; private set; }
 
+    public float GeneralDamageMultiplier { get; set; } = 1F;
+
     public float ScaleSign => Mathf.Sign(OwnerObj.transform.localScale.x);
 
     public Transform WeaponTransform => weaponTransform;
 
     public IAgent Owner { get; private set; }
-
-    public float BaseDamage { get => baseDamage; set => baseDamage = value; }
 
     protected float IdleRotation => idleRotation;
 
@@ -43,21 +42,10 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         OwnerObj = (owner as MonoBehaviour).gameObject;
     }
 
-    public virtual void SetOwner(IAgent owner, float damage)
-    {
-        SetOwner(owner);
-        baseDamage = damage;
-    }
-
     public virtual void SetActive(bool state)
     {
         if (IsActive == state) return;
         IsActive = state;
-    }
-
-    public virtual void SetHitDamageMultiplier(float multiplier = 1F)
-    {
-        hitDamageMultiplier = multiplier;
     }
 
     public bool HasTarget()
@@ -106,11 +94,6 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         returnToIdleTimer = 2F;
     }
 
-    protected float GetDamage()
-    {
-        return GetDamageMultiplier() * baseDamage;
-    }
-
     protected virtual void Awake()
     {
         spriteRenderer = weaponTransform.GetComponent<SpriteRenderer>();
@@ -119,13 +102,6 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
     protected virtual void Start()
     {
         CommonUpdateManager.Register(this);
-    }
-
-    private float GetDamageMultiplier()
-    {
-        float res = hitDamageMultiplier;
-        hitDamageMultiplier = 1F;
-        return res;
     }
 
     private void OnEnable()
