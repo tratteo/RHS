@@ -21,7 +21,8 @@ public class LevelSelectorUI : MonoBehaviour
         levels.ForEach(l =>
         {
             GameObject obj = Instantiate(levelObjectPrefab, content);
-            obj.GetComponentInChildren<Text>().text = l.GetName();
+            obj.transform.GetFirstComponentInChildrenWithName<Text>("Name", true).text = l.GetName();
+            obj.transform.GetFirstComponentInChildrenWithName<Text>("Description", true).text = l.GetDescription();
             obj.GetComponentInChildren<GButton>().AddOnReleasedCallback(new Callback(() =>
             {
                 GameDaemon.Instance.AddPersistentResource(GameDaemon.LOADED_LEVEL, l);

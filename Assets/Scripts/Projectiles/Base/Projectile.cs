@@ -12,6 +12,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 {
     protected List<StatusEffect> onHitEffects;
     protected List<string> collideTagExceptions;
+    [Header("Projectile")]
     [SerializeField] private float baseDamage = 1F;
     private float counterAttackDamageMultiplier = 1F;
     private bool critical = false;
@@ -33,11 +34,11 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
     {
         if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES)))
         {
-            return LayerMask.NameToLayer(Layers.FRIENDLIES);
+            return LayerMask.GetMask(Layers.FRIENDLIES);
         }
         else if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.PROJECTILES)))
         {
-            return LayerMask.NameToLayer(Layers.HOSTILES);
+            return LayerMask.GetMask(Layers.HOSTILES);
         }
         return ~0;
     }

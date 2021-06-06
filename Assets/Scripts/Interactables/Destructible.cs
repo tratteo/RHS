@@ -11,9 +11,8 @@ using UnityEngine;
 public class Destructible : MonoBehaviour, IHealthHolder
 {
     [SerializeField] private float resistance = 5F;
+    [SerializeField] private bool deactivate = false;
     private ValueContainerSystem resistanceSystem;
-
-    public event Action OnDeath;
 
     public void Damage(float amount)
     {
@@ -27,9 +26,30 @@ public class Destructible : MonoBehaviour, IHealthHolder
         //resistanceSystem.Increase(amount);
     }
 
+    private void OnExhaust()
+    {
+        if (deactivate)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnEnable()
+    {
+        resistanceSystem.OnExhaust += OnExhaust;
+    }
+
     private void Awake()
     {
         resistanceSystem = new ValueContainerSystem(resistance);
-        resistanceSystem.OnExhaust += () => Destroy(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        resistanceSystem.OnExhaust -= OnExhaust;
     }
 }

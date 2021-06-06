@@ -8,12 +8,12 @@ using UnityEngine;
 
 public class Linear : Projectile, IDeflectable
 {
+    public bool canBeDeflected = true;
     [SerializeField] private float speed = 10F;
-
-    public bool CanBeDeflected { get; private set; } = true;
 
     public void Deflect(IAgent agent)
     {
+        if (!canBeDeflected) return;
         if (agent.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
         {
             gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
@@ -24,7 +24,7 @@ public class Linear : Projectile, IDeflectable
         }
 
         Rigidbody.velocity = -Rigidbody.velocity;
-        CanBeDeflected = false;
+        canBeDeflected = false;
     }
 
     public override void OnObjectSpawn()

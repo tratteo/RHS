@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : Blocker.cs
+//
+// All Rights Reserved
+
+using UnityEngine;
 
 public class Blocker : MonoBehaviour
 {

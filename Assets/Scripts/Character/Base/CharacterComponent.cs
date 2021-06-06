@@ -15,11 +15,13 @@ public class CharacterComponent : MonoBehaviour, ICommonUpdate, ICommonFixedUpda
 
     public Rigidbody2D Rigidbody { get; private set; }
 
-    protected CharacterChannelEvent EventChannel => eventChannel;
+    protected CharacterChannelEvent EventBus => eventChannel;
 
     protected Collider2D Collider { get; private set; }
 
     protected CharacterManager Manager { get; private set; } = null;
+
+    protected bool Active { get; private set; } = true;
 
     public void SetManager(CharacterManager manager)
     {
@@ -36,18 +38,18 @@ public class CharacterComponent : MonoBehaviour, ICommonUpdate, ICommonFixedUpda
 
     protected virtual void OnEnable()
     {
-        EventChannel.OnGameEnded += OnGameEnded;
+        EventBus.GameEndedEvent.Invocation += OnDeath;
         CommonUpdateManager.Register(this);
     }
 
-    protected virtual void OnGameEnded(bool win)
+    protected virtual void OnDeath(bool win)
     {
-        enabled = false;
+        Active = false;
     }
 
     protected virtual void OnDisable()
     {
-        EventChannel.OnGameEnded -= OnGameEnded;
+        EventBus.GameEndedEvent.Invocation -= OnDeath;
         CommonUpdateManager.Unregister(this);
     }
 

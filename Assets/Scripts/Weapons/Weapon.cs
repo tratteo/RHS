@@ -59,6 +59,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         {
             targetRotation = ScaleSign * Vector3.SignedAngle(Vector2.right, Target.GetSightPoint() - OwnerObj.transform.position, Vector3.forward);
             targetRotation += (ScaleSign * offsetRotation) + (ScaleSign * idleRotation);
+            spriteRenderer.flipX = Flipped * ScaleSign < 0;
         }
         else
         {
@@ -70,12 +71,12 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
             {
                 offsetRotation = 0F;
                 Flipped = 1F;
+                spriteRenderer.flipX = false;
             }
             targetRotation = offsetRotation + idleRotation;
         }
 
         WeaponTransform.localRotation = Quaternion.Euler(0F, 0F, targetRotation);
-        spriteRenderer.flipX = Flipped * ScaleSign > 0;
     }
 
     public void SetTarget(IElementOfInterest target)

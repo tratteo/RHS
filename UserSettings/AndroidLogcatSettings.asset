@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "e47ffcd6",
         "name": "com.Siamango.RoguelikeHS",
-        "processId": 8758,
+        "processId": 16465,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -192,6 +192,54 @@
             "deviceId": "e47ffcd6",
             "name": "com.Siamango.RoguelikeHS",
             "processId": 8758,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 12566,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 28366,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 12255,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 12258,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 16462,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 16463,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 16464,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 16465,
             "exited": false
         }
     ],

@@ -47,9 +47,10 @@ public class CharacterGUI : CharacterComponent
         CooldownUI.Attach(owner, cooldownUIPrefab, cooldownsParent);
     }
 
-    protected override void OnGameEnded(bool win)
+    protected override void OnDeath(bool win)
     {
-        base.OnGameEnded(win);
+        base.OnDeath(win);
+        joystick.gameObject.SetActive(false);
         victoryPanel.SetActive(win);
         defeatPanel.SetActive(!win);
     }
@@ -61,10 +62,34 @@ public class CharacterGUI : CharacterComponent
         dodgeButton.gameObject.GetComponentInChildren<CooldownUI>(true).Bind(Manager.Kinematic);
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        EventBus.OnStunEvent.Invocation += OnStun;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventBus.OnStunEvent.Invocation -= OnStun;
+    }
+
     private void BindInput()
     {
         dodgeButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction))));
         attackButton.AddOnLongPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.PRIMARY_ABILITY))));
         attackButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.BASE_ATTACK))));
+    }
+
+    private void OnStun(bool stun)
+    {
+        if (stun)
+        {
+            Manager.GUI.SetInteraction(Assets.Sprites.Stun);
+        }
+        else
+        {
+            Manager.GUI.SetInteraction();
+        }
     }
 }

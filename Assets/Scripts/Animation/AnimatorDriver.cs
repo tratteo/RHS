@@ -1,6 +1,6 @@
 // Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : CharacterAnimator.cs
+// Package com.Siamango.RHS : AnimatorDriver.cs
 //
 // All Rights Reserved
 

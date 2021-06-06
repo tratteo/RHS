@@ -72,6 +72,30 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-5851287274935559111
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2524ea6706ec39c47816eb41eb3db412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5762666101132996521
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2524ea6706ec39c47816eb41eb3db412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1102 &-4312833967656443194
 AnimatorState:
   serializedVersion: 6
@@ -111,7 +135,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7736967013807070780}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -5762666101132996521}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -120,7 +145,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: 7400000, guid: caae7653ebcba9e4d8a2be1fc0e49ad1, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -138,7 +163,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 5383932858884416294}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -5851287274935559111}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -147,7 +173,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: 7400000, guid: caae7653ebcba9e4d8a2be1fc0e49ad1, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -376,18 +402,18 @@ MonoBehaviour:
   movementSpeedMultiplier: 1
   accelerationMultiplier: 1
   movementUpdate:
-    min: 0.5
-    max: 1
+    min: 0.25
+    max: 0.5
   damageMultiplier: 1
   abilityInitialTime: 4
   abilityUpdateTime:
-    min: 1
-    max: 2
+    min: 2
+    max: 4
   abilitiesPrefabs:
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   shootUpdate:
-    min: 100
-    max: 100
+    min: 0.5
+    max: 1
 --- !u!1102 &6254476953192550591
 AnimatorState:
   serializedVersion: 6
@@ -454,20 +480,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc3ff123386ca54ba3e7fc5a923d40d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeedMultiplier: 1
-  accelerationMultiplier: 1
+  movementSpeedMultiplier: 1.5
+  accelerationMultiplier: 1.5
   movementUpdate:
-    min: 0.5
-    max: 1
-  damageMultiplier: 1
+    min: 0.25
+    max: 0.5
+  damageMultiplier: 1.4
   abilityInitialTime: 4
   abilityUpdateTime:
-    min: 1
-    max: 2
-  abilitiesPrefabs: []
+    min: 2
+    max: 4
+  abilitiesPrefabs:
+  - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   shootUpdate:
-    min: 0
-    max: 0
+    min: 0.2
+    max: 0.5
 --- !u!1102 &7511989360236268475
 AnimatorState:
   serializedVersion: 6
@@ -509,17 +536,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca121559670e69d429616d180b27fd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeedMultiplier: 1
-  accelerationMultiplier: 1
+  movementSpeedMultiplier: 1.25
+  accelerationMultiplier: 1.25
   movementUpdate:
-    min: 0.5
-    max: 1
-  damageMultiplier: 1
+    min: 0.25
+    max: 0.5
+  damageMultiplier: 1.2
   abilityInitialTime: 4
   abilityUpdateTime:
-    min: 1
-    max: 2
-  abilitiesPrefabs: []
+    min: 2
+    max: 4
+  abilitiesPrefabs:
+  - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   shootUpdate:
-    min: 0.5
-    max: 1.25
+    min: 0.3
+    max: 0.75

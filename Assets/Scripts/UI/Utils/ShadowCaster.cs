@@ -1,4 +1,10 @@
-﻿using GibFrame.Performance;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : ShadowCaster.cs
+//
+// All Rights Reserved
+
+using GibFrame.Performance;
 using UnityEngine;
 
 public class ShadowCaster : MonoBehaviour, ICommonUpdate

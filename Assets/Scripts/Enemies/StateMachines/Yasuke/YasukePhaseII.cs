@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : SlayerPhaseII.cs
+// Package com.Siamango.RHS : YasukePhaseII.cs
 //
 // All Rights Reserved
 

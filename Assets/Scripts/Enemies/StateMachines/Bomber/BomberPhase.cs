@@ -1,8 +1,16 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : BomberPhase.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using UnityEngine;
 
 public class BomberPhase : BossPhaseStateMachine
 {
+    public const int CLUSTER_GRENADES_INDEX = 1;
+    public const int GRENADES_INDEX = 0;
     [Header("Bomber")]
     [SerializeField] private RandomizedFloat shootUpdate;
     private float shootTimer;
@@ -34,25 +42,29 @@ public class BomberPhase : BossPhaseStateMachine
             }
             else
             {
-                Launcher.TriggerShoot(Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) * 0.75F);
+                Launcher.TriggerShoot(Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) * 0.825F);
                 shootTimer = shootUpdate;
             }
         }
     }
 
-    protected override float GetAttackRange() => 10F;
+    protected override float GetAttackRange() => 8.5F;
 
     protected override Vector3 GetMovementDirection()
     {
         Vector2 dir = (Owner.transform.position - Owner.TargetContext.Transform.position).normalized;
-        if (Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) > GetAttackRange())
+        float distance = Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position);
+        if (distance > GetAttackRange())
         {
-            return UnityEngine.Random.value < 0.2F ? Vector2.zero : -dir;
+            return -dir.Perturbate();
+        }
+        else if (distance < GetAttackRange() * 0.75F)
+        {
+            return dir.Perturbate();
         }
         else
         {
             dir = UnityEngine.Random.value < 0.5F ? Quaternion.AngleAxis(90F, Vector3.forward) * dir : Quaternion.AngleAxis(-90F, Vector3.forward) * dir;
-            Debug.DrawRay(Owner.transform.position, dir, Color.red, 0.5F);
             return dir;
         }
     }

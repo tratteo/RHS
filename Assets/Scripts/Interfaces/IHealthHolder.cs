@@ -4,12 +4,8 @@
 //
 // All Rights Reserved
 
-using System;
-
 public interface IHealthHolder
 {
-    event Action OnDeath;
-
     void Damage(float amount);
 
     void Heal(float amount);

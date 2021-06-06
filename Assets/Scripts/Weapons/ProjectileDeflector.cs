@@ -43,10 +43,7 @@ public class ProjectileDeflector : MonoBehaviour
             IDeflectable deflectable;
             if ((deflectable = other.gameObject.GetComponent<IDeflectable>()) != null)
             {
-                if (deflectable.CanBeDeflected)
-                {
-                    deflectable.Deflect(Owner);
-                }
+                deflectable.Deflect(Owner);
             }
         }
     }

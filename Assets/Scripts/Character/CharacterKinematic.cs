@@ -6,6 +6,7 @@
 
 using GibFrame;
 using GibFrame.Performance;
+using System;
 using UnityEngine;
 
 public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody
@@ -22,6 +23,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
     [SerializeField] private int dodgesCount = 3;
     [SerializeField] private float dodgeCooldown = 4F;
     [SerializeField] private int invulnerabilityTimeSteps = 10;
+    [Header("References")]
+    [SerializeField] private ParticleSystem footstepsSystem;
+    private ParticleSystemRenderer footstepsSystemRenderer;
     private Vector2 traslation;
     private float dodgeTimer = 0F;
     private int invulnerabilityCurrentSteps;
@@ -29,7 +33,11 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
     private int dodgesCharges = 0;
     private Vector3 externVelocity = Vector2.zero;
 
-    private bool IsDodging => dodgeTimer > 0F;
+    public bool IsInvulnerable => invulnerabilityCurrentSteps > 0;
+
+    public bool IsDodging => dodgeTimer > 0F;
+
+    public event Action<bool> OnInvulnerability;
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
@@ -45,11 +53,11 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
             if (invulnerabilityCurrentSteps > 0)
             {
                 invulnerabilityCurrentSteps--;
-            }
-            else if (invulnerabilityCurrentSteps == 0)
-            {
-                EventChannel.BroadcastInvulnerability(false);
-                invulnerabilityCurrentSteps = -1;
+                if (invulnerabilityCurrentSteps <= 0)
+                {
+                    OnInvulnerability?.Invoke(false);
+                    invulnerabilityCurrentSteps = 0;
+                }
             }
         }
     }
@@ -67,7 +75,7 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
             if (dodgeTimer <= 0)
             {
                 dodgeTimer = 0F;
-                EventChannel.BroadcastInvulnerability(false);
+                OnInvulnerability?.Invoke(false);
             }
         }
 
@@ -76,8 +84,6 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            //externVelocity += new Vector2(transform.right.x, transform.right.y) * 20F;
-            // Rigidbody.AddForce(transform.right * 2000F, ForceMode2D.Impulse);
             inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, transform.right));
         }
     }
@@ -102,23 +108,38 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         externVelocity += force;
     }
 
+    protected override void OnDeath(bool win)
+    {
+        base.OnDeath(win);
+        traslation = Vector2.zero;
+        animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
+    }
+
     protected override void Awake()
     {
         base.Awake();
         rechargeDodgesJob = new UpdateJob(new Callback(RechargeDodge), dodgeCooldown);
         dodgesCharges = dodgesCount;
+        footstepsSystemRenderer = footstepsSystem.GetComponent<ParticleSystemRenderer>();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+        EventBus.OnStunEvent.Invocation += OnStun;
         inputChannel.OnEvent += OnInput;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+        EventBus.OnStunEvent.Invocation -= OnStun;
         inputChannel.OnEvent -= OnInput;
+    }
+
+    private void OnStun(bool stun)
+    {
+        Manager.Kinematic.Move(Vector2.zero);
     }
 
     private void RechargeDodge()
@@ -134,6 +155,12 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         switch (data.Type)
         {
             case Inputs.InputType.MOVE:
+                if (!Active || Manager.Combat.Stunned)
+                {
+                    animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
+                    return;
+                }
+
                 Inputs.DirectionInputData directionData = data as Inputs.DirectionInputData;
                 Move(directionData.Direction);
                 if (Mathf.Approximately(directionData.Direction.magnitude, 0F))
@@ -143,6 +170,11 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 else
                 {
                     animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, directionData.Direction.magnitude));
+                    if (UnityEngine.Random.value < 0.01F)
+                    {
+                        footstepsSystem.Play();
+                        footstepsSystemRenderer.flip = new Vector3(Rigidbody.velocity.x > 0 ? 1F : -1F, 0F, 0F);
+                    }
                 }
                 break;
 
@@ -150,10 +182,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 if (IsDodging || dodgesCharges < 1) return;
                 Inputs.DirectionInputData dodgeDir = data as Inputs.DirectionInputData;
                 AddExternalForce(dodgeDir.Direction * dodgeForce);
-                //Rigidbody.AddForce(dodgeDir.Direction * dodgeForce, ForceMode2D.Impulse);
                 dodgeTimer = dodgeDuration;
                 invulnerabilityCurrentSteps = invulnerabilityTimeSteps;
-                EventChannel.BroadcastInvulnerability(true);
+                OnInvulnerability?.Invoke(true);
                 dodgesCharges--;
                 if (!rechargeDodgesJob.Active)
                 {

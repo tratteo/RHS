@@ -27,7 +27,7 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
     public static Ability<TParent> Attach(GameObject abilityPrefab, TParent parent)
     {
         Ability<TParent> ability;
-        GameObject obj = Instantiate(abilityPrefab);
+        GameObject obj = Instantiate(abilityPrefab, Vector3.zero, Quaternion.identity);
         if ((ability = obj.GetComponent<Ability<TParent>>()) != null)
         {
             ability.Parent = parent;
@@ -39,9 +39,11 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
                     name = "AbilitiesHolder"
                 };
                 holderObj.transform.SetParent(parent.transform);
+                holderObj.transform.localPosition = Vector3.zero;
                 holder = holderObj.transform;
             }
             obj.transform.SetParent(holder);
+            obj.transform.localPosition = Vector3.zero;
             return ability;
         }
         else

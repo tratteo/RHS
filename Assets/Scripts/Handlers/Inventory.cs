@@ -8,7 +8,6 @@ using GibFrame;
 using GibFrame.SaveSystem;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public static class Inventory
 {

@@ -430,7 +430,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2059021641541260423, guid: 3892f00035efb9442bfdcedcbbd4bb86, type: 3}
+  m_Sprite: {fileID: -7530518988636886945, guid: 592ea33ae700b7e478388837aae26187, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -498,7 +498,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.2, y: 3.4}
+    oldSize: {x: 1.75, y: 2}
     newSize: {x: 3.2, y: 3.4}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -524,7 +524,7 @@ MonoBehaviour:
     name: Bomber
     icon: {fileID: 0}
     description: Boom!
-  maxHealth: 500
+  maxHealth: 750
   senseRadius: 30
   idleSpeed: 2
   runSpeed: 10
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2779607593840281960}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 054fa036395d3f4489f745924e6c023d, type: 3}
   m_Name: 
@@ -1216,6 +1216,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrenadeLauncher
       objectReference: {fileID: 0}
+    - target: {fileID: 4489651639985287314, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489651639985287314, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489651639985287314, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5552184355056075340, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1226,7 +1238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5552184355056075340, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.75
+      value: -0.35
       objectReference: {fileID: 0}
     - target: {fileID: 5552184355056075340, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1260,6 +1272,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7896442306833426594, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 28d47cbaafc98254f8d4f6184dff22cd, type: 3}
+    - target: {fileID: 9174745093445586111, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: projectilePrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174745093445586111, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: projectilePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 8474679064271465605, guid: 2c0cc5b0138962e40b85fede9d8b4eba, type: 3}
+    - target: {fileID: 9174745093445586111, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
+      propertyPath: projectilePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 7736206838423945981, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70db2a0b86dd6ea4280739ee10e8ade8, type: 3}
 --- !u!114 &4358645601471883737 stripped

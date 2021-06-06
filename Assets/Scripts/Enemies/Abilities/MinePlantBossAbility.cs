@@ -1,4 +1,10 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : MinePlantBossAbility.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using GibFrame.ObjectPooling;
 using System.Collections;
 using UnityEngine;
@@ -6,12 +12,6 @@ using UnityEngine;
 public class MinePlantBossAbility : Ability<BossEnemy>
 {
     [SerializeField, Guarded] private GameObject minePrefab;
-
-    public override void CommonUpdate(float deltaTime)
-    {
-        base.CommonUpdate(deltaTime);
-        // Debug.Log(IsPerforming);
-    }
 
     protected override IEnumerator Execute_C()
     {

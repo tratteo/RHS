@@ -1,4 +1,10 @@
-﻿public class GrenadeLauncher : Shooter
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : GrenadeLauncher.cs
+//
+// All Rights Reserved
+
+public class GrenadeLauncher : Shooter
 {
     public void TriggerShoot(float force)
     {

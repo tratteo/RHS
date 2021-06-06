@@ -10,12 +10,21 @@ using UnityEngine;
 public class Shooter : Weapon
 {
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject[] projectilePrefabs;
+    private int prefabIndex = 0;
+
+    public void SetPrefabIndex(int index)
+    {
+        if (index > 0 && index < projectilePrefabs.Length)
+        {
+            prefabIndex = index;
+        }
+    }
 
     public Projectile TriggerShoot()
     {
         // Debug.Log(firePoint == null);
-        GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, projectilePrefab.name, firePoint.position, firePoint.rotation);
+        GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, projectilePrefabs[prefabIndex].name, firePoint.position, firePoint.rotation);
         Projectile projectile = obj.GetComponent<Projectile>();
         if (!projectile)
         {
@@ -29,25 +38,12 @@ public class Shooter : Weapon
         return projectile;
     }
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
-        InitializePool();
-    }
-
-    private void InitializePool()
-    {
-        PoolCategory category = PoolManager.Instance.GetCategory(Layers.PROJECTILES);
-        if (category == null)
+        base.Awake();
+        for (int i = 0; i < projectilePrefabs.Length; i++)
         {
-            category = new PoolCategory(Layers.PROJECTILES);
-        }
-        Pool pool = category.GetPool(projectilePrefab.name);
-        if (pool == null)
-        {
-            pool = new Pool(projectilePrefab.name, projectilePrefab, 50);
-            category.AddPool(pool);
-            PoolManager.Instance.AddCategory(category);
+            GameDaemon.Instance.RequestPool(Layers.PROJECTILES, projectilePrefabs[i], 50);
         }
     }
 }

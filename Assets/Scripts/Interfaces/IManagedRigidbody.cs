@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : IManagedRigidbody.cs
+//
+// All Rights Reserved
+
+using UnityEngine;
 
 public interface IManagedRigidbody
 {

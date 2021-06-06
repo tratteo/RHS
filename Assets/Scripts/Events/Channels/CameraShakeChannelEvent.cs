@@ -9,16 +9,36 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CameraShakeChannel", menuName = "Scriptable Objects/Channels/CameraShakeChannel", order = 0)]
 public class CameraShakeChannelEvent : SingleParamChannelEvent<CameraShakeChannelEvent.Shake>
 {
+    public static readonly Shake.Parameters EXPLOSION = new Shake.Parameters(0.15F, 4F, 0.15F);
+    public static readonly Shake.Parameters HEAVY_EXPLOSION = new Shake.Parameters(0.2F, 8F, 0.15F);
+    public static readonly Shake.Parameters HIT = new Shake.Parameters(0.075F, 6F, 0.3F);
+
     public class Shake
     {
-        public float Duration { get; private set; }
+        public Parameters Params { get; private set; }
 
-        public float Amplitude { get; private set; }
+        public Vector3 WorldPos { get; private set; }
 
-        public Shake(float duration, float amplitude)
+        public Shake(Parameters parameters, Vector3 worldPos)
         {
-            Duration = duration;
-            Amplitude = amplitude;
+            Params = parameters;
+            WorldPos = worldPos;
+        }
+
+        public class Parameters
+        {
+            public float Duration { get; private set; }
+
+            public float Amplitude { get; private set; }
+
+            public float Frequency { get; private set; }
+
+            public Parameters(float duration, float amplitude, float frequency)
+            {
+                Duration = duration;
+                Amplitude = amplitude;
+                Frequency = frequency;
+            }
         }
     }
 }

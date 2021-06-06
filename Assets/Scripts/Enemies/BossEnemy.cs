@@ -79,6 +79,7 @@ public class BossEnemy : Enemy
         if (status == Status.IDLING)
         {
             Collider.enabled = true;
+            Move(Vector2.zero);
             stateMachine.SetBool(idleTransitionId, true);
             for (int i = 1; i < phasesAmount + 1; i++)
             {

@@ -4,6 +4,8 @@
 //
 // All Rights Reserved
 
+using GibFrame;
+using GibFrame.Performance;
 using UnityEngine;
 
 public class CharacterManager : MonoBehaviour

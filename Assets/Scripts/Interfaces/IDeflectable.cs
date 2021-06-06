@@ -6,7 +6,5 @@
 
 public interface IDeflectable
 {
-    bool CanBeDeflected { get; }
-
     void Deflect(IAgent agent);
 }

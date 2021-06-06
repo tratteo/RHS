@@ -9,7 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, IHealthHolder
+public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest
 {
     [Header("Channels")]
     [SerializeField, Guarded] private CameraShakeChannelEvent cameraShakeChannel;
@@ -29,32 +29,24 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
     private UpdateJob detectElementsOfInterestJob;
     private ValueContainerSystem healthSystem;
     private float attackTimer = 0F;
-    private bool canBeDamaged = true;
     private float lookSign = 1F;
+    private float stunTimer = 0F;
+
+    public bool Stunned => stunTimer > 0F;
 
     public Ability<CharacterManager> EquippedAbility { get; private set; }
 
-    public float ThresholdDistance => 20F;
-
     public bool CanAttack => attackTimer <= 0F;
 
-    public event Action OnDeath;
+    public float ThresholdDistance => 20F;
+
+    public event Action<bool> OnStun;
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
         if (focusedTarget == null)
         {
             transform.localScale = new Vector3(lookSign, 1F, 1F);
-            //if (Rigidbody.velocity != Vector2.zero)
-            //{
-            //    if (Rigidbody.velocity.x < 0F)
-            //    {
-            //    }
-            //    else
-            //    {
-            //        transform.localScale = new Vector3(1F, 1F, 1F);
-            //    }
-            //}
             sword.ClearTarget();
         }
         else if (focusedTarget as Component)
@@ -82,19 +74,25 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
                 attackTimer = 0F;
             }
         }
+        if (stunTimer > 0F)
+        {
+            stunTimer -= deltaTime;
+            if (stunTimer <= 0)
+            {
+                stunTimer = 0F;
+                OnStun?.Invoke(false);
+                Manager.GUI.SetInteraction();
+            }
+        }
     }
 
     public IAgent.FactionRelation GetFactionRelation() => IAgent.FactionRelation.FRIENDLY;
 
-    public Vector3 GetSightPoint() => transform.position;
-
     public Weapon GetWeapon() => sword;
-
-    public IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MANDATORY;
 
     public void Damage(float amount)
     {
-        if (canBeDamaged)
+        if (!Manager.Kinematic.IsInvulnerable)
         {
             healthSystem.Decrease(amount);
         }
@@ -107,6 +105,16 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
 
     public float GetHealthPercentage() => healthSystem.GetPercentage();
 
+    public void Stun(float duration)
+    {
+        stunTimer = duration;
+        OnStun?.Invoke(true);
+    }
+
+    public Vector3 GetSightPoint() => transform.position;
+
+    public IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MANDATORY;
+
     protected override void Awake()
     {
         base.Awake();
@@ -117,8 +125,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
         healthSystem = new ValueContainerSystem(maxHealth);
         healthBar.Bind(healthSystem);
         healthSystem.OnExhaust += Die;
-        healthSystem.OnExhaust += OnDeath;
-        healthSystem.OnExhaust += () => EventChannel.BroadcastOnGameEnded(false);
+        healthSystem.OnExhaust += () => EventBus.GameEndedEvent.Broadcast(false);
     }
 
     protected override void Start()
@@ -139,19 +146,12 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
     {
         base.OnEnable();
         inputChannel.OnEvent += OnInput;
-        EventChannel.OnInvulnerabilityChanged += OnInvulnerabilityChanged;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         inputChannel.OnEvent -= OnInput;
-        EventChannel.OnInvulnerabilityChanged -= OnInvulnerabilityChanged;
-    }
-
-    private void OnInvulnerabilityChanged(bool state)
-    {
-        canBeDamaged = !state;
     }
 
     private void Die()
@@ -167,7 +167,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IElementOfInterest, I
             case Inputs.InputType.BASE_ATTACK:
                 if (CanAttack)
                 {
-                    sword.TriggerSlash(baseSlash.OnComplete(() => cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(0.08F, 5F))));
+                    sword.TriggerSlash(baseSlash.OnComplete(() => cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.HIT, transform.position))));
                     attackTimer = attackCooldown;
                 }
                 break;

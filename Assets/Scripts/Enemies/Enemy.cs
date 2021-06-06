@@ -223,28 +223,28 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
         {
             if (!hit.collider.isTrigger)
             {
-                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
+                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
         if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.left, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
-                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
+                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
         if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.up, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
-                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
+                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
         if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.down, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
-                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate(0.5F).normalized);
+                Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
     }

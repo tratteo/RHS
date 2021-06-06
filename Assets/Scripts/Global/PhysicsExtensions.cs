@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : PhysicsExtensions.cs
+//
+// All Rights Reserved
+
+using UnityEngine;
 
 public static class PhysicsExtensions
 {

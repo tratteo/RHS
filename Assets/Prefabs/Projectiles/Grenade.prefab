@@ -74,8 +74,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 0.6341174, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 9172a135022d77042a8e951b1f1c9d1f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -113,7 +113,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8474679064271465605}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -136,5 +136,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseDamage: 150
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  detonationTime: 1.5
-  detonationRadius: 4
+  detonationTime:
+    min: 0.75
+    max: 1
+  detonationRadius: 2
+  torqueOnLaunch: 0
+  randomTorque:
+    min: 0
+    max: 0

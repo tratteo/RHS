@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8991617445082287924}
   - component: {fileID: 4739822610738964375}
   - component: {fileID: 4427697365529952301}
+  - component: {fileID: 3860453048847670465}
+  - component: {fileID: -530845686572678035}
   - component: {fileID: 7502112561493670255}
   m_Layer: 0
   m_Name: Mine
@@ -113,7 +115,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3914466772948077725}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -122,6 +124,35 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &3860453048847670465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914466772948077725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e0a96f21a6e734cbc0383790af0cfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thresholdDistance: 5
+  priority: 3
+  sightPointOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &-530845686572678035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914466772948077725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d64a74d03f367204390ad01d75f1a1e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resistance: 100
+  deactivate: 1
 --- !u!114 &7502112561493670255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,5 +167,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseDamage: 300
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  explosionRadius: 8
-  explosionForce: 1000
+  explosionRadius: 2.5
+  explosionForce: 35
