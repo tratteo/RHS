@@ -32,14 +32,14 @@ public class CharacterGUI : CharacterComponent
 
     public void SetInteraction(Sprite icon, Color color)
     {
+        if (Manager.Combat.IsStunned) return;
         interactionIndicator.sprite = icon;
         interactionIndicator.color = color;
     }
 
     public void SetInteraction(Sprite icon = null)
     {
-        interactionIndicator.sprite = icon != null ? icon : Assets.Sprites.Transparent;
-        interactionIndicator.color = Color.white;
+        SetInteraction(icon != null ? icon : Assets.Sprites.Transparent, Color.white);
     }
 
     public void BindCooldown(ICooldownOwner owner)
@@ -85,11 +85,13 @@ public class CharacterGUI : CharacterComponent
     {
         if (stun)
         {
-            Manager.GUI.SetInteraction(Assets.Sprites.Stun);
+            interactionIndicator.sprite = Assets.Sprites.Stun;
+            interactionIndicator.color = Color.white;
         }
         else
         {
-            Manager.GUI.SetInteraction();
+            interactionIndicator.sprite = Assets.Sprites.Transparent;
+            interactionIndicator.color = Color.white;
         }
     }
 }

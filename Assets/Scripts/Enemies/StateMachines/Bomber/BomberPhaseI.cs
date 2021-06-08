@@ -11,5 +11,6 @@ public class BomberPhaseI : BomberPhase
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+        //Launcher.SetPrefabIndex(CLUSTER_GRENADES_INDEX);
     }
 }

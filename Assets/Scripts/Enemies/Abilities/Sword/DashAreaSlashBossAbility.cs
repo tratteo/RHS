@@ -26,7 +26,7 @@ public class DashAreaSlashBossAbility : Ability<BossEnemy>
             slash.OnComplete(() => Parent.SetInteraction());
             Parent.Move(Vector2.zero);
             Vector3 axis = (Parent.transform.position - Parent.TargetContext.Transform.position).normalized;
-            Vector3 pos = Parent.TargetContext.Transform.position + (axis * 10F);
+            Vector3 pos = Parent.TargetContext.Transform.position + (axis * 12F);
             Parent.Dash(pos - Parent.transform.position, 4F);
             yield return new WaitForSeconds(waitTime);
             Parent.SetInteraction(Assets.Sprites.Exclamation, Color.red);

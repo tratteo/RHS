@@ -51,13 +51,15 @@ public class CharacterCamera : CharacterComponent
 
     private void ShakeCamera(CameraShakeChannelEvent.Shake shake)
     {
-        if (!Active) return;
-        Vector2 screenPos = mainCamera.WorldToViewportPoint(shake.WorldPos);
-        if (screenPos.x > 0F && screenPos.x < 1F && screenPos.y > 0F && screenPos.y < 1F)
-        {
-            noise.m_AmplitudeGain = shake.Params.Amplitude;
-            noise.m_FrequencyGain = shake.Params.Frequency;
-            shakeDuration = shake.Params.Duration;
-        }
+        if (!Active) return; noise.m_AmplitudeGain = shake.Params.Amplitude;
+        noise.m_FrequencyGain = shake.Params.Frequency;
+        shakeDuration = shake.Params.Duration;
+        //Vector2 screenPos = mainCamera.WorldToViewportPoint(shake.WorldPos);
+        //if (screenPos.x > 0F && screenPos.x < 1F && screenPos.y > 0F && screenPos.y < 1F)
+        //{
+        //    noise.m_AmplitudeGain = shake.Params.Amplitude;
+        //    noise.m_FrequencyGain = shake.Params.Frequency;
+        //    shakeDuration = shake.Params.Duration;
+        //}
     }
 }

@@ -9,6 +9,11 @@ public class ClusterGrenade : Grenade
     [SerializeField] private RandomizedFloat detonationForce;
     [SerializeField, Guarded] private GameObject clusterGrenadePrefab = null;
 
+    public override void Deflect(IAgent agent)
+    {
+        return;
+    }
+
     protected override void Detonate()
     {
         cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.EXPLOSION, transform.position));
@@ -25,10 +30,5 @@ public class ClusterGrenade : Grenade
     {
         base.Awake();
         GameDaemon.Instance.RequestPool(Layers.PROJECTILES, clusterGrenadePrefab, 50);
-    }
-
-    private void Start()
-    {
-        Launch(0F);
     }
 }

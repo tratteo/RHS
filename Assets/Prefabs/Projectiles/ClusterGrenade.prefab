@@ -99,13 +99,13 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 2
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &6952478793228242509
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -134,16 +134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de3ba21faf05074b8c2c94ff78c123f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 150
+  baseDamage: 0
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
   detonationTime:
     min: 0.75
     max: 1
-  detonationRadius: 2
-  torqueOnLaunch: 0
+  detonationRadius: 1
+  torqueOnLaunch: 1
   randomTorque:
-    min: 0
-    max: 0
+    min: 200
+    max: 360
   clusterDimension: 3
   detonationForce:
     min: 2

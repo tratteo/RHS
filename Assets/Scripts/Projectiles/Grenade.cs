@@ -12,15 +12,27 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
 {
     [Header("Channels")]
     [SerializeField, Guarded] protected CameraShakeChannelEvent cameraShakeChannel;
-    private readonly Collider2D[] detonationBuf = new Collider2D[8];
-    private bool canBeDeflected = false;
+    [Header("FX")]
+    [SerializeField] protected ParticleSystem explosionEffect;
+    private readonly Collider2D[] buf = new Collider2D[8];
+    private bool canBeDeflected = true;
     [Header("Parameters")]
     [SerializeField] private RandomizedFloat detonationTime;
-    [SerializeField] private float detonationRadius = 4F;
+    [SerializeField] private float explosionRadius = 4F;
     [Header("Movement")]
     [SerializeField] private bool torqueOnLaunch = false;
     [SerializeField] private RandomizedFloat randomTorque;
     private float detonationTimer = 0F;
+    private bool detonated = false;
+
+    private IHealthHolder healthHolder;
+
+    public override void OnObjectSpawn()
+    {
+        base.OnObjectSpawn();
+        detonated = false;
+        detonationTimer = 0F;
+    }
 
     public void CommonUpdate(float deltaTime)
     {
@@ -45,17 +57,17 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
         }
     }
 
-    public void Deflect(IAgent agent)
+    public virtual void Deflect(IAgent agent)
     {
         if (!canBeDeflected) return;
-        if (agent.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
-        {
-            gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
-        }
-        else if (agent.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
-        {
-            gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
-        }
+        //if (agent.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
+        //{
+        //    gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
+        //}
+        //else if (agent.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
+        //{
+        //    gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
+        //}
 
         Rigidbody.velocity = -Rigidbody.velocity;
         canBeDeflected = false;
@@ -70,29 +82,37 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     {
         if (!collideTagExceptions.Contains(collision.collider.tag))
         {
-            //Debug.Log("Detonate");
             Detonate();
         }
     }
 
     protected virtual void Detonate()
     {
+        if (detonated) return;
+        detonated = true;
         cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.EXPLOSION, transform.position));
-        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, detonationRadius, detonationBuf, GetActionLayer());
+        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, GetActionLayer());
+        if (explosionEffect)
+        {
+            explosionEffect.Play();
+            explosionEffect.transform.localScale = Vector3.one * explosionRadius;
+        }
+
         for (int i = 0; i < amount; i++)
         {
-            IHealthHolder healthHolder;
-            if ((healthHolder = detonationBuf[i].gameObject.GetComponent<IHealthHolder>()) != null)
+            if ((healthHolder = buf[i].gameObject.GetComponent<IHealthHolder>()) != null)
             {
                 healthHolder.Damage(GetDamage());
             }
             IEffectsReceiverHolder effectReceiver;
-            if ((effectReceiver = detonationBuf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
+            if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
             {
                 effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
             }
         }
-        gameObject.SetActive(false);
+        Collider.enabled = false;
+        Renderer.enabled = false;
+        new Timer(this, explosionEffect.main.duration, false, true, new Callback(() => gameObject.SetActive(false)));
     }
 
     private void OnEnable()
@@ -102,7 +122,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, detonationRadius);
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 
     private void OnDisable()

@@ -38,17 +38,17 @@ public class AnimatorDriver : MonoBehaviour
 
     private void OnAnimationEvent(AnimationChannelEvent.AnimationData data)
     {
-        if (currentPlaying == data.Id) return;
         switch (data.Id)
         {
             case RUN:
                 float speed = data.GetArgAs<float>();
-                //animator.SetFloat(speedHash, speed);
+                animator.SetFloat(speedHash, speed);
                 break;
 
             case IDLE:
                 break;
         }
+        if (currentPlaying == data.Id) return;
         animator.Play(data.Id, animationLayerIndex);
         currentPlaying = data.Id;
     }

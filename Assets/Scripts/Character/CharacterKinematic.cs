@@ -108,6 +108,11 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         externVelocity += force;
     }
 
+    public float GetCombinedSign(Vector3 vector)
+    {
+        return Mathf.Sign(transform.localScale.x * vector.x);
+    }
+
     protected override void OnDeath(bool win)
     {
         base.OnDeath(win);
@@ -155,7 +160,7 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         switch (data.Type)
         {
             case Inputs.InputType.MOVE:
-                if (!Active || Manager.Combat.Stunned)
+                if (!Active || Manager.Combat.IsStunned)
                 {
                     animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
                     return;
@@ -169,7 +174,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 }
                 else
                 {
-                    animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, directionData.Direction.magnitude));
+                    //Debug.Log(GetCombinedSign(directionData.Direction));
+                    animationChannelEvent.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, GetCombinedSign(directionData.Direction)));
+
                     if (UnityEngine.Random.value < 0.01F)
                     {
                         footstepsSystem.Play();

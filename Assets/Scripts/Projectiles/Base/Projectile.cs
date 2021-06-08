@@ -21,6 +21,8 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 
     public bool Grounded { get; private set; }
 
+    protected SpriteRenderer Renderer { get; private set; }
+
     protected Collider2D Collider { get; private set; } = null;
 
     protected Rigidbody2D Rigidbody { get; private set; } = null;
@@ -93,6 +95,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         Collider = GetComponent<Collider2D>();
+        Renderer = GetComponent<SpriteRenderer>();
         onHitEffects = new List<StatusEffect>();
         collideTagExceptions = new List<string>();
         damage = baseDamage;

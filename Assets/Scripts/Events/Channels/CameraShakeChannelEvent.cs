@@ -11,6 +11,7 @@ public class CameraShakeChannelEvent : SingleParamChannelEvent<CameraShakeChanne
 {
     public static readonly Shake.Parameters EXPLOSION = new Shake.Parameters(0.15F, 4F, 0.15F);
     public static readonly Shake.Parameters HEAVY_EXPLOSION = new Shake.Parameters(0.2F, 8F, 0.15F);
+    public static readonly Shake.Parameters HUGE_EXPLOSION = new Shake.Parameters(0.35F, 10F, 0.25F);
     public static readonly Shake.Parameters HIT = new Shake.Parameters(0.075F, 6F, 0.3F);
 
     public class Shake

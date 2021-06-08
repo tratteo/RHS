@@ -32,15 +32,13 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     private float lookSign = 1F;
     private float stunTimer = 0F;
 
-    public bool Stunned => stunTimer > 0F;
+    public bool IsStunned => stunTimer > 0F;
 
     public Ability<CharacterManager> EquippedAbility { get; private set; }
 
     public bool CanAttack => attackTimer <= 0F;
 
     public float ThresholdDistance => 20F;
-
-    public event Action<bool> OnStun;
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
@@ -80,8 +78,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             if (stunTimer <= 0)
             {
                 stunTimer = 0F;
-                OnStun?.Invoke(false);
-                Manager.GUI.SetInteraction();
+                EventBus.OnStunEvent.Broadcast(false);
             }
         }
     }
@@ -108,7 +105,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     public void Stun(float duration)
     {
         stunTimer = duration;
-        OnStun?.Invoke(true);
+        EventBus.OnStunEvent.Broadcast(true);
     }
 
     public Vector3 GetSightPoint() => transform.position;

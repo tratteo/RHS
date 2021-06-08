@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class Mine : Projectile
 {
+    [Header("FX")]
+    [SerializeField] protected ParticleSystem explosionEffect;
     private readonly Collider2D[] buf = new Collider2D[8];
     [Header("Channels")]
     [SerializeField, Guarded] private CameraShakeChannelEvent cameraShakeChannel;
@@ -21,6 +23,11 @@ public class Mine : Projectile
         if (!collideTagExceptions.Contains(collision.collider.tag))
         {
             cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.HEAVY_EXPLOSION, transform.position));
+            if (explosionEffect)
+            {
+                explosionEffect.Play();
+                explosionEffect.transform.localScale = Vector3.one * explosionRadius;
+            }
             int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, GetActionLayer());
             for (int i = 0; i < amount; i++)
             {

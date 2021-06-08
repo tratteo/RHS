@@ -11,7 +11,7 @@ public class GapCloserBossAbility : Ability<BossEnemy>
 {
     public override bool CanPerform()
     {
-        return base.CanPerform() && Vector2.Distance(Parent.transform.position, Parent.TargetContext.Transform.position) > 4F;
+        return base.CanPerform() && Vector2.Distance(Parent.transform.position, Parent.TargetContext.Transform.position) > 10F;
     }
 
     protected override IEnumerator Execute_C()
