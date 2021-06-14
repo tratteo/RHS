@@ -9,11 +9,10 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest
+public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IStatisticsProvider
 {
     [Header("Channels")]
-    [SerializeField, Guarded] private CameraShakeChannelEvent cameraShakeChannel;
-    [SerializeField, Guarded] private InputChannelEvent inputChannel;
+    [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
     [Header("Parameters")]
     [SerializeField] private float maxHealth = 250F;
     [SerializeField] private float baseDamage = 10F;
@@ -39,6 +38,8 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     public bool CanAttack => attackTimer <= 0F;
 
     public float ThresholdDistance => 20F;
+
+    public event Action<bool> OnStun;
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
@@ -78,7 +79,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             if (stunTimer <= 0)
             {
                 stunTimer = 0F;
-                EventBus.OnStunEvent.Broadcast(false);
+                OnStun?.Invoke(false);
             }
         }
     }
@@ -105,12 +106,17 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     public void Stun(float duration)
     {
         stunTimer = duration;
-        EventBus.OnStunEvent.Broadcast(true);
+        OnStun?.Invoke(true);
     }
 
     public Vector3 GetSightPoint() => transform.position;
 
     public IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MANDATORY;
+
+    public Statistic[] GetStats()
+    {
+        return new Statistic[] { new Statistic(StatisticsHub.HEALTH_PERCENTAGE, GetHealthPercentage()) };
+    }
 
     protected override void Awake()
     {
@@ -122,7 +128,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         healthSystem = new ValueContainerSystem(maxHealth);
         healthBar.Bind(healthSystem);
         healthSystem.OnExhaust += Die;
-        healthSystem.OnExhaust += () => EventBus.GameEndedEvent.Broadcast(false);
+        healthSystem.OnExhaust += () => GameEndedBus.Broadcast(false);
     }
 
     protected override void Start()
@@ -139,32 +145,15 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         Manager.GUI.BindCooldown(EquippedAbility);
     }
 
-    protected override void OnEnable()
+    protected override void OnInput(Inputs.InputData data)
     {
-        base.OnEnable();
-        inputChannel.OnEvent += OnInput;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        inputChannel.OnEvent -= OnInput;
-    }
-
-    private void Die()
-    {
-        Rigidbody.velocity = Vector2.zero;
-        Collider.enabled = false;
-    }
-
-    private void OnInput(Inputs.InputData data)
-    {
+        if (IsStunned) return;
         switch (data.Type)
         {
             case Inputs.InputType.BASE_ATTACK:
                 if (CanAttack)
                 {
-                    sword.TriggerSlash(baseSlash.OnComplete(() => cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.HIT, transform.position))));
+                    sword.TriggerSlash(baseSlash.OnComplete(() => cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HIT, transform.position))));
                     attackTimer = attackCooldown;
                 }
                 break;
@@ -181,6 +170,12 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
                 }
                 break;
         }
+    }
+
+    private void Die()
+    {
+        Rigidbody.velocity = Vector2.zero;
+        Collider.enabled = false;
     }
 
     private void DetectCloseElementsOfInterest()

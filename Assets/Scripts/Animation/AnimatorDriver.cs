@@ -4,40 +4,25 @@
 //
 // All Rights Reserved
 
-using GibFrame;
 using UnityEngine;
 
 public class AnimatorDriver : MonoBehaviour
 {
     public const string RUN = "run";
     public const string IDLE = "idle";
-    public const string DASH = "dash";
+    public const string DASH_F = "dash_f";
+    public const string DASH_B = "dash_b";
     private Animator animator;
-    [Header("Channels")]
-    [SerializeField, Guarded] private AnimationChannelEvent animationChannelEvent;
+
     [SerializeField] private int animationLayerIndex = 0;
+    [SerializeField] private string rotatedSuffix = "_mirror";
 
     private int speedHash;
     private string currentPlaying;
 
-    private void Awake()
+    public void DriveAnimation(AnimationData data)
     {
-        animator = GetComponent<Animator>();
-        speedHash = Animator.StringToHash("Speed");
-    }
-
-    private void OnEnable()
-    {
-        animationChannelEvent.OnEvent += OnAnimationEvent;
-    }
-
-    private void OnDisable()
-    {
-        animationChannelEvent.OnEvent -= OnAnimationEvent;
-    }
-
-    private void OnAnimationEvent(AnimationChannelEvent.AnimationData data)
-    {
+        string animId = data.Id;
         switch (data.Id)
         {
             case RUN:
@@ -48,8 +33,36 @@ public class AnimatorDriver : MonoBehaviour
             case IDLE:
                 break;
         }
-        if (currentPlaying == data.Id) return;
-        animator.Play(data.Id, animationLayerIndex);
-        currentPlaying = data.Id;
+        if (data.HorizontalRotated)
+        {
+            animId += rotatedSuffix;
+        }
+        if (currentPlaying == animId) return;
+        animator.Play(animId, animationLayerIndex);
+        currentPlaying = animId;
+    }
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        speedHash = Animator.StringToHash("Speed");
+    }
+
+    public class AnimationData
+    {
+        public string Id { get; private set; }
+
+        public object Arg { get; private set; }
+
+        public bool HorizontalRotated { get; private set; }
+
+        public AnimationData(string id, bool horizontalRotated = false, object args = null)
+        {
+            HorizontalRotated = horizontalRotated;
+            Id = id;
+            Arg = args;
+        }
+
+        public T GetArgAs<T>() => (T)Arg;
     }
 }

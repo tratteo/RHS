@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5803829066754800789}
   - component: {fileID: 7738368306661467427}
   - component: {fileID: 5803829066754800794}
+  - component: {fileID: 3736752658676139658}
   m_Layer: 0
   m_Name: Initializer
   m_TagString: Untagged
@@ -87,3 +88,17 @@ MonoBehaviour:
   abilities:
     characterAbilities:
     - {fileID: 4943380845929579821, guid: efdfe9af4f129324ab32683771faf589, type: 3}
+--- !u!114 &3736752658676139658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803829066754800798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eae07c7be32f1f3429055674e25e98ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  persistent: 0
+  flags: 0

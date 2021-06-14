@@ -5,13 +5,14 @@
 // All Rights Reserved
 
 using GibFrame;
-using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Destructible : MonoBehaviour, IHealthHolder
 {
     [SerializeField] private float resistance = 5F;
     [SerializeField] private bool deactivate = false;
+    [SerializeField] private UnityEvent OnDestroyed;
     private ValueContainerSystem resistanceSystem;
 
     public void Damage(float amount)
@@ -28,13 +29,20 @@ public class Destructible : MonoBehaviour, IHealthHolder
 
     private void OnExhaust()
     {
-        if (deactivate)
+        if (OnDestroyed != null)
         {
-            gameObject.SetActive(false);
+            OnDestroyed?.Invoke();
         }
         else
         {
-            Destroy(gameObject);
+            if (deactivate)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

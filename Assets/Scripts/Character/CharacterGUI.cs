@@ -7,13 +7,14 @@
 using GibFrame;
 using GibFrame.Joystick;
 using GibFrame.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterGUI : CharacterComponent
 {
     [Header("Channels")]
-    [SerializeField, Guarded] private InputChannelEvent inputChannel;
+    [SerializeField, Guarded] private SessionStatisticsEventBus statisticsEventBus;
     [Header("Prefabs")]
     [SerializeField, Guarded] private CooldownUI cooldownUIPrefab;
     [Header("UI")]
@@ -24,10 +25,11 @@ public class CharacterGUI : CharacterComponent
     [SerializeField, Guarded] private GButton dodgeButton;
     [SerializeField, Guarded] private GameObject victoryPanel;
     [SerializeField, Guarded] private GameObject defeatPanel;
+    [SerializeField, Guarded] private StatisticsDisplay statsDisplay;
 
     public override void CommonUpdate(float deltaTime)
     {
-        inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.MOVE, joystick.Direction));
+        InputBus.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.MOVE, joystick.Direction));
     }
 
     public void SetInteraction(Sprite icon, Color color)
@@ -47,9 +49,9 @@ public class CharacterGUI : CharacterComponent
         CooldownUI.Attach(owner, cooldownUIPrefab, cooldownsParent);
     }
 
-    protected override void OnDeath(bool win)
+    protected override void OnGameEnded(bool win)
     {
-        base.OnDeath(win);
+        base.OnGameEnded(win);
         joystick.gameObject.SetActive(false);
         victoryPanel.SetActive(win);
         defeatPanel.SetActive(!win);
@@ -65,20 +67,27 @@ public class CharacterGUI : CharacterComponent
     protected override void OnEnable()
     {
         base.OnEnable();
-        EventBus.OnStunEvent.Invocation += OnStun;
+        Manager.Combat.OnStun += OnStun;
+        statisticsEventBus.OnEvent += OnStatisticsReceived;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        EventBus.OnStunEvent.Invocation -= OnStun;
+        Manager.Combat.OnStun -= OnStun;
+        statisticsEventBus.OnEvent -= OnStatisticsReceived;
+    }
+
+    private void OnStatisticsReceived(List<Statistic> stats)
+    {
+        statsDisplay.Display(stats);
     }
 
     private void BindInput()
     {
-        dodgeButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction))));
-        attackButton.AddOnLongPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.PRIMARY_ABILITY))));
-        attackButton.AddOnPressedCallback(new Callback(() => inputChannel.Broadcast(new Inputs.InputData(Inputs.InputType.BASE_ATTACK))));
+        dodgeButton.AddOnPressedCallback(new Callback(() => InputBus.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction))));
+        attackButton.AddOnLongPressedCallback(new Callback(() => InputBus.Broadcast(new Inputs.InputData(Inputs.InputType.PRIMARY_ABILITY))));
+        attackButton.AddOnPressedCallback(new Callback(() => InputBus.Broadcast(new Inputs.InputData(Inputs.InputType.BASE_ATTACK))));
     }
 
     private void OnStun(bool stun)

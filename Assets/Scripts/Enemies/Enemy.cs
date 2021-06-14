@@ -157,7 +157,6 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     {
         CommonUpdateManager.Register(this);
         HealthSystem.OnExhaust += Die;
-        HealthSystem.OnExhaust += () => OnDeath?.Invoke();
         SetStatus(Status.IDLING);
     }
 
@@ -213,6 +212,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     protected virtual void Die()
     {
+        OnDeath?.Invoke();
         gameObject.SetActive(false);
     }
 

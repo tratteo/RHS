@@ -11,7 +11,7 @@ using UnityEngine;
 public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpdate
 {
     [Header("Channels")]
-    [SerializeField, Guarded] protected CameraShakeChannelEvent cameraShakeChannel;
+    [SerializeField, Guarded] protected CameraShakeEventBus cameraShakeChannel;
     [Header("FX")]
     [SerializeField] protected ParticleSystem explosionEffect;
     private readonly Collider2D[] buf = new Collider2D[8];
@@ -30,6 +30,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     public override void OnObjectSpawn()
     {
         base.OnObjectSpawn();
+        Renderer.enabled = true;
         detonated = false;
         detonationTimer = 0F;
     }
@@ -47,10 +48,10 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
         }
     }
 
-    public void Launch(float force)
+    public void Launch(float force, float detonationTimeOverride = -1F)
     {
         Rigidbody.AddForce((Rigidbody.drag + 1F) * force * transform.right, UnityEngine.ForceMode2D.Impulse);
-        detonationTimer = detonationTime;
+        detonationTimer = detonationTimeOverride > 0F ? detonationTimeOverride : detonationTime;
         if (torqueOnLaunch)
         {
             Rigidbody.AddTorque(randomTorque * Mathf.Deg2Rad * Rigidbody.inertia, ForceMode2D.Impulse);
@@ -90,12 +91,12 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     {
         if (detonated) return;
         detonated = true;
-        cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.EXPLOSION, transform.position));
-        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, GetActionLayer());
+        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.EXPLOSION, transform.position));
+        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, LayerMask.GetMask(GetActionLayer(), LayerMask.LayerToName(gameObject.layer)));
         if (explosionEffect)
         {
-            explosionEffect.Play();
             explosionEffect.transform.localScale = Vector3.one * explosionRadius;
+            explosionEffect.Play();
         }
 
         for (int i = 0; i < amount; i++)

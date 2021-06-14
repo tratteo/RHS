@@ -27,22 +27,6 @@ public class MinePlantBossAbility : Ability<BossEnemy>
 
     private void Awake()
     {
-        InitializePool();
-    }
-
-    private void InitializePool()
-    {
-        PoolCategory category = PoolManager.Instance.GetCategory(Categories.PROJECTILES);
-        if (category == null)
-        {
-            category = new PoolCategory(Categories.PROJECTILES);
-        }
-        Pool pool = category.GetPool(minePrefab.name);
-        if (pool == null)
-        {
-            pool = new Pool(minePrefab.name, minePrefab, 50);
-            category.AddPool(pool);
-            PoolManager.Instance.AddCategory(category);
-        }
+        PoolDispatcher.Instance.RequestPool(Categories.PROJECTILES, minePrefab, 50);
     }
 }

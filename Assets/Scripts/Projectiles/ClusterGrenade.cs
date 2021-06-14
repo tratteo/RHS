@@ -1,4 +1,10 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : ClusterGrenade.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using GibFrame.ObjectPooling;
 using UnityEngine;
 
@@ -16,7 +22,7 @@ public class ClusterGrenade : Grenade
 
     protected override void Detonate()
     {
-        cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.EXPLOSION, transform.position));
+        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.EXPLOSION, transform.position));
         for (int i = 0; i < clusterDimension; i++)
         {
             GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, clusterGrenadePrefab.name, transform.position.Perturbate(0.5F), Quaternion.Euler(0F, 0F, Random.value * 360));
@@ -29,6 +35,6 @@ public class ClusterGrenade : Grenade
     protected override void Awake()
     {
         base.Awake();
-        GameDaemon.Instance.RequestPool(Layers.PROJECTILES, clusterGrenadePrefab, 50);
+        PoolDispatcher.Instance.RequestPool(Layers.PROJECTILES, clusterGrenadePrefab, 50);
     }
 }

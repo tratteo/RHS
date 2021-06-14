@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class LevelSelectorUI : MonoBehaviour
 {
-    [SerializeField, Guarded] private StringChannelEvent loadSceneChannel;
+    [SerializeField, Guarded] private StringEventBus loadSceneChannel;
     [SerializeField] private Level[] levels;
     [SerializeField, Guarded] private Transform content;
     [SerializeField, Guarded] private GameObject levelObjectPrefab;

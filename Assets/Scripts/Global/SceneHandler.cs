@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class SceneHandler : MonoBehaviour
 {
     private string currentLoaded = "";
-    [SerializeField, Guarded] private StringChannelEvent loadSceneChannel;
+    [SerializeField, Guarded] private StringEventBus loadSceneChannel;
     [SerializeField, Guarded] private GameObject backgroundPanel;
 
     public void LoadSceneAsync(string name)

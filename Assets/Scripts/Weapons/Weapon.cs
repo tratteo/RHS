@@ -11,6 +11,7 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour, ICommonUpdate
 {
     [Range(-90F, 90F)] [SerializeField] private float idleRotation;
+    [SerializeField] private bool keepWeaponTransformUpVector = false;
     [SerializeField, Guarded] private Transform weaponTransform;
     private SpriteRenderer spriteRenderer;
 
@@ -75,7 +76,10 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
             }
             targetRotation = offsetRotation + idleRotation;
         }
-
+        if (keepWeaponTransformUpVector)
+        {
+            spriteRenderer.flipY = weaponTransform.transform.up.y < 0F;
+        }
         WeaponTransform.localRotation = Quaternion.Euler(0F, 0F, targetRotation);
     }
 

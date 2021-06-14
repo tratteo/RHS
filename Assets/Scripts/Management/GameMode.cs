@@ -5,11 +5,38 @@
 // All Rights Reserved
 
 using GibFrame;
+using GibFrame.Performance;
+using System;
 using UnityEngine;
 
-public class GameMode : MonoBehaviour
+public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvider
 {
+    [SerializeField, Guarded] private BoolEventBus gameEndedBus;
     [SerializeField, Guarded] private GameObject characterPrefab;
+
+    private float time = 0;
+
+    public event Action<BossEnemy> OnBossSpawned = delegate { };
+
+    public void CommonUpdate(float deltaTime)
+    {
+        time += deltaTime;
+    }
+
+    public Statistic[] GetStats()
+    {
+        return new Statistic[] { new Statistic(StatisticsHub.TIME, time) }; throw new NotImplementedException();
+    }
+
+    private void OnEnable()
+    {
+        CommonUpdateManager.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        CommonUpdateManager.Unregister(this);
+    }
 
     private void Start()
     {
@@ -20,7 +47,10 @@ public class GameMode : MonoBehaviour
         else
         {
             Instantiate(characterPrefab, Vector2.zero, Quaternion.identity);
-            Instantiate(loadedLevel.Boss, Vector2.right * 15F, Quaternion.identity);
+            GameObject obj = Instantiate(loadedLevel.Boss, Vector2.right * 15F, Quaternion.identity);
+            BossEnemy boss = obj.GetComponent<BossEnemy>();
+            boss.OnDeath += () => gameEndedBus.Broadcast(true);
+            OnBossSpawned?.Invoke(boss);
         }
     }
 }

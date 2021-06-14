@@ -10,16 +10,21 @@ using UnityEngine.UI;
 
 public class BossEnemy : Enemy
 {
-    [Header("Channels")]
-    [SerializeField, Guarded] private AnimationChannelEvent animationChannel;
     [Header("Boss")]
     [SerializeField, Guarded] private Weapon weapon;
     [SerializeField, Guarded] private Animator stateMachine;
     [SerializeField, Guarded] private Transform phaseIndicatorsParent;
     [SerializeField, Guarded] private string idleTransitionId = "idle";
     [SerializeField] private int phasesAmount;
+    [Header("Animation")]
+    [SerializeField] private bool hasMirror = false;
+    [SerializeField, Guarded] private GameObject phaseIndicatorPrefab;
+
     private int currentPhase = 0;
+
     private Image[] phaseIndicators;
+
+    protected AnimatorDriver AnimatorDriver { get; private set; }
 
     public override Weapon GetWeapon() => weapon;
 
@@ -28,38 +33,37 @@ public class BossEnemy : Enemy
         base.CommonFixedUpdate(fixedDeltaTime);
         if (IsDashing)
         {
-            animationChannel.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.DASH, null));
         }
         else
         {
             if (Mathf.Approximately(TargetVelocity.magnitude, 0F))
             {
-                animationChannel.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.IDLE, null));
+                Animate(AnimatorDriver.IDLE);
             }
             else
             {
-                animationChannel.Broadcast(new AnimationChannelEvent.AnimationData(AnimatorDriver.RUN, Rigidbody.velocity.magnitude));
+                Animate(AnimatorDriver.RUN, GetCombinedSign(Rigidbody.velocity));
             }
         }
+    }
+
+    public float GetCombinedSign(Vector3 vector)
+    {
+        return Mathf.Sign(transform.localScale.x * vector.x);
     }
 
     protected override void Awake()
     {
         base.Awake();
+        AnimatorDriver = GetComponent<AnimatorDriver>();
         weapon.SetOwner(this);
         phaseIndicators = new Image[phasesAmount];
         for (int i = 0; i < phasesAmount; i++)
         {
-            GameObject obj = new GameObject()
-            {
-                name = "Phase_" + i
-            };
-            Image image = obj.AddComponent<Image>();
-            image.rectTransform.sizeDelta = new Vector2(50, 50);
-            image.transform.SetParent(phaseIndicatorsParent);
-            image.maskable = false;
-            image.color = Color.red;
-            phaseIndicators[i] = image;
+            GameObject obj = Instantiate(phaseIndicatorPrefab);
+            obj.name = "Phase_" + i;
+            obj.transform.SetParent(phaseIndicatorsParent);
+            phaseIndicators[i] = obj.GetComponent<Image>();
         }
     }
 
@@ -96,11 +100,11 @@ public class BossEnemy : Enemy
             {
                 if (i < phasesAmount - currentPhase)
                 {
-                    phaseIndicators[i].color = Color.red;
+                    phaseIndicators[i].color = new Color(137F / 255F, 4 / 255F, 0, 1F);
                 }
                 else
                 {
-                    phaseIndicators[i].color = Color.white;
+                    phaseIndicators[i].color = new Color(125F / 255F, 125F / 255F, 125F / 255F, 1F);
                 }
             }
             stateMachine.SetBool((++currentPhase).ToString(), true);
@@ -109,5 +113,12 @@ public class BossEnemy : Enemy
         {
             base.Die();
         }
+    }
+
+    private bool ShouldAnimBeMirrored() => hasMirror && transform.localScale.x < 1F;
+
+    private void Animate(string animation, object args = null)
+    {
+        AnimatorDriver.DriveAnimation(new AnimatorDriver.AnimationData(animation, ShouldAnimBeMirrored(), args));
     }
 }

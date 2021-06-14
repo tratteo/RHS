@@ -32,17 +32,18 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         onHitEffects.AddRange(effects);
     }
 
-    public int GetActionLayer()
+    public string GetActionLayer()
     {
         if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES)))
         {
-            return LayerMask.GetMask(Layers.FRIENDLIES);
+            return Layers.FRIENDLIES;
         }
         else if (gameObject.layer.Equals(LayerMask.NameToLayer(Layers.PROJECTILES)))
         {
-            return LayerMask.GetMask(Layers.HOSTILES);
+            return Layers.HOSTILES;
         }
-        return ~0;
+        Debug.Log("Empty");
+        return "";
     }
 
     public void SetCounterAttack(float counterAttackDamageMultiplier = 2F)
@@ -75,6 +76,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
 
     public virtual void OnObjectSpawn()
     {
+        Renderer.enabled = true;
         Rigidbody.velocity = Vector3.zero;
         collideTagExceptions.Clear();
         onHitEffects.Clear();

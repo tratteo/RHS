@@ -11,7 +11,7 @@ using UnityEngine;
 public class CharacterCamera : CharacterComponent
 {
     [Header("Channels")]
-    [SerializeField, Guarded] private CameraShakeChannelEvent cameraShakeChannel;
+    [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
     [SerializeField, Guarded] private CinemachineVirtualCamera cinemachineCamera;
     private Camera mainCamera;
 
@@ -49,7 +49,7 @@ public class CharacterCamera : CharacterComponent
         cameraShakeChannel.OnEvent -= ShakeCamera;
     }
 
-    private void ShakeCamera(CameraShakeChannelEvent.Shake shake)
+    private void ShakeCamera(CameraShakeEventBus.Shake shake)
     {
         if (!Active) return; noise.m_AmplitudeGain = shake.Params.Amplitude;
         noise.m_FrequencyGain = shake.Params.Frequency;

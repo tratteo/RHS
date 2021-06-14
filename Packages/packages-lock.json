@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "com.tratteo.gibframe": {
-      "version": "https://github.com/tratteo/com.tratteo.gibframe.git",
+      "version": "https://github.com/tratteo/GibFrame.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "de1e452536b80014be6fdb740cadf79599bd644e"
+      "hash": "677b988b0b2e1bf3c390c9bbb8806d2b8252e5b5"
     },
     "com.unity.2d.animation": {
       "version": "5.0.5",

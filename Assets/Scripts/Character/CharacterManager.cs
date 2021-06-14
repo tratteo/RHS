@@ -4,10 +4,9 @@
 //
 // All Rights Reserved
 
-using GibFrame;
-using GibFrame.Performance;
 using UnityEngine;
 
+//Execution order among components is assured by the ScriptExecutionOrder feature of Unity
 public class CharacterManager : MonoBehaviour
 {
     public CharacterKinematic Kinematic { get; private set; }

@@ -10,12 +10,18 @@ using UnityEngine;
 
 public class CharacterComponent : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate
 {
-    [Header("Channel")]
-    [SerializeField, Guarded] private CharacterChannelEvent eventChannel;
+    [Header("Channels")]
+    [SerializeField, Guarded] private BoolEventBus gameEndedBus;
+
+    [SerializeField, Guarded] private InputEventBus inputBus;
 
     public Rigidbody2D Rigidbody { get; private set; }
 
-    protected CharacterChannelEvent EventBus => eventChannel;
+    protected AnimatorDriver AnimatorDriver { get; private set; }
+
+    protected BoolEventBus GameEndedBus => gameEndedBus;
+
+    protected InputEventBus InputBus => inputBus;
 
     protected Collider2D Collider { get; private set; }
 
@@ -36,20 +42,26 @@ public class CharacterComponent : MonoBehaviour, ICommonUpdate, ICommonFixedUpda
     {
     }
 
-    protected virtual void OnEnable()
+    protected virtual void OnInput(Inputs.InputData data)
     {
-        EventBus.GameEndedEvent.Invocation += OnDeath;
-        CommonUpdateManager.Register(this);
     }
 
-    protected virtual void OnDeath(bool win)
+    protected virtual void OnGameEnded(bool win)
     {
         Active = false;
     }
 
+    protected virtual void OnEnable()
+    {
+        inputBus.OnEvent += OnInput;
+        gameEndedBus.OnEvent += OnGameEnded;
+        CommonUpdateManager.Register(this);
+    }
+
     protected virtual void OnDisable()
     {
-        EventBus.GameEndedEvent.Invocation -= OnDeath;
+        inputBus.OnEvent -= OnInput;
+        gameEndedBus.OnEvent -= OnGameEnded;
         CommonUpdateManager.Unregister(this);
     }
 
@@ -57,6 +69,7 @@ public class CharacterComponent : MonoBehaviour, ICommonUpdate, ICommonFixedUpda
     {
         Collider = GetComponent<Collider2D>();
         Rigidbody = GetComponent<Rigidbody2D>();
+        AnimatorDriver = GetComponent<AnimatorDriver>();
     }
 
     protected virtual void Start()

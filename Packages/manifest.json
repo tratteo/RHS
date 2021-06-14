@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.tratteo.gibframe": "https://github.com/tratteo/com.tratteo.gibframe.git",
+    "com.tratteo.gibframe": "https://github.com/tratteo/GibFrame.git",
     "com.unity.2d.animation": "5.0.5",
     "com.unity.2d.pixel-perfect": "4.0.1",
     "com.unity.2d.psdimporter": "4.0.2",

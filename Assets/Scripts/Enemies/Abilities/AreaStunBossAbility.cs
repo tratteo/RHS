@@ -5,6 +5,7 @@
 // All Rights Reserved
 
 using GibFrame;
+using GibFrame.Debug;
 using System.Collections;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class AreaStunBossAbility : Ability<BossEnemy>
 {
     private readonly Collider2D[] buf = new Collider2D[8];
     [Header("Channels")]
-    [SerializeField, Guarded] private CameraShakeChannelEvent cameraShakeChannel;
+    [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
     [SerializeField] private float baseDamage = 350F;
     [SerializeField] private float channelTime = 1.25F;
     [SerializeField] private float explosionRadius = 8F;
@@ -36,7 +37,7 @@ public class AreaStunBossAbility : Ability<BossEnemy>
         Parent.SetInteraction(Assets.Sprites.Exclamation, Color.red);
         yield return new WaitForSeconds(channelTime);
         Parent.SetInteraction();
-        cameraShakeChannel.Broadcast(new CameraShakeChannelEvent.Shake(CameraShakeChannelEvent.HUGE_EXPLOSION, Parent.transform.position));
+        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HUGE_EXPLOSION, Parent.transform.position));
         int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, ~LayerMask.GetMask(Layers.HOSTILES));
         explosionEffect.Play();
         explosionEffect.transform.localScale = Vector3.one * explosionRadius;
