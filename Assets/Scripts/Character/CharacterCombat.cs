@@ -9,7 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IStatisticsProvider
+public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IStatisticsProvider, IWeaponOwner
 {
     [Header("Channels")]
     [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
@@ -18,7 +18,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     [SerializeField] private float baseDamage = 10F;
     [SerializeField] private float senseRadius = 12F;
     [SerializeField] private float attackCooldown = 0.3F;
-    [SerializeField] private Sword.Slash.Builder baseSlash;
+    [SerializeField] private Sword.Attack.Builder baseAttack;
     [SerializeField, Guarded] private GameObject defaultAbility;
     [Header("UI")]
     [SerializeField, Guarded] private ValueContainerBar healthBar;
@@ -153,7 +153,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             case Inputs.InputType.BASE_ATTACK:
                 if (CanAttack)
                 {
-                    sword.TriggerSlash(baseSlash.OnComplete(() => cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HIT, transform.position))));
+                    sword.TriggerAttack(baseAttack.OnStart(() => cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HIT, transform.position))));
                     attackTimer = attackCooldown;
                 }
                 break;

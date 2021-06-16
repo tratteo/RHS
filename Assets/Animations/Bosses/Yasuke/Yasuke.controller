@@ -278,6 +278,7 @@ MonoBehaviour:
     min: 1.5
     max: 2.5
   abilitiesPrefabs:
+  - {fileID: 1488015568085479338, guid: 51342362428d608438d910dae60d306d, type: 3}
   - {fileID: 8091657948389907, guid: 9e6c49a823ad1a34ea27f30c0f105e9b, type: 3}
   - {fileID: 2322230498075898872, guid: 392409c0b4e89394d99e7408a6462d5b, type: 3}
 --- !u!1101 &-884066782771047891
@@ -345,25 +346,25 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: 2
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: idle
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Speed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: StateMachine
@@ -610,6 +611,7 @@ MonoBehaviour:
   - {fileID: 2823483088263690575, guid: ed3533ebab2005742a096e64cf9f4bc6, type: 3}
   - {fileID: 2322230498075898872, guid: 392409c0b4e89394d99e7408a6462d5b, type: 3}
   - {fileID: 8091657948389907, guid: 9e6c49a823ad1a34ea27f30c0f105e9b, type: 3}
+  - {fileID: 1488015568085479338, guid: 51342362428d608438d910dae60d306d, type: 3}
   gapCloserPrefab: {fileID: 7255686803220885411, guid: d947fa55c71448745aa1227ff6bcc553, type: 3}
 --- !u!1101 &5221602339113149281
 AnimatorStateTransition:

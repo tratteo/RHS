@@ -13,11 +13,13 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
     [Range(-90F, 90F)] [SerializeField] private float idleRotation;
     [SerializeField] private bool keepWeaponTransformUpVector = false;
     [SerializeField, Guarded] private Transform weaponTransform;
-    private SpriteRenderer spriteRenderer;
+    [SerializeField, Guarded] private SpriteRenderer spriteRenderer;
 
     private float offsetRotation;
     private float targetRotation;
     private float returnToIdleTimer = 0F;
+    private bool overrideParentRot = false;
+    private Vector2 pointVector;
 
     public bool IsActive { get; private set; }
 
@@ -29,13 +31,26 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     public IAgent Owner { get; private set; }
 
+    public Animator Animator { get; private set; }
+
+    public IElementOfInterest Target { get; private set; }
+
     protected float IdleRotation => idleRotation;
 
     protected float Flipped { get; set; } = 1F;
 
-    protected IElementOfInterest Target { get; private set; }
-
     protected GameObject OwnerObj { get; private set; }
+
+    public void OverrideRotation(Vector2 pointVector)
+    {
+        overrideParentRot = true;
+        this.pointVector = pointVector;
+    }
+
+    public void ResetOverrideRotation()
+    {
+        overrideParentRot = false;
+    }
 
     public virtual void SetOwner(IAgent owner)
     {
@@ -56,31 +71,39 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     public virtual void CommonUpdate(float deltaTime)
     {
-        if (HasTarget())
+        if (overrideParentRot)
         {
-            targetRotation = ScaleSign * Vector3.SignedAngle(Vector2.right, Target.GetSightPoint() - OwnerObj.transform.position, Vector3.forward);
-            targetRotation += (ScaleSign * offsetRotation) + (ScaleSign * idleRotation);
-            spriteRenderer.flipX = Flipped * ScaleSign < 0;
+            weaponTransform.up = pointVector;
         }
-        else
+        else if (!Animator.runtimeAnimatorController || Animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
         {
-            if (returnToIdleTimer > 0)
+            if (HasTarget())
             {
-                returnToIdleTimer -= deltaTime;
+                targetRotation = ScaleSign * Vector3.SignedAngle(Vector2.right, Target.GetSightPoint() - OwnerObj.transform.position, Vector3.forward);
+                targetRotation += (ScaleSign * offsetRotation) + (ScaleSign * idleRotation);
+                spriteRenderer.flipX = Flipped * ScaleSign < 0;
             }
             else
             {
-                offsetRotation = 0F;
-                Flipped = 1F;
-                spriteRenderer.flipX = false;
+                if (returnToIdleTimer > 0)
+                {
+                    returnToIdleTimer -= deltaTime;
+                    if (returnToIdleTimer <= 0)
+                    {
+                        offsetRotation = 0F;
+                        Flipped = 1F;
+                        spriteRenderer.flipX = false;
+                    }
+                }
+
+                targetRotation = offsetRotation + idleRotation;
             }
-            targetRotation = offsetRotation + idleRotation;
+            if (keepWeaponTransformUpVector)
+            {
+                spriteRenderer.flipY = weaponTransform.transform.up.y < 0F;
+            }
+            WeaponTransform.localRotation = Quaternion.Euler(0F, 0F, targetRotation);
         }
-        if (keepWeaponTransformUpVector)
-        {
-            spriteRenderer.flipY = weaponTransform.transform.up.y < 0F;
-        }
-        WeaponTransform.localRotation = Quaternion.Euler(0F, 0F, targetRotation);
     }
 
     public void SetTarget(IElementOfInterest target)
@@ -101,12 +124,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     protected virtual void Awake()
     {
-        spriteRenderer = weaponTransform.GetComponent<SpriteRenderer>();
-    }
-
-    protected virtual void Start()
-    {
-        CommonUpdateManager.Register(this);
+        Animator = GetComponent<Animator>();
     }
 
     private void OnEnable()

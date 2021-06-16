@@ -8,7 +8,7 @@ using GibFrame;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossEnemy : Enemy
+public class BossEnemy : Enemy, IWeaponOwner
 {
     [Header("Boss")]
     [SerializeField, Guarded] private Weapon weapon;

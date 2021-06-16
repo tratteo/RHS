@@ -5041,6 +5041,7 @@ GameObject:
   - component: {fileID: 4068125241748383675}
   - component: {fileID: 5751188111200103844}
   - component: {fileID: 373255106608727046}
+  - component: {fileID: 6259694090163584280}
   m_Layer: 8
   m_Name: Yasuke_Sword
   m_TagString: Untagged
@@ -5079,8 +5080,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleRotation: 40
-  baseDamage: 10
+  keepWeaponTransformUpVector: 0
   weaponTransform: {fileID: 5509613817319473725}
+  spriteRenderer: {fileID: 5509613817319473714}
+  damage: 50
   blocker: {fileID: 2776179436687202684}
   deflector: {fileID: 2432325536947306905}
   defaultSlashEffect: {fileID: 6751868035663618430}
@@ -5131,6 +5134,25 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!95 &6259694090163584280
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5509613816199637503}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5509613817319473724
 GameObject:
   m_ObjectHideFlags: 0

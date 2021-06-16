@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1044005767156575606}
   - component: {fileID: 8465493756136336477}
+  - component: {fileID: 7122596693600481484}
   m_Layer: 0
   m_Name: Shooter
   m_TagString: Untagged
@@ -75,10 +76,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleRotation: 0
-  baseDamage: 5
+  keepWeaponTransformUpVector: 0
   weaponTransform: {fileID: 9024700828565921704}
+  spriteRenderer: {fileID: 3379269304723097496}
   firePoint: {fileID: 3645355548841782339}
-  projectilePrefab: {fileID: 0}
+  projectilePrefabs: []
+--- !u!95 &7122596693600481484
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909225741029836882}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8087765159581726947
 GameObject:
   m_ObjectHideFlags: 0

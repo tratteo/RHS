@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4943380845929579821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3072105819026466128}
+  - component: {fileID: 2315842953080048865}
+  m_Layer: 0
+  m_Name: thrust_character_ab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3072105819026466128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4943380845929579821}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2315842953080048865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4943380845929579821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b87e8048e19d0e4c9e58aa4013661eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  describable:
+    id: 
+    name: 
+    icon: {fileID: 0}
+    description: 
+  cooldown: 14
+  chargeTime: 0.6
+  attack:
+    attack:
+      duration: 0.02
+      damageMultiplier: 2
+      range: 8
+      isParriable: 0
+      offset: {x: 0, y: 0, z: 0}
+      overrideEffect: 0
+      effectOverride: {fileID: 0}
+      overrideEffectScale: 1
+      effectScale: {x: 1, y: 0.3, z: 1}
+      overrideColliderAngle: 1
+      colliderAngle: 30

@@ -42,7 +42,6 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         {
             return Layers.HOSTILES;
         }
-        Debug.Log("Empty");
         return "";
     }
 
@@ -61,7 +60,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         {
             gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
         }
-        Collider.enabled = true;
+        //Collider.enabled = true;
     }
 
     public void ClearTagExceptions()

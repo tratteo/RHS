@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 652526889
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9172a135022d77042a8e951b1f1c9d1f, type: 3}
   m_Color: {r: 1, g: 0.7043308, b: 0.6761006, a: 1}
@@ -136,10 +136,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseDamage: 0
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
+  explosionEffect: {fileID: 0}
   detonationTime:
     min: 0.75
     max: 1
-  detonationRadius: 1
+  explosionRadius: 4
   torqueOnLaunch: 1
   randomTorque:
     min: 200

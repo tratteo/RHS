@@ -10,7 +10,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, IElementOfInterest, IAgent, IHealthHolder, IDescribable
+public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, IElementOfInterest, IAgent, IHealthHolder, IDescribable, IMovable
 {
     public enum Status { ATTACKING, IDLING }
 
@@ -140,9 +140,9 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public abstract Weapon GetWeapon();
 
-    public virtual void Move(Vector2 direction)
+    public virtual void Move(Vector2 direction, float speed = 1F)
     {
-        TargetVelocity = direction.normalized * movementSpeed;
+        TargetVelocity = direction.normalized * movementSpeed * speed;
     }
 
     public string GetId() => describable.GetId();

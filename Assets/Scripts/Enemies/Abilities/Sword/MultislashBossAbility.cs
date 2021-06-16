@@ -41,7 +41,7 @@ public class MultislashBossAbility : Ability<BossEnemy>
                 yield return new WaitForSeconds(multislash.Delay);
                 Parent.Rigidbody.velocity = Vector2.zero;
                 yield return new WaitForSeconds(AdjustPosition(Parent, multislash.Slash));
-                sword.TriggerSlash(multislash.Slash);
+                sword.TriggerAttack(multislash.Slash);
                 yield return new WaitForSeconds(multislash.Slash.Build().Duration);
             }
             Parent.Rigidbody.velocity = Vector2.zero;
@@ -76,7 +76,7 @@ public class MultislashBossAbility : Ability<BossEnemy>
         parried++;
     }
 
-    private float AdjustPosition(BossEnemy parent, Sword.Slash currentSlash)
+    private float AdjustPosition(BossEnemy parent, Sword.Attack currentSlash)
     {
         Vector2 directionToTarget = parent.TargetContext.Transform.position - parent.transform.position;
         if (parent.CurrentStatus == Enemy.Status.ATTACKING && parent.TargetContext != null)
@@ -102,10 +102,10 @@ public class MultislashBossAbility : Ability<BossEnemy>
     private class Multislash
     {
         [SerializeField] private RandomizedFloat delay;
-        [SerializeField] private Sword.Slash.Builder slash;
+        [SerializeField] private Sword.Attack.Builder slash;
 
         public RandomizedFloat Delay => delay;
 
-        public Sword.Slash.Builder Slash => slash;
+        public Sword.Attack.Builder Slash => slash;
     }
 }

@@ -9,7 +9,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescribable, ICommonUpdate where TParent : MonoBehaviour
+public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescribable, ICommonUpdate where TParent : class
 {
     [SerializeField] private SerializedDescribable describable;
     [SerializeField] private float cooldown;
@@ -20,6 +20,8 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
 
     public TParent Parent { get; private set; }
 
+    public GameObject ParentObj { get; private set; }
+
     public event Action OnComplete = delegate { };
 
     public event Action OnPerform = delegate { };
@@ -28,17 +30,18 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
     {
         Ability<TParent> ability;
         GameObject obj = Instantiate(abilityPrefab, Vector3.zero, Quaternion.identity);
-        if ((ability = obj.GetComponent<Ability<TParent>>()) != null)
+        if (parent is MonoBehaviour mono && (ability = obj.GetComponent<Ability<TParent>>()) != null)
         {
             ability.Parent = parent;
+            ability.ParentObj = mono.gameObject;
             Transform holder;
-            if (!(holder = parent.transform.Find("AbilitiesHolder")))
+            if (!(holder = ability.ParentObj.transform.Find("AbilitiesHolder")))
             {
                 GameObject holderObj = new GameObject
                 {
                     name = "AbilitiesHolder"
                 };
-                holderObj.transform.SetParent(parent.transform);
+                holderObj.transform.SetParent(ability.ParentObj.transform);
                 holderObj.transform.localPosition = Vector3.zero;
                 holder = holderObj.transform;
             }

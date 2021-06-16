@@ -19,19 +19,17 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     [SerializeField] private float colliderAngle = 100F;
     [SerializeField] private int colliderQuality = 5;
 
-    private CircleCollider2D parryCollider;
     private PolygonCollider2D castCollider;
     private bool effectFlipped = false;
     private float hitDamageMultiplier = 1F;
     private int slashTicks = 0;
-
     private ParticleSystemRenderer effectRenderer;
 
     private Vector2[] colliderPoints;
 
     public bool IsBlocking => blocker.Active;
 
-    public Slash LastSlash { get; private set; }
+    public Attack LastSlash { get; private set; }
 
     public bool IsSlashing { get; private set; } = false;
 
@@ -63,16 +61,15 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         }
     }
 
-    public void TriggerSlash(Slash slash)
+    public void TriggerAttack(Attack slash)
     {
         IsSlashing = true;
         LastSlash = slash;
         slashTicks = Mathf.RoundToInt(slash.Duration / Time.fixedDeltaTime);
         SetHitDamageMultiplier(slash.DamageMultiplier);
-        parryCollider.radius = LastSlash.Range;
-        parryCollider.enabled = true;
         slash.OnStart?.Invoke();
         SetupPolygonCollider();
+        castCollider.enabled = true;
         if (deflector)
         {
             deflector.StartDeflecting(colliderPoints);
@@ -128,7 +125,6 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     {
         base.Awake();
         castCollider = GetComponent<PolygonCollider2D>();
-        parryCollider = GetComponent<CircleCollider2D>();
         if (defaultSlashEffect)
         {
             effectRenderer = defaultSlashEffect.GetComponent<ParticleSystemRenderer>();
@@ -160,7 +156,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     private void EndSlash(bool blocked)
     {
         IsSlashing = false;
-        parryCollider.enabled = false;
+        castCollider.enabled = false;
         if (LastSlash != null)
         {
             LastSlash.OnComplete?.Invoke();
@@ -175,9 +171,20 @@ public partial class Sword : Weapon, ICommonFixedUpdate
     private void ProcessHit()
     {
         effectFlipped = !effectFlipped;
-
         CollidersCast();
-        if (defaultSlashEffect)
+        ParticleSystem effect = null;
+        ParticleSystemRenderer effectRenderer = null;
+        if (LastSlash.OverrideEffect && LastSlash.Effect)
+        {
+            effect = LastSlash.Effect;
+            effectRenderer = effect.GetComponent<ParticleSystemRenderer>();
+        }
+        else if (defaultSlashEffect)
+        {
+            effect = defaultSlashEffect;
+            effectRenderer = this.effectRenderer;
+        }
+        if (effect && effectRenderer)
         {
             if (effectFlipped)
             {
@@ -187,25 +194,33 @@ public partial class Sword : Weapon, ICommonFixedUpdate
             {
                 effectRenderer.flip = new Vector3(0, 0, 0);
             }
-            defaultSlashEffect.transform.localScale = new Vector3(1F, 0.7F, 1F) * LastSlash.Range;
-
-            if (Target != null)
+            if (LastSlash.OverrideEffectScale)
             {
-                defaultSlashEffect.transform.right = Target.GetSightPoint() - OwnerObj.transform.position;
+                effect.transform.localScale = LastSlash.EffectScale * LastSlash.Range;
             }
             else
             {
-                Vector3 newScale = Vector3.Scale(new Vector3(ScaleSign, 1F, 1F), defaultSlashEffect.transform.localScale);
-                defaultSlashEffect.transform.localScale = newScale;
-                defaultSlashEffect.transform.right = OwnerObj.transform.right;
+                effect.transform.localScale = new Vector3(1F, 0.7F, 1F) * LastSlash.Range;
             }
-            defaultSlashEffect.transform.localPosition = LastSlash.Offset;
-            defaultSlashEffect.Play();
+
+            if (Target != null)
+            {
+                effect.transform.right = Target.GetSightPoint() - OwnerObj.transform.position;
+            }
+            else
+            {
+                Vector3 newScale = Vector3.Scale(new Vector3(ScaleSign, 1F, 1F), effect.transform.localScale);
+                effect.transform.localScale = newScale;
+                effect.transform.right = OwnerObj.transform.right;
+            }
+            effect.transform.localPosition = LastSlash.Offset;
+            effect.Play();
         }
     }
 
     private void SetupPolygonCollider()
     {
+        float angle = LastSlash.OverrideColliderAngle ? LastSlash.ColliderAngle : colliderAngle;
         castCollider.offset = LastSlash.Offset;
         if (colliderPoints.Length != colliderQuality + 1)
         {
@@ -223,8 +238,8 @@ public partial class Sword : Weapon, ICommonFixedUpdate
             axis = OwnerObj.transform.right * LastSlash.Range;
         }
 
-        float stride = -colliderAngle / (colliderQuality - 1);
-        axis = Quaternion.AngleAxis(colliderAngle / 2F, Vector3.forward) * axis;
+        float stride = -angle / (colliderQuality - 1);
+        axis = Quaternion.AngleAxis(angle / 2F, Vector3.forward) * axis;
         for (int i = 1; i < colliderQuality + 1; i++)
         {
             colliderPoints[i] = axis;
