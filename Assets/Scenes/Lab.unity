@@ -900,6 +900,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Yasuke
       objectReference: {fileID: 0}
+    - target: {fileID: 2139005779912535603, guid: f69d644d16f2ed449bb0258f45c5e013, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2139005779912535607, guid: f69d644d16f2ed449bb0258f45c5e013, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -1721,7 +1725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2779607593840281960, guid: d8f927c25e6ad1a458d3a6e351287f5f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2779607593840281964, guid: d8f927c25e6ad1a458d3a6e351287f5f, type: 3}
       propertyPath: m_RootOrder
@@ -1879,6 +1883,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1217177338061774306, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433871821775503700, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433871821775503700, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433871821775503700, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
+      propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7736206838423945981, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}

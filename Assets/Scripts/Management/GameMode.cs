@@ -25,7 +25,7 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
 
     public Statistic[] GetStats()
     {
-        return new Statistic[] { new Statistic(StatisticsHub.TIME, time) }; throw new NotImplementedException();
+        return new Statistic[] { new Statistic(Statistic.TIME, time) };
     }
 
     private void OnEnable()
@@ -47,7 +47,7 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
         else
         {
             Instantiate(characterPrefab, Vector2.zero, Quaternion.identity);
-            GameObject obj = Instantiate(loadedLevel.Boss, Vector2.right * 15F, Quaternion.identity);
+            GameObject obj = Instantiate(loadedLevel.Boss.gameObject, Vector2.right * 15F, Quaternion.identity);
             BossEnemy boss = obj.GetComponent<BossEnemy>();
             boss.OnDeath += () => gameEndedBus.Broadcast(true);
             OnBossSpawned?.Invoke(boss);

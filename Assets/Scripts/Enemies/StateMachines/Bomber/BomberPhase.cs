@@ -29,6 +29,7 @@ public class BomberPhase : BossPhaseStateMachine
         {
             Debug.LogError("Bomber has no shooter weapon");
         }
+        shootTimer = shootUpdate;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

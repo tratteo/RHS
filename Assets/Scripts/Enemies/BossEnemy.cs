@@ -5,10 +5,12 @@
 // All Rights Reserved
 
 using GibFrame;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossEnemy : Enemy, IWeaponOwner
+public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
 {
     [Header("Boss")]
     [SerializeField, Guarded] private Weapon weapon;
@@ -19,7 +21,7 @@ public class BossEnemy : Enemy, IWeaponOwner
     [Header("Animation")]
     [SerializeField] private bool hasMirror = false;
     [SerializeField, Guarded] private GameObject phaseIndicatorPrefab;
-
+    private List<Statistic> intermediateStatistics;
     private int currentPhase = 0;
 
     private Image[] phaseIndicators;
@@ -27,6 +29,20 @@ public class BossEnemy : Enemy, IWeaponOwner
     protected AnimatorDriver AnimatorDriver { get; private set; }
 
     public override Weapon GetWeapon() => weapon;
+
+    public void NotifyStatistic(int hash, Func<object, object> UpdateAction)
+    {
+        Statistic stat = intermediateStatistics.Find(s => s.Hash.Equals(hash));
+        if (stat != null)
+        {
+            stat.Value = UpdateAction(stat.Value);
+        }
+        else
+        {
+            stat = new Statistic(hash, UpdateAction(default));
+            intermediateStatistics.Add(stat);
+        }
+    }
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
@@ -52,10 +68,16 @@ public class BossEnemy : Enemy, IWeaponOwner
         return Mathf.Sign(transform.localScale.x * vector.x);
     }
 
+    public Statistic[] GetStats()
+    {
+        return intermediateStatistics.ToArray();
+    }
+
     protected override void Awake()
     {
         base.Awake();
         AnimatorDriver = GetComponent<AnimatorDriver>();
+        intermediateStatistics = new List<Statistic>();
         weapon.SetOwner(this);
         phaseIndicators = new Image[phasesAmount];
         for (int i = 0; i < phasesAmount; i++)
@@ -104,7 +126,7 @@ public class BossEnemy : Enemy, IWeaponOwner
                 }
                 else
                 {
-                    phaseIndicators[i].color = new Color(125F / 255F, 125F / 255F, 125F / 255F, 1F);
+                    phaseIndicators[i].color = new Color(100F / 255F, 100F / 255F, 100F / 255F, 1F);
                 }
             }
             stateMachine.SetBool((++currentPhase).ToString(), true);

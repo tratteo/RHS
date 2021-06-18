@@ -22,7 +22,7 @@ public class ClusterGrenade : Grenade
 
     protected override void Detonate()
     {
-        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.EXPLOSION, transform.position));
+        //cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.EXPLOSION, transform.position));
         for (int i = 0; i < clusterDimension; i++)
         {
             GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, clusterGrenadePrefab.name, transform.position.Perturbate(0.5F), Quaternion.Euler(0F, 0F, Random.value * 360));

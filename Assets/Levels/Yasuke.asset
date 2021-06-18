@@ -12,11 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f2d03a40096f440ae3735e643c6ff8, type: 3}
   m_Name: Yasuke
   m_EditorClassIdentifier: 
-  describable:
-    id: yasuke_takeshi
-    name: Yasuke
-    icon: {fileID: 0}
-    description: 'Battle Yasuke!
-
-'
-  boss: {fileID: 2139005779912535603, guid: f69d644d16f2ed449bb0258f45c5e013, type: 3}
+  scene: Yasuke
+  boss: {fileID: 2139005779912535602, guid: f69d644d16f2ed449bb0258f45c5e013, type: 3}

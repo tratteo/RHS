@@ -7,28 +7,35 @@
 using GibFrame;
 using GibFrame.SaveSystem;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class StatisticsHub : MonoBehaviour
+public class StatisticsHub : MonoSingleton<StatisticsHub>
 {
-    public const int HEALTH_PERCENTAGE = 0x0;
-    public const int TIME = 0x1;
-
     [Header("Channels")]
     [SerializeField, Guarded] private BoolEventBus gameEndChannel;
     [SerializeField, Guarded] private SessionStatisticsEventBus statisticsChannel;
     private List<Statistic> sessionStats;
     private BossEnemy boss;
 
-    public static string NameByHash(int hash)
-    {
-        return hash switch
-        {
-            HEALTH_PERCENTAGE => "Health percentage",
-            TIME => "Time",
-            _ => "???"
-        };
-    }
+    //public Statistic GetStat(int hash)
+    //{
+    //    return sessionStats.Find(s => s.Hash.Equals(hash));
+    //}
+
+    //public void NotifyStatistic(int hash, object value)
+    //{
+    //    Statistic stat = sessionStats.Find(s => s.Hash.Equals(hash));
+    //    if (stat != null)
+    //    {
+    //        stat.Value = value;
+    //    }
+    //    else
+    //    {
+    //        stat = new Statistic(hash, value);
+    //        sessionStats.Add(stat);
+    //    }
+    //}
 
     private void OnEnable()
     {
@@ -62,6 +69,7 @@ public class StatisticsHub : MonoBehaviour
                 }
             }
         }
+        sessionStats = sessionStats.OrderBy(s => s.Hash).ToList();
         statisticsChannel.Broadcast(sessionStats);
         //if (win)
         //{
@@ -113,7 +121,7 @@ public class StatisticsHub : MonoBehaviour
             }
             switch (current.Hash)
             {
-                case HEALTH_PERCENTAGE:
+                case Statistic.HEALTH_PERCENTAGE:
                     float perc = (float)currVal;
                     if (perc < current.ValueAs<float>())
                     {
@@ -122,7 +130,7 @@ public class StatisticsHub : MonoBehaviour
 
                     break;
 
-                case TIME:
+                case Statistic.TIME:
                     float time = (float)currVal;
                     if (time > current.ValueAs<float>())
                     {

@@ -5,15 +5,17 @@
 // All Rights Reserved
 
 using GibFrame;
+using GibFrame.Performance;
 using GibFrame.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ValueContainerBar : MonoBehaviour
+public class ValueContainerBar : MonoBehaviour, ICommonUpdate
 {
     public enum ValueToastBindType { INCREASE, DECREASE, CHANGE }
 
     [SerializeField] private Image fillImage;
+    [SerializeField] private Image secondFill;
     [SerializeField] private Text amountText;
     [SerializeField] private ToastScript valueToast;
 
@@ -21,11 +23,12 @@ public class ValueContainerBar : MonoBehaviour
     private bool enqueueToast = true;
     private Vector2 durations = new Vector2(0.1F, 0.5F);
 
+    private float delayedValue = 0;
     private ValueToastBindType toastBindType;
 
     private ValueContainerSystem bindedSystem;
 
-    public bool Binded { get; private set; }
+    public bool Binded { get; private set; } = false;
 
     public void Bind(ValueContainerSystem system)
     {
@@ -33,6 +36,7 @@ public class ValueContainerBar : MonoBehaviour
         bindedSystem = system;
         bindedSystem.OnDecrease += OnIncrease;
         bindedSystem.OnIncrease += OnIncrease;
+        delayedValue = bindedSystem.CurrentValue;
         UpdateUI();
         Binded = true;
     }
@@ -60,6 +64,25 @@ public class ValueContainerBar : MonoBehaviour
         UnbindToast();
         bindedSystem = null;
         Binded = false;
+    }
+
+    public void CommonUpdate(float deltaTime)
+    {
+        if (Binded && secondFill)
+        {
+            delayedValue = Mathf.Lerp(delayedValue, bindedSystem.CurrentValue, 0.02F);
+            secondFill.fillAmount = delayedValue / bindedSystem.MaxValue;
+        }
+    }
+
+    private void OnEnable()
+    {
+        CommonUpdateManager.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        CommonUpdateManager.Unregister(this);
     }
 
     private void OnDecrease(float amount)

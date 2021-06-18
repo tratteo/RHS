@@ -12,9 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f2d03a40096f440ae3735e643c6ff8, type: 3}
   m_Name: Bomber
   m_EditorClassIdentifier: 
-  describable:
-    id: bomber
-    name: Bomber
-    icon: {fileID: 0}
-    description: E sbimmete e sbummete sboom sboom
-  boss: {fileID: 2779607593840281960, guid: d8f927c25e6ad1a458d3a6e351287f5f, type: 3}
+  scene: Bomber
+  boss: {fileID: 2779607593840281961, guid: d8f927c25e6ad1a458d3a6e351287f5f, type: 3}

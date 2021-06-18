@@ -274,9 +274,6 @@ MonoBehaviour:
     max: 1
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilityUpdateTime:
-    min: 1.5
-    max: 2.5
   abilitiesPrefabs:
   - {fileID: 1488015568085479338, guid: 51342362428d608438d910dae60d306d, type: 3}
   - {fileID: 8091657948389907, guid: 9e6c49a823ad1a34ea27f30c0f105e9b, type: 3}
@@ -604,9 +601,6 @@ MonoBehaviour:
     max: 1
   damageMultiplier: 1.5
   abilityInitialTime: 2
-  abilityUpdateTime:
-    min: 1.5
-    max: 3
   abilitiesPrefabs:
   - {fileID: 2823483088263690575, guid: ed3533ebab2005742a096e64cf9f4bc6, type: 3}
   - {fileID: 2322230498075898872, guid: 392409c0b4e89394d99e7408a6462d5b, type: 3}

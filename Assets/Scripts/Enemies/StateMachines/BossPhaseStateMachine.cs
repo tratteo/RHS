@@ -17,7 +17,6 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     [Header("Combat")]
     [Range(0F, 10F)] [SerializeField] private float damageMultiplier = 1F;
     [SerializeField] private float abilityInitialTime = 4F;
-    [SerializeField] private RandomizedFloat abilityUpdateTime;
     [SerializeField] private List<GameObject> abilitiesPrefabs;
 
     private List<Ability<BossEnemy>> abilities;
@@ -79,12 +78,12 @@ public abstract class BossPhaseStateMachine : BossStateMachine
                             IsPerformingAbility = false;
                             Owner.EnableSelfMovement = true;
                             movementTimer = movementUpdate;
-                            abilityTimer = abilityUpdateTime;
+                            abilityTimer = 1F;
                         };
                         ability.Perform();
                     }
                 }
-                abilityTimer = abilityUpdateTime;
+                abilityTimer = 1F;
             }
 
             if (!IsPerformingAbility)
@@ -111,7 +110,11 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
         Owner.Collider.enabled = false;
-        abilities.ForEach(a => a.HardStop());
+        abilities.ForEach(a =>
+        {
+            a.HardStop();
+            Destroy(a.gameObject);
+        });
     }
 
     protected abstract float GetAttackRange();

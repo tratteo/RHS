@@ -132,9 +132,9 @@ MonoBehaviour:
     name: Area Stun
     icon: {fileID: 0}
     description: 
-  cooldown: 0
+  cooldown: 6
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  baseDamage: 350
+  baseDamage: 400
   channelTime: 1
   explosionRadius: 8
   stunDuration: 2

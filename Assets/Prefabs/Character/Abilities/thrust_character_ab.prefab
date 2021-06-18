@@ -53,7 +53,7 @@ MonoBehaviour:
   attack:
     attack:
       duration: 0.02
-      damageMultiplier: 2
+      damageMultiplier: 2.5
       range: 8
       isParriable: 0
       offset: {x: 0, y: 0, z: 0}

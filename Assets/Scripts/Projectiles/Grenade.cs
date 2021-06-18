@@ -91,7 +91,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     {
         if (detonated) return;
         detonated = true;
-        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.EXPLOSION, transform.position));
+        cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.LIGHT_EXPLOSION, transform.position));
         int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, LayerMask.GetMask(GetActionLayer(), LayerMask.LayerToName(gameObject.layer)));
         if (explosionEffect)
         {

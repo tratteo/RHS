@@ -26,7 +26,7 @@ public class ThrustCharacterAbility : Ability<CharacterManager>
                 {
                     sword.ToggleBlock(false);
                 }
-                Parent.GUI.SetInteraction(Assets.Sprites.Exclamation, Color.yellow);
+                Parent.GUI.SetInteraction(Assets.Sprites.Exclamation);
                 sword.OverrideRotation(transform.up);
                 yield return new WaitForSeconds(chargeTime);
                 if (sword.HasTarget())

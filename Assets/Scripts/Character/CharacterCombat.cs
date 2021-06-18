@@ -9,7 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IStatisticsProvider, IWeaponOwner
+public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IWeaponOwner, IStatisticsProvider
 {
     [Header("Channels")]
     [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
@@ -93,6 +93,11 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         if (!Manager.Kinematic.IsInvulnerable)
         {
             healthSystem.Decrease(amount);
+            if (healthSystem.GetPercentage() <= 0)
+            {
+                Die();
+                GameEndedBus.Broadcast(false);
+            }
         }
     }
 
@@ -115,7 +120,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     public Statistic[] GetStats()
     {
-        return new Statistic[] { new Statistic(StatisticsHub.HEALTH_PERCENTAGE, GetHealthPercentage()) };
+        return new Statistic[] { new Statistic(Statistic.HEALTH_PERCENTAGE, healthSystem.GetPercentage()) };
     }
 
     protected override void Awake()
@@ -127,8 +132,6 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         sword.SetOwner(this, baseDamage);
         healthSystem = new ValueContainerSystem(maxHealth);
         healthBar.Bind(healthSystem);
-        healthSystem.OnExhaust += Die;
-        healthSystem.OnExhaust += () => GameEndedBus.Broadcast(false);
     }
 
     protected override void Start()

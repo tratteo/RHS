@@ -13,6 +13,11 @@ public class ThrustBossAbility : Ability<BossEnemy>
     [SerializeField] private float chargeTime;
     [SerializeField] private Sword.Attack.Builder attack;
 
+    public override bool CanPerform()
+    {
+        return base.CanPerform() && Vector3.Distance(Parent.transform.position, Parent.TargetContext.Transform.position) < attack.Build().Range;
+    }
+
     protected override IEnumerator Execute_C()
     {
         Weapon weapon = Parent.GetWeapon();

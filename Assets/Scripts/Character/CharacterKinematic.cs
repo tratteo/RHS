@@ -9,7 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody
+public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody, IStatisticsProvider
 {
     [Header("Physics")]
     [SerializeField] private float movementSpeed = 5F;
@@ -30,6 +30,8 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
     private UpdateJob rechargeDodgesJob;
     private int dodgesCharges = 0;
     private Vector3 externVelocity = Vector2.zero;
+    private float distanceTraveled = 0F;
+    private Vector3 lastPos = Vector3.zero;
 
     public bool IsInvulnerable => invulnerabilityCurrentSteps > 0;
 
@@ -39,6 +41,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
     {
+        distanceTraveled += Vector3.Distance(transform.position, lastPos);
+        lastPos = transform.position;
+
         externVelocity = Vector2.Lerp(externVelocity, Vector2.zero, forceDampening);
         Rigidbody.velocity = externVelocity;
         if (!IsDodging)
@@ -119,6 +124,11 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         return Mathf.Sign(transform.localScale.x * vector.x);
     }
 
+    public Statistic[] GetStats()
+    {
+        return new Statistic[] { new Statistic(Statistic.DISTANCE_TRAVELED, distanceTraveled) };
+    }
+
     protected override void OnGameEnded(bool win)
     {
         base.OnGameEnded(win);
@@ -188,6 +198,12 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 }
                 break;
         }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        lastPos = transform.position;
     }
 
     private void OnStun(bool stun)

@@ -35,6 +35,7 @@ public class MultislashBossAbility : Ability<BossEnemy>
             yield return new WaitForSeconds(channelTime);
             foreach (Multislash multislash in slashes)
             {
+                if (Parent.CurrentStatus != Enemy.Status.ATTACKING && Parent.TargetContext == null) break;
                 Parent.Move(Quaternion.AngleAxis(UnityEngine.Random.value > 0.5F ? 90F : -90F, Vector3.forward) * (Parent.TargetContext.Transform.position - Parent.transform.position).normalized);
                 multislash.Slash.OnStart(() => Parent.SetInteraction(Assets.Sprites.Exclamation));
                 multislash.Slash.OnComplete(() => Parent.SetInteraction());
@@ -57,6 +58,14 @@ public class MultislashBossAbility : Ability<BossEnemy>
             {
                 sword.ToggleBlock(true);
             }
+            int updateAmount = parried;
+            Parent.NotifyStatistic(Statistic.PARRIES, (old) => old != null ? (int)old + updateAmount : updateAmount);
+            //Statistic stat = StatisticsHub.Instance.GetStat(StatisticsHub.PARRIES);
+            //if (stat != null)
+            //{
+            //    updateAmount += stat.ValueAs<int>();
+            //}
+            //StatisticsHub.Instance.NotifyStatistic(StatisticsHub.PARRIES, updateAmount);
         }
         Complete();
     }
@@ -69,6 +78,11 @@ public class MultislashBossAbility : Ability<BossEnemy>
         {
             sword.OnBlocked -= OnBlock;
         }
+    }
+
+    private void Start()
+    {
+        Parent.NotifyStatistic(Statistic.PARRIES, (old) => old ?? 0);
     }
 
     private void OnBlock(Sword.Clash clash)

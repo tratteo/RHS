@@ -48,13 +48,13 @@ MonoBehaviour:
     name: 
     icon: {fileID: 0}
     description: 
-  cooldown: 0
-  chargeTime: 0.75
+  cooldown: 4
+  chargeTime: 0.7
   slash:
     attack:
       duration: 0.02
       damageMultiplier: 2
-      range: 8
+      range: 9
       isParriable: 0
       offset: {x: 0, y: 0, z: 0}
       overrideEffect: 0

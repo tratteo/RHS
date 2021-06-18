@@ -41,7 +41,7 @@ public class CharacterGUI : CharacterComponent
 
     public void SetInteraction(Sprite icon = null)
     {
-        SetInteraction(icon != null ? icon : Assets.Sprites.Transparent, Color.white);
+        SetInteraction(icon != null ? icon : Assets.Sprites.Transparent, Color.black);
     }
 
     public void BindCooldown(ICooldownOwner owner)

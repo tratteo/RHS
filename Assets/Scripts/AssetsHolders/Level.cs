@@ -8,18 +8,12 @@ using GibFrame;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable Objects/Levels/Level")]
-public class Level : ScriptableObject, IDescribable
+public class Level : ScriptableObject
 {
-    [SerializeField, Guarded] private SerializedDescribable describable;
-    [SerializeField, Guarded] private GameObject boss;
+    [SerializeField, SceneString] public string scene;
+    [SerializeField, Guarded] private BossEnemy boss;
 
-    public GameObject Boss => boss;
+    public string Scene => scene.ToString();
 
-    public string GetDescription() => describable.GetDescription();
-
-    public Sprite GetIcon() => describable.GetIcon();
-
-    public string GetId() => describable.GetId();
-
-    public string GetName() => describable.GetName();
+    public BossEnemy Boss => boss;
 }

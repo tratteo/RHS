@@ -82,7 +82,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     public virtual void SetInteraction(Sprite icon = null)
     {
         interactionImage.sprite = icon != null ? icon : Assets.Sprites.Transparent;
-        interactionImage.color = Color.white;
+        interactionImage.color = Color.black;
     }
 
     public virtual void CommonFixedUpdate(float fixedDeltaTime)

@@ -9,6 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CameraShakeChannel", menuName = "Scriptable Objects/Channels/CameraShakeChannel", order = 0)]
 public class CameraShakeEventBus : SingleParamEventBus<CameraShakeEventBus.Shake>
 {
+    public static readonly Shake.Parameters LIGHT_EXPLOSION = new Shake.Parameters(0.1F, 5F, 0.7F);
     public static readonly Shake.Parameters EXPLOSION = new Shake.Parameters(0.15F, 8F, 0.5F);
     public static readonly Shake.Parameters HEAVY_EXPLOSION = new Shake.Parameters(0.2F, 12F, 0.5F);
     public static readonly Shake.Parameters HUGE_EXPLOSION = new Shake.Parameters(0.35F, 16F, 0.75F);

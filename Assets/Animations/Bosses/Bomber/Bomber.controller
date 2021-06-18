@@ -307,31 +307,31 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: 1
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: 2
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: 3
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Speed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: StateMachine
@@ -476,14 +476,12 @@ MonoBehaviour:
     max: 0.5
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilityUpdateTime:
-    min: 2
-    max: 4
   abilitiesPrefabs:
   - {fileID: 4504497316423005363, guid: 6950316f0dfc7d049bf43f0e648dd8ea, type: 3}
+  - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   shootUpdate:
-    min: 1
-    max: 1.75
+    min: 1.25
+    max: 2
 --- !u!1107 &5657584649162689301
 AnimatorStateMachine:
   serializedVersion: 6
@@ -617,16 +615,13 @@ MonoBehaviour:
     max: 0.35
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilityUpdateTime:
-    min: 2
-    max: 4
   abilitiesPrefabs:
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   - {fileID: 4688718122061437400, guid: 2d6f56bb70aff4d4da32e57270be1991, type: 3}
   - {fileID: 4504497316423005363, guid: 6950316f0dfc7d049bf43f0e648dd8ea, type: 3}
   shootUpdate:
-    min: 0.5
-    max: 1
+    min: 0.75
+    max: 1.75
 --- !u!1102 &7511989360236268475
 AnimatorState:
   serializedVersion: 6
@@ -675,15 +670,12 @@ MonoBehaviour:
     max: 0.5
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilityUpdateTime:
-    min: 2
-    max: 4
   abilitiesPrefabs:
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   - {fileID: 4688718122061437400, guid: 2d6f56bb70aff4d4da32e57270be1991, type: 3}
   shootUpdate:
-    min: 0.75
-    max: 1.25
+    min: 1
+    max: 1.75
 --- !u!1102 &8378350919427013587
 AnimatorState:
   serializedVersion: 6

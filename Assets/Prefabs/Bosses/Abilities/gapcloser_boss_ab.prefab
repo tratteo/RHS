@@ -48,4 +48,4 @@ MonoBehaviour:
     name: 
     icon: {fileID: 0}
     description: 
-  cooldown: 2
+  cooldown: 4

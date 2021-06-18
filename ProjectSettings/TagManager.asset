@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: FX
+    uniqueID: 886538661
+    locked: 0
   - name: WorldSpaceGUI
     uniqueID: 652526889
     locked: 0

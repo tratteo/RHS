@@ -19,7 +19,7 @@ public class StatisticsDisplay : MonoBehaviour
         string text = string.Empty;
         foreach (Statistic stat in stats)
         {
-            text += StatisticsHub.NameByHash(stat.Hash) + ": " + stat.Value.ToString() + "\n";
+            text += stat.ToString() + "\n";
         }
         mainText.text = text;
         gameObject.SetActive(true);

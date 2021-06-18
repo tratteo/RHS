@@ -48,5 +48,5 @@ MonoBehaviour:
     name: 
     icon: {fileID: 0}
     description: 
-  cooldown: 0
+  cooldown: 2
   minePrefab: {fileID: 3914466772948077725, guid: 57cd6fd44ee80e2418925f1b0c77b953, type: 3}
