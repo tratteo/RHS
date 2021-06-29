@@ -85,18 +85,17 @@ public abstract class BossPhaseStateMachine : BossStateMachine
                 }
                 abilityTimer = 1F;
             }
-
-            if (!IsPerformingAbility)
+        }
+        if (Owner.EnableSelfMovement)
+        {
+            if (movementTimer <= 0F)
             {
-                if (movementTimer <= 0F)
-                {
-                    Owner.Move(GetMovementDirection());
-                    movementTimer = movementUpdate;
-                }
-                else
-                {
-                    movementTimer -= Time.deltaTime;
-                }
+                Owner.Move(GetMovementDirection());
+                movementTimer = movementUpdate;
+            }
+            else
+            {
+                movementTimer -= Time.deltaTime;
             }
         }
     }
@@ -115,6 +114,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
             a.HardStop();
             Destroy(a.gameObject);
         });
+        Owner.Move(Vector2.zero);
     }
 
     protected abstract float GetAttackRange();

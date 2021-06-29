@@ -11,8 +11,10 @@ using UnityEngine;
 public class CharacterCamera : CharacterComponent
 {
     [Header("Channels")]
+    [SerializeField, Guarded] private CameraTargetGroupEventBus targetGroupEventBus;
     [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
     [SerializeField, Guarded] private CinemachineVirtualCamera cinemachineCamera;
+    [SerializeField, Guarded] private CinemachineTargetGroup targetGroup;
     private Camera mainCamera;
 
     private CinemachineBasicMultiChannelPerlin noise;
@@ -40,13 +42,54 @@ public class CharacterCamera : CharacterComponent
     protected override void OnEnable()
     {
         base.OnEnable();
+        targetGroup.AddMember(Manager.transform, 2F, 1F);
+        AdjustCamera(Settings.GetSetting<float>(SettingsData.CAMERA_HARDNESS));
+        targetGroupEventBus.OnEvent += OnTargetGroupRequest;
         cameraShakeChannel.OnEvent += ShakeCamera;
+        Settings.OnSettingChanged += OnSettingChanged;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+        targetGroupEventBus.OnEvent -= OnTargetGroupRequest;
         cameraShakeChannel.OnEvent -= ShakeCamera;
+        Settings.OnSettingChanged -= OnSettingChanged;
+    }
+
+    private void OnTargetGroupRequest(Transform transform, bool add)
+    {
+        if (add)
+        {
+            if (targetGroup.FindMember(transform) < 0)
+            {
+                targetGroup.AddMember(transform, 1.5F, 1F);//cinemachineCamera.m_Lens.OrthographicSize);
+            }
+        }
+        else
+        {
+            targetGroup.RemoveMember(transform);
+        }
+    }
+
+    private void AdjustCamera(float hardness)
+    {
+        CinemachineFramingTransposer transposer = cinemachineCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (transposer)
+        {
+            transposer.m_XDamping = hardness;
+            transposer.m_YDamping = hardness;
+            transposer.m_ZDamping = hardness;
+        }
+    }
+
+    private void OnSettingChanged(string key, object newVal)
+    {
+        if (key.Equals(SettingsData.CAMERA_HARDNESS))
+        {
+            float newHardness = (float)newVal;
+            AdjustCamera(newHardness);
+        }
     }
 
     private void ShakeCamera(CameraShakeEventBus.Shake shake)

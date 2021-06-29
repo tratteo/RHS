@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CameraShakeChannel", menuName = "Scriptable Objects/Channels/CameraShakeChannel", order = 0)]
+[CreateAssetMenu(fileName = "CameraShakeBus", menuName = "Scriptable Objects/Bus/CameraShakeBus", order = 0)]
 public class CameraShakeEventBus : SingleParamEventBus<CameraShakeEventBus.Shake>
 {
     public static readonly Shake.Parameters LIGHT_EXPLOSION = new Shake.Parameters(0.1F, 5F, 0.7F);

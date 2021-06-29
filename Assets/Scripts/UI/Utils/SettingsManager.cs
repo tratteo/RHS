@@ -4,6 +4,7 @@
 //
 // All Rights Reserved
 
+using GibFrame;
 using GibFrame.Audio;
 using GibFrame.UI;
 using UnityEngine;

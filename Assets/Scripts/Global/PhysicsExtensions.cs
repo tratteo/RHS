@@ -10,13 +10,18 @@ public static class PhysicsExtensions
 {
     public static void AddForce2D(this GameObject obj, Vector3 force)
     {
-        Rigidbody2D rigidbody2D;
+        Rigidbody2D rigidbody2D = obj.GetComponent<Rigidbody2D>();
+        if (!rigidbody2D) return;
         IManagedRigidbody managedRigidbody;
         if ((managedRigidbody = obj.GetComponent<IManagedRigidbody>()) != null)
         {
+            if (!Mathf.Approximately(rigidbody2D.mass, 0F))
+            {
+                force /= rigidbody2D.mass;
+            }
             managedRigidbody.AddExternalForce(force);
         }
-        else if ((rigidbody2D = obj.GetComponent<Rigidbody2D>()) != null)
+        else
         {
             if (!Mathf.Approximately(rigidbody2D.mass, 0F))
             {

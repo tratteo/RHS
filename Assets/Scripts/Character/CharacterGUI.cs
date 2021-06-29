@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterGUI : CharacterComponent
+public partial class CharacterGUI : CharacterComponent
 {
     [Header("Channels")]
     [SerializeField, Guarded] private SessionStatisticsEventBus statisticsEventBus;
@@ -30,6 +30,11 @@ public class CharacterGUI : CharacterComponent
     public override void CommonUpdate(float deltaTime)
     {
         InputBus.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.MOVE, joystick.Direction));
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            InputBus.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, joystick.Direction));
+        }
     }
 
     public void SetInteraction(Sprite icon, Color color)

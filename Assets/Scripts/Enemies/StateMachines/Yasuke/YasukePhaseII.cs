@@ -12,7 +12,7 @@ public class YasukePhaseII : BossPhaseStateMachine
     [Header("Yasuke II")]
     [SerializeField, Guarded] private GameObject gapCloserPrefab;
     private Sword sword;
-    private GapCloserBossAbility gapCloser;
+    private GapBossAbility gapCloser;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -24,7 +24,7 @@ public class YasukePhaseII : BossPhaseStateMachine
         {
             Debug.LogError("Slayer is not equipped with a sword!");
         }
-        gapCloser = (GapCloserBossAbility)Ability<BossEnemy>.Attach(gapCloserPrefab, Owner);
+        gapCloser = (GapBossAbility)Ability<BossEnemy>.Attach(gapCloserPrefab, Owner);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

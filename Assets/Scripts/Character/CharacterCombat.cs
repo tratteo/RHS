@@ -8,6 +8,7 @@ using GibFrame;
 using GibFrame.Performance;
 using System;
 using UnityEngine;
+using static IHealthHolder;
 
 public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunnable, IElementOfInterest, IWeaponOwner, IStatisticsProvider
 {
@@ -22,6 +23,8 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     [SerializeField, Guarded] private GameObject defaultAbility;
     [Header("UI")]
     [SerializeField, Guarded] private ValueContainerBar healthBar;
+    [Header("FX")]
+    [SerializeField] private FxHandler bloodFxh;
     private Sword sword;
     private IElementOfInterest focusedTarget;
     private Collider2D[] elemetsOfInterestBuf;
@@ -37,7 +40,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     public bool CanAttack => attackTimer <= 0F;
 
-    public float ThresholdDistance => 20F;
+    public float ThresholdDistance => 50F;
 
     public event Action<bool> OnStun;
 
@@ -88,11 +91,15 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     public Weapon GetWeapon() => sword;
 
-    public void Damage(float amount)
+    public void Damage(Data data)
     {
         if (!Manager.Kinematic.IsInvulnerable)
         {
-            healthSystem.Decrease(amount);
+            Vector3 axis = (transform.position - data.Dealer.transform.position).normalized;
+            axis = Quaternion.AngleAxis(UnityEngine.Random.Range(-40F, 40F), Vector3.forward) * axis;
+            gameObject.AddForce2D(3F * data.Amount * axis);
+            bloodFxh.Display(gameObject, transform.position, axis, Vector3.zero, FxHandler.Space.WORLD);
+            healthSystem.Decrease(data.Amount);
             if (healthSystem.GetPercentage() <= 0)
             {
                 Die();
@@ -101,15 +108,16 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         }
     }
 
-    public void Heal(float amount)
+    public void Heal(Data data)
     {
-        healthSystem.Increase(amount);
+        healthSystem.Increase(data.Amount);
     }
 
     public float GetHealthPercentage() => healthSystem.GetPercentage();
 
     public void Stun(float duration)
     {
+        if (Manager.Kinematic.IsInvulnerable) return;
         stunTimer = duration;
         OnStun?.Invoke(true);
     }
@@ -128,7 +136,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         base.Awake();
         sword = GetComponentInChildren<Sword>();
         elemetsOfInterestBuf = new Collider2D[8];
-        detectElementsOfInterestJob = new UpdateJob(new Callback(DetectCloseElementsOfInterest), 0.25F);
+        detectElementsOfInterestJob = new UpdateJob(new Callback(DetectCloseElementsOfInterest), 0.125F);
         sword.SetOwner(this, baseDamage);
         healthSystem = new ValueContainerSystem(maxHealth);
         healthBar.Bind(healthSystem);

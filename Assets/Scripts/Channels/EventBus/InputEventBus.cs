@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "InputChannel", menuName = "Scriptable Objects/Channels/InputChannel", order = 0)]
+[CreateAssetMenu(fileName = "InputBus", menuName = "Scriptable Objects/Bus/InputBus", order = 0)]
 public class InputEventBus : SingleParamEventBus<Inputs.InputData>
 {
 }

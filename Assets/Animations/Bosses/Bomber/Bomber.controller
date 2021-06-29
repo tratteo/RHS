@@ -477,11 +477,13 @@ MonoBehaviour:
   damageMultiplier: 1
   abilityInitialTime: 4
   abilitiesPrefabs:
-  - {fileID: 4504497316423005363, guid: 6950316f0dfc7d049bf43f0e648dd8ea, type: 3}
+  - {fileID: 4504497316423005363, guid: a331187dc94e72342af9212502889aee, type: 3}
+  - {fileID: 4688718122061437400, guid: 2d6f56bb70aff4d4da32e57270be1991, type: 3}
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
   shootUpdate:
-    min: 1.25
-    max: 2
+    min: 0.75
+    max: 1.5
+  gapBossAbilityPrefab: {fileID: 7255686803220885411, guid: 45847a7e1d381fc4f860b8ce977687d7, type: 3}
 --- !u!1107 &5657584649162689301
 AnimatorStateMachine:
   serializedVersion: 6
@@ -608,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc3ff123386ca54ba3e7fc5a923d40d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeedMultiplier: 1.5
+  movementSpeedMultiplier: 1.25
   accelerationMultiplier: 1.5
   movementUpdate:
     min: 0.25
@@ -617,11 +619,12 @@ MonoBehaviour:
   abilityInitialTime: 4
   abilitiesPrefabs:
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
-  - {fileID: 4688718122061437400, guid: 2d6f56bb70aff4d4da32e57270be1991, type: 3}
-  - {fileID: 4504497316423005363, guid: 6950316f0dfc7d049bf43f0e648dd8ea, type: 3}
+  - {fileID: 4688718122061437400, guid: 99ebc4aa53829f844a4a18deae556db2, type: 3}
+  - {fileID: 4504497316423005363, guid: 69c9c3ca4dac0e34ba597d09aefe1a88, type: 3}
   shootUpdate:
     min: 0.75
-    max: 1.75
+    max: 1.5
+  gapBossAbilityPrefab: {fileID: 7255686803220885411, guid: 45847a7e1d381fc4f860b8ce977687d7, type: 3}
 --- !u!1102 &7511989360236268475
 AnimatorState:
   serializedVersion: 6
@@ -663,7 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca121559670e69d429616d180b27fd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeedMultiplier: 1.25
+  movementSpeedMultiplier: 1.15
   accelerationMultiplier: 1.25
   movementUpdate:
     min: 0.25
@@ -672,10 +675,12 @@ MonoBehaviour:
   abilityInitialTime: 4
   abilitiesPrefabs:
   - {fileID: 1667384205004500371, guid: 633e7f8dd90c614488e329169f94d7df, type: 3}
-  - {fileID: 4688718122061437400, guid: 2d6f56bb70aff4d4da32e57270be1991, type: 3}
+  - {fileID: 4688718122061437400, guid: 99ebc4aa53829f844a4a18deae556db2, type: 3}
+  - {fileID: 4504497316423005363, guid: 6950316f0dfc7d049bf43f0e648dd8ea, type: 3}
   shootUpdate:
-    min: 1
-    max: 1.75
+    min: 0.75
+    max: 1.25
+  gapBossAbilityPrefab: {fileID: 7255686803220885411, guid: 45847a7e1d381fc4f860b8ce977687d7, type: 3}
 --- !u!1102 &8378350919427013587
 AnimatorState:
   serializedVersion: 6

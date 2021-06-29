@@ -34,7 +34,7 @@ public class ValueContainerBar : MonoBehaviour, ICommonUpdate
     {
         Unbind();
         bindedSystem = system;
-        bindedSystem.OnDecrease += OnIncrease;
+        bindedSystem.OnDecrease += OnDecrease;
         bindedSystem.OnIncrease += OnIncrease;
         delayedValue = bindedSystem.CurrentValue;
         UpdateUI();
@@ -141,6 +141,7 @@ public class ValueContainerBar : MonoBehaviour, ICommonUpdate
                 }
             }
         }
+        delayedValue = bindedSystem.CurrentValue;
     }
 
     private void OnDestroy()

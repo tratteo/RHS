@@ -20,10 +20,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
     [SerializeField] private int dodgesCount = 3;
     [SerializeField] private float dodgeCooldown = 4F;
     [SerializeField] private int invulnerabilityTimeSteps = 10;
-    [Header("References")]
-    [SerializeField] private ParticleSystem footstepsSystem;
-    [SerializeField] private ParticleSystem dashSystem;
-    private ParticleSystemRenderer footstepsSystemRenderer;
+    [Header("FX")]
+    [SerializeField, Guarded] private FxHandler footstepsFx;
+    [SerializeField, Guarded] private FxHandler dashFx;
     private Vector2 traslation;
     private float dodgeTimer = 0F;
     private int invulnerabilityCurrentSteps;
@@ -92,11 +91,6 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
 
         rechargeDodgesJob.Step(deltaTime);
         if (dodgesCharges >= dodgesCount) rechargeDodgesJob.Suspend();
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            InputBus.Broadcast(new Inputs.DirectionInputData(Inputs.InputType.DODGE, transform.right));
-        }
     }
 
     public int GetResourcesAmount() => dodgesCharges;
@@ -141,7 +135,6 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         base.Awake();
         rechargeDodgesJob = new UpdateJob(new Callback(RechargeDodge), dodgeCooldown);
         dodgesCharges = dodgesCount;
-        footstepsSystemRenderer = footstepsSystem.GetComponent<ParticleSystemRenderer>();
     }
 
     protected override void OnEnable()
@@ -168,8 +161,7 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 {
                     if (UnityEngine.Random.value < 0.01F)
                     {
-                        footstepsSystem.Play();
-                        footstepsSystemRenderer.flip = new Vector3(Rigidbody.velocity.x > 0 ? 1F : -1F, 0F, 0F);
+                        footstepsFx.Display(gameObject, Vector3.zero, new Vector3(Rigidbody.velocity.x > 0 ? 1F : -1F, 0F, 0F));
                     }
                 }
                 break;
@@ -186,8 +178,8 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
                 {
                     rechargeDodgesJob.Resume();
                 }
-                dashSystem.Play();
-                dashSystem.GetComponent<ParticleSystemRenderer>().flip = new Vector3(Rigidbody.velocity.x > 0 ? 1F : -1F, 0F, 0F);
+                dashFx.Display(gameObject, transform.position, Rigidbody.velocity, new Vector3(Rigidbody.velocity.x > 0 ? -1F : 1F, 0F, 0F), FxHandler.Space.WORLD);
+
                 if (GetRelativeTraslationSign(dodgeDir.Direction) > 0F)
                 {
                     AnimatorDriver.DriveAnimation(new AnimatorDriver.AnimationData(AnimatorDriver.DASH_F));

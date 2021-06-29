@@ -18,6 +18,8 @@ public class LevelSelectorUI : MonoBehaviour
 
     private void Start()
     {
+        GameDaemon.Instance.RemovePersistentResource(GameDaemon.LOADED_LEVEL);
+
         levels.ForEach(l =>
         {
             GameObject obj = Instantiate(levelObjectPrefab, content);

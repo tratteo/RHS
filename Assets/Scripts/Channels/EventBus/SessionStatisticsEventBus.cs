@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StatisticsChannel", menuName = "Scriptable Objects/Channels/StatisticsChannel", order = 0)]
+[CreateAssetMenu(fileName = "SessionStatisticsBus", menuName = "Scriptable Objects/Bus/SessionStatisticsBus", order = 0)]
 public class SessionStatisticsEventBus : SingleParamEventBus<List<Statistic>>
 {
 }

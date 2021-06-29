@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BooelanChannel", menuName = "Scriptable Objects/Channels/BooleanChannel", order = 0)]
+[CreateAssetMenu(fileName = "BoolBus", menuName = "Scriptable Objects/Bus/BoolBus", order = 0)]
 public class BoolEventBus : SingleParamEventBus<bool>
 {
 }

@@ -18,6 +18,7 @@ public class StunExplosionBossAbility : Ability<BossEnemy>
     [SerializeField] private float channelTime = 1.25F;
     [SerializeField] private float explosionRadius = 8F;
     [SerializeField] private float stunDuration = 2F;
+    [SerializeField] private RandomizedFloat recoverDuration;
     [SerializeField, Guarded] private GameObject rangeIndicator;
     [SerializeField, Guarded] private ParticleSystem explosionEffect;
 
@@ -38,6 +39,7 @@ public class StunExplosionBossAbility : Ability<BossEnemy>
         yield return new WaitForSeconds(channelTime);
         Parent.SetInteraction();
         cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HUGE_EXPLOSION, Parent.transform.position));
+        rangeIndicator.SetActive(false);
         int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, ~LayerMask.GetMask(Layers.HOSTILES));
         explosionEffect.Play();
         explosionEffect.transform.localScale = Vector3.one * explosionRadius;
@@ -52,10 +54,13 @@ public class StunExplosionBossAbility : Ability<BossEnemy>
 
             if ((healthHolder = buf[i].gameObject.GetComponent<IHealthHolder>()) != null)
             {
-                healthHolder.Damage(baseDamage);
+                healthHolder.Damage(new IHealthHolder.Data(gameObject, baseDamage));
             }
         }
-        rangeIndicator.SetActive(false);
+        Parent.SetInteraction(Assets.Sprites.Stun);
+        yield return new WaitForSeconds(recoverDuration);
+        Parent.SetInteraction();
+
         Complete();
     }
 

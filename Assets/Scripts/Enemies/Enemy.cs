@@ -9,6 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static IHealthHolder;
 
 public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, IElementOfInterest, IAgent, IHealthHolder, IDescribable, IMovable
 {
@@ -27,6 +28,10 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     [Header("HUD")]
     [SerializeField, Guarded] private ValueContainerBar healthBar;
     [SerializeField, Guarded] private Image interactionImage;
+    [Header("FX")]
+    [SerializeField] private FxHandler footstepsFx;
+    [SerializeField] private FxHandler dashFx;
+    [SerializeField] private FxHandler bloodFx;
     [Header("Debug")]
     [SerializeField] private bool debugRender = true;
     private float currentSpeed;
@@ -47,7 +52,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public Status CurrentStatus { get; private set; }
 
-    public virtual float ThresholdDistance => 20F;
+    public virtual float ThresholdDistance => 50F;
 
     public Rigidbody2D Rigidbody { get; private set; }
 
@@ -66,10 +71,15 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     public virtual float Dash(Vector2 direction, float force)
     {
         IsDashing = true;
+
         float duration = ((dashDuration.y - dashDuration.x) * 0.01F) * direction.magnitude * force + dashDuration.x;
         duration = Mathf.Clamp(duration, dashDuration.x, dashDuration.y);
-        Rigidbody.AddForce(direction * force * Rigidbody.mass, ForceMode2D.Impulse);
+        Rigidbody.AddForce(force * Rigidbody.mass * direction, ForceMode2D.Impulse);
         new Timer(this, duration, false, true, new Callback(() => IsDashing = false));
+        if (direction.magnitude * force > 10F)
+        {
+            dashFx.Display(gameObject, transform.position, Rigidbody.velocity, new Vector3(Rigidbody.velocity.x > 0 ? -1F : 1F, 0F, 0F), FxHandler.Space.WORLD);
+        }
         return duration;
     }
 
@@ -118,23 +128,35 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
                 }
             }
         }
+
+        if (!Mathf.Approximately(TargetVelocity.magnitude, 0F))
+        {
+            if (UnityEngine.Random.value < 0.01F)
+            {
+                footstepsFx.Display(gameObject, Vector3.zero, new Vector3(TargetVelocity.x > 0 ? 1F : -1F, 0F, 0F));
+            }
+        }
     }
 
-    public virtual void Damage(float amount)
+    public virtual void Damage(Data data)
     {
-        HealthSystem.Decrease(amount);
+        HealthSystem.Decrease(data.Amount);
+        Vector3 axis = (transform.position - data.Dealer.transform.position).normalized;
+        axis = Quaternion.AngleAxis(UnityEngine.Random.Range(-40F, 40F), Vector3.forward) * axis;
+        gameObject.AddForce2D(axis * data.Amount * 3F);
+        bloodFx?.Display(gameObject, transform.position, axis, Vector3.zero, FxHandler.Space.WORLD);
     }
 
-    public virtual void Heal(float amount)
+    public virtual void Heal(Data data)
     {
-        HealthSystem.Increase(amount);
+        HealthSystem.Increase(data.Amount);
     }
 
     public IAgent.FactionRelation GetFactionRelation() => IAgent.FactionRelation.HOSTILE;
 
     public float GetHealthPercentage() => HealthSystem.GetPercentage();
 
-    public virtual IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.AVERAGE;
+    public virtual IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MANDATORY;
 
     public Vector3 GetSightPoint() => transform.position;
 

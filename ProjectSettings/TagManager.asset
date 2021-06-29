@@ -44,6 +44,12 @@ TagManager:
   - name: FX
     uniqueID: 886538661
     locked: 0
+  - name: Agents
+    uniqueID: 919334517
+    locked: 0
+  - name: Ornaments
+    uniqueID: 2168263457
+    locked: 0
   - name: WorldSpaceGUI
     uniqueID: 652526889
     locked: 0

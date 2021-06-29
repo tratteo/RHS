@@ -40,14 +40,14 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
 
     private void Start()
     {
-        if (!GameDaemon.Instance.TryGetResource(GameDaemon.LOADED_LEVEL, out Level loadedLevel, true))
+        if (!GameDaemon.Instance.TryGetResource(GameDaemon.LOADED_LEVEL, out Level loadedLevel, false))
         {
             Debug.LogError("Unable to load the level from the game mode!");
         }
         else
         {
             Instantiate(characterPrefab, Vector2.zero, Quaternion.identity);
-            GameObject obj = Instantiate(loadedLevel.Boss.gameObject, Vector2.right * 15F, Quaternion.identity);
+            GameObject obj = Instantiate(loadedLevel.Boss.gameObject, Vector2.up * 12F, Quaternion.identity);
             BossEnemy boss = obj.GetComponent<BossEnemy>();
             boss.OnDeath += () => gameEndedBus.Broadcast(true);
             OnBossSpawned?.Invoke(boss);

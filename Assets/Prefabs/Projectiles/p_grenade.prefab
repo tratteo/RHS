@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 146889196966053775}
   - component: {fileID: 9132374481013858357}
   - component: {fileID: 4590645294790809954}
+  - component: {fileID: 8791254496804474347}
   m_Layer: 0
   m_Name: p_grenade
   m_TagString: Untagged
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 9172a135022d77042a8e951b1f1c9d1f, type: 3}
+  m_Sprite: {fileID: 8618663976898325987, guid: 1a4bd454f79be594884599364c31496f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -138,6 +139,7 @@ MonoBehaviour:
   baseDamage: 100
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
   explosionEffect: {fileID: 9208941064896006379}
+  canBeDeflected: 1
   detonationTime:
     min: 0.75
     max: 1
@@ -146,6 +148,21 @@ MonoBehaviour:
   randomTorque:
     min: 200
     max: 1080
+--- !u!114 &8791254496804474347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8474679064271465605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e0a96f21a6e734cbc0383790af0cfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thresholdDistance: 8
+  priority: 2
+  sightPointOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &2231277641639383319
 PrefabInstance:
   m_ObjectHideFlags: 0

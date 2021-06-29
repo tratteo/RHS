@@ -13,7 +13,9 @@ public class BomberPhase : BossPhaseStateMachine
     public const int GRENADES_INDEX = 0;
     [Header("Bomber")]
     [SerializeField] private RandomizedFloat shootUpdate;
+    [SerializeField, Guarded] private GameObject gapBossAbilityPrefab;
     private float shootTimer;
+    private GapBossAbility gapBossAbility;
 
     protected GrenadeLauncher Launcher { get; private set; } = null;
 
@@ -30,6 +32,7 @@ public class BomberPhase : BossPhaseStateMachine
             Debug.LogError("Bomber has no shooter weapon");
         }
         shootTimer = shootUpdate;
+        gapBossAbility = (GapBossAbility)Ability<BossEnemy>.Attach(gapBossAbilityPrefab, Owner);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -41,15 +44,22 @@ public class BomberPhase : BossPhaseStateMachine
             {
                 shootTimer -= Time.deltaTime;
             }
-            else
+            else if (GetDistanceToTarget() <= GetAttackRange() * 1.75F)
             {
                 Launcher.TriggerShoot(Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) * 0.825F);
                 shootTimer = shootUpdate;
             }
         }
+        if (CanExecute())
+        {
+            if (gapBossAbility.CanPerform())
+            {
+                gapBossAbility.Perform();
+            }
+        }
     }
 
-    protected override float GetAttackRange() => 8.5F;
+    protected override float GetAttackRange() => 10F;
 
     protected override Vector3 GetMovementDirection()
     {

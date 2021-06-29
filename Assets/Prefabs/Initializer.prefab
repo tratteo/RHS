@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   persistent: 0
   flags: 0
-  loadSceneChannel: {fileID: 11400000, guid: d255c2879e7cab54b9c77c375dfe54e6, type: 2}
+  loadSceneChannel: {fileID: 11400000, guid: 3eb92b1f62617894abf2a789a4047270, type: 2}
   loadMenuOnStart: 1
 --- !u!114 &7738368306661467427
 MonoBehaviour:
@@ -81,7 +81,7 @@ MonoBehaviour:
   persistent: 0
   flags: 0
   sprites:
-    arrow: {fileID: 0}
+    arrow: {fileID: 21300000, guid: 82342bfdcb8c09f46b15776596d9c99d, type: 3}
     exclamation: {fileID: 21300000, guid: 56f1de1abec79ee42bb8daa4cb8b582a, type: 3}
     transparent: {fileID: 21300000, guid: 01299d3ac213c654482fec94d79fed84, type: 3}
     stun: {fileID: 21300000, guid: cfbd264e02cfa5d4e804da500a419a0d, type: 3}

@@ -29,7 +29,7 @@ public class Mine : Projectile
             IHealthHolder healthHolder;
             if ((healthHolder = buf[i].gameObject.GetComponent<IHealthHolder>()) != null)
             {
-                healthHolder.Damage(GetDamage());
+                healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
             }
             IEffectsReceiverHolder effectReceiver;
             if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)

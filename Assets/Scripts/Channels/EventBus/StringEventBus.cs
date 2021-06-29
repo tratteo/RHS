@@ -6,9 +6,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StringChannel", menuName = "Scriptable Objects/Channels/StringChannel", order = 0)]
+[CreateAssetMenu(fileName = "StringBus", menuName = "Scriptable Objects/Bus/StringBus", order = 0)]
 public class StringEventBus : SingleParamEventBus<string>
 {
-    public const string MENU = "Menu";
-    public const string MAP = "Map";
 }

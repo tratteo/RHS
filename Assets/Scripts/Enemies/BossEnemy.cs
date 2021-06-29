@@ -18,9 +18,13 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     [SerializeField, Guarded] private Transform phaseIndicatorsParent;
     [SerializeField, Guarded] private string idleTransitionId = "idle";
     [SerializeField] private int phasesAmount;
+
     [Header("Animation")]
     [SerializeField] private bool hasMirror = false;
     [SerializeField, Guarded] private GameObject phaseIndicatorPrefab;
+    [Header("Bus")]
+    [SerializeField] private CameraTargetGroupEventBus targetGroupEventBus;
+    [SerializeField] private TransformEventBus indicatorEventBus;
     private List<Statistic> intermediateStatistics;
     private int currentPhase = 0;
 
@@ -71,6 +75,20 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     public Statistic[] GetStats()
     {
         return intermediateStatistics.ToArray();
+    }
+
+    public override void CommonUpdate(float deltaTime)
+    {
+        base.CommonUpdate(deltaTime);
+        Vector2 viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        if (viewPos.x > 0F && viewPos.x < 1F && viewPos.y > 0F && viewPos.y < 1F)
+        {
+            targetGroupEventBus.Broadcast(transform, true);
+        }
+        else
+        {
+            targetGroupEventBus.Broadcast(transform, false);
+        }
     }
 
     protected override void Awake()
@@ -135,6 +153,11 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         {
             base.Die();
         }
+    }
+
+    private void Start()
+    {
+        indicatorEventBus?.Broadcast(transform);
     }
 
     private bool ShouldAnimBeMirrored() => hasMirror && transform.localScale.x < 1F;

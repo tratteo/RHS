@@ -33,7 +33,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
 
     public bool IsSlashing { get; private set; } = false;
 
-    public float ClashPower => GetDamage() / 2F;
+    public float ClashPower => GetDamage() / 3F;
 
     public event Action<Clash> OnBlocked = delegate { };
 
@@ -272,7 +272,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
                 if ((health = hit.gameObject.GetComponent<IHealthHolder>()) != null)
                 {
                     float damage = GetDamage();
-                    health.Damage(damage);
+                    health.Damage(new IHealthHolder.Data(gameObject, damage));
                     OnDamaged?.Invoke(health, damage);
                 }
             }

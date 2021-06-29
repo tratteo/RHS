@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eeb70472657fff4ca44d203566e191d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadSceneChannel: {fileID: 11400000, guid: d255c2879e7cab54b9c77c375dfe54e6, type: 2}
+  loadSceneChannel: {fileID: 11400000, guid: 3eb92b1f62617894abf2a789a4047270, type: 2}
   levels:
   - {fileID: 11400000, guid: 27c68a62bc321c444bc01d958e4e3f63, type: 2}
   - {fileID: 11400000, guid: c9c02a604464ee343b3f940f65aad2e2, type: 2}

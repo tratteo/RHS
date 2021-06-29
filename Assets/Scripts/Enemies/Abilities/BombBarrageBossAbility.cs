@@ -12,7 +12,7 @@ using UnityEngine;
 public class BombBarrageBossAbility : Ability<BossEnemy>
 {
     [SerializeField] private RandomizedFloat explosionInterval;
-    [SerializeField] private float duration = 8F;
+    [SerializeField] private RandomizedFloat duration;
     [SerializeField] private GameObject delayedExplosionPrefab;
 
     protected override IEnumerator Execute_C()
@@ -21,6 +21,7 @@ public class BombBarrageBossAbility : Ability<BossEnemy>
         WaitForFixedUpdate wait = new WaitForFixedUpdate();
         float currentTime = 0F;
         float explosionTimer = explosionInterval;
+        float duration = this.duration;
         while ((currentTime += Time.fixedDeltaTime) < duration && Parent.CurrentStatus == Enemy.Status.ATTACKING)
         {
             explosionTimer -= Time.fixedDeltaTime;

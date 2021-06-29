@@ -16,7 +16,7 @@ filters = {
 	settings = true
 }
 scopes = {
-	"last_search.AB59B443" = "yasuke_ab"
+	"last_search.AB59B443" = "_fx"
 }
 providers = {
 	asset = {

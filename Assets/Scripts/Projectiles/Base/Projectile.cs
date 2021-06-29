@@ -109,7 +109,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
             IHealthHolder healthHolder;
             if ((healthHolder = collision.gameObject.GetComponent<IHealthHolder>()) != null)
             {
-                healthHolder.Damage(GetDamage());
+                healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
             }
             IEffectsReceiverHolder effectReceiver;
             if ((effectReceiver = collision.gameObject.GetComponent<IEffectsReceiverHolder>()) != null)

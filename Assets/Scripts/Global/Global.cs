@@ -17,6 +17,7 @@ public static class Layers
 public static class Categories
 {
     public static readonly string PROJECTILES = "Projectiles";
+    public static readonly string FX = "FX";
 }
 
 public static class UIPrefs

@@ -30,6 +30,8 @@ public class GameDaemon : MonoSingleton<GameDaemon>
 
     public bool HasPersistentResource(string key) => persistentResources.ContainsKey(key);
 
+    public bool RemovePersistentResource(string key) => persistentResources.Remove(key);
+
     public bool TryGetResource<T>(string key, out T value, bool consume = false)
     {
         if (persistentResources.TryGetValue(key, out object obj))
@@ -69,7 +71,7 @@ public class GameDaemon : MonoSingleton<GameDaemon>
     {
         if (loadMenuOnStart)
         {
-            loadSceneChannel.Broadcast(StringEventBus.MENU);
+            loadSceneChannel.Broadcast(LoadSceneEventBus.MENU);
         }
     }
 }

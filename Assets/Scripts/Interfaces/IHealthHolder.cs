@@ -4,11 +4,26 @@
 //
 // All Rights Reserved
 
+using UnityEngine;
+
 public interface IHealthHolder
 {
-    void Damage(float amount);
+    void Damage(Data amount);
 
-    void Heal(float amount);
+    void Heal(Data amount);
 
     float GetHealthPercentage();
+
+    public class Data
+    {
+        public GameObject Dealer { get; private set; }
+
+        public float Amount { get; private set; }
+
+        public Data(GameObject dealer, float amount)
+        {
+            Dealer = dealer;
+            Amount = amount;
+        }
+    }
 }

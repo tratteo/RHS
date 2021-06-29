@@ -13,6 +13,7 @@ public class DashslashBossAbility : Ability<BossEnemy>
     [SerializeField] private RandomizedFloat vulnerabilityTime;
     [SerializeField] private float waitTime = 0.75F;
     [SerializeField] private Sword.Attack.Builder slash;
+    [SerializeField] private ParticleSystem chargeEffect;
 
     protected override IEnumerator Execute_C()
     {
@@ -32,6 +33,7 @@ public class DashslashBossAbility : Ability<BossEnemy>
             Parent.SetInteraction(Assets.Sprites.Exclamation, Color.red);
             float duration = Parent.Dash(Parent.TargetContext.Transform.position - Parent.transform.position, 2.75F);
             yield return new WaitForSeconds(duration);
+            chargeEffect?.Play();
             sword.TriggerAttack(slash);
             Parent.Move(Vector2.zero);
             yield return new WaitForSeconds(slash.Build().Duration + vulnerabilityTime);

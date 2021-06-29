@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 236543333582232725}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.2, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489651639985287314}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2058954011550902120
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,7 +80,9 @@ MonoBehaviour:
   weaponTransform: {fileID: 4489651639985287314}
   spriteRenderer: {fileID: 7896442306833426594}
   firePoint: {fileID: 8207450202454115193}
-  projectilePrefabs: []
+  projectilePrefabs:
+  - {fileID: 8474679064271465605, guid: 2c0cc5b0138962e40b85fede9d8b4eba, type: 3}
+  - {fileID: 7736206838423945981, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
 --- !u!95 &-3376122945528044687
 Animator:
   serializedVersion: 3
@@ -124,14 +126,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3696853279241459673}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8207450202454115193}
   m_Father: {fileID: 5552184355056075340}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7896442306833426594
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -172,7 +174,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 90335e5423c010749a50f906b965fa54, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b4370b181c00279449d67a1990134762, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

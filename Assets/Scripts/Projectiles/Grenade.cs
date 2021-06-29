@@ -15,7 +15,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     [Header("FX")]
     [SerializeField] protected ParticleSystem explosionEffect;
     private readonly Collider2D[] buf = new Collider2D[8];
-    private bool canBeDeflected = true;
+    [SerializeField] private bool canBeDeflected = true;
     [Header("Parameters")]
     [SerializeField] private RandomizedFloat detonationTime;
     [SerializeField] private float explosionRadius = 4F;
@@ -70,7 +70,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
         //    gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
         //}
 
-        Rigidbody.velocity = -Rigidbody.velocity;
+        Rigidbody.velocity = -Rigidbody.velocity * 1.5F;
         canBeDeflected = false;
     }
 
@@ -92,7 +92,7 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
         if (detonated) return;
         detonated = true;
         cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.LIGHT_EXPLOSION, transform.position));
-        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, LayerMask.GetMask(GetActionLayer(), LayerMask.LayerToName(gameObject.layer)));
+        int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, LayerMask.GetMask(GetActionLayer()));
         if (explosionEffect)
         {
             explosionEffect.transform.localScale = Vector3.one * explosionRadius;
@@ -101,14 +101,17 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
 
         for (int i = 0; i < amount; i++)
         {
-            if ((healthHolder = buf[i].gameObject.GetComponent<IHealthHolder>()) != null)
+            if (!buf[i].gameObject.Equals(gameObject))
             {
-                healthHolder.Damage(GetDamage());
-            }
-            IEffectsReceiverHolder effectReceiver;
-            if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
-            {
-                effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
+                if ((healthHolder = buf[i].gameObject.GetComponent<IHealthHolder>()) != null)
+                {
+                    healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
+                }
+                IEffectsReceiverHolder effectReceiver;
+                if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
+                {
+                    effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
+                }
             }
         }
         Collider.enabled = false;
@@ -124,6 +127,11 @@ public class Grenade : Projectile, ICommonUpdate, IDeflectable, ICommonFixedUpda
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
+
+    private void Start()
+    {
+        Launch(0F);
     }
 
     private void OnDisable()

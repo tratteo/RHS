@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class SceneHandler : MonoBehaviour
 {
     private string currentLoaded = "";
-    [SerializeField, Guarded] private StringEventBus loadSceneChannel;
+    [SerializeField, Guarded] private LoadSceneEventBus loadSceneChannel;
     [SerializeField, Guarded] private GameObject backgroundPanel;
 
     public void LoadSceneAsync(string name)
@@ -35,13 +35,20 @@ public class SceneHandler : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(currentLoaded));
     }
 
+    private void ReloadScene()
+    {
+        LoadSceneAsync(currentLoaded);
+    }
+
     private void OnEnable()
     {
         loadSceneChannel.OnEvent += LoadSceneAsync;
+        loadSceneChannel.OnReloadScene += ReloadScene;
     }
 
     private void OnDisable()
     {
         loadSceneChannel.OnEvent -= LoadSceneAsync;
+        loadSceneChannel.OnReloadScene -= ReloadScene;
     }
 }

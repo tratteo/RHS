@@ -7,7 +7,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "VoidChannelEvent", menuName = "Scriptable Objects/Channels/VoidChannelEvent", order = 0)]
+[CreateAssetMenu(fileName = "VoidBus", menuName = "Scriptable Objects/Bus/VoidBus", order = 0)]
 public class VoidEventBus : ScriptableObject
 {
     public event Action OnEvent = delegate { };

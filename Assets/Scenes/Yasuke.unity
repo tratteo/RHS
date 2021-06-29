@@ -156,7 +156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resistance: 250
-  deactivate: 0
   OnDestroyed:
     m_PersistentCalls:
       m_Calls: []
@@ -593,7 +592,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resistance: 150
-  deactivate: 0
   OnDestroyed:
     m_PersistentCalls:
       m_Calls: []
@@ -753,7 +751,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resistance: 150
-  deactivate: 0
   OnDestroyed:
     m_PersistentCalls:
       m_Calls: []
