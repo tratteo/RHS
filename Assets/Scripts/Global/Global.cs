@@ -12,10 +12,13 @@ public static class Layers
     public static readonly string HOSTILES = "Hostiles";
     public static readonly string ENVIROMENT = "Enviroment";
     public static readonly string WEAPONS = "Weapons";
+    public static readonly string NOT_FOCUSABLE = "NotFocusable";
 }
 
 public static class Categories
 {
+    public static readonly string INTERACTABLES = "Interactables";
+    public static readonly string ENEMY_MINIONS = "EnemyMinions";
     public static readonly string PROJECTILES = "Projectiles";
     public static readonly string FX = "FX";
 }

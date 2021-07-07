@@ -17,22 +17,22 @@ public class BomberPhase : BossPhaseStateMachine
     private float shootTimer;
     private GapBossAbility gapBossAbility;
 
-    protected GrenadeLauncher Launcher { get; private set; } = null;
+    protected Shooter Launcher { get; private set; } = null;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         Weapon weapon = Owner.GetWeapon();
-        if (weapon is GrenadeLauncher)
+        if (weapon is Shooter)
         {
-            Launcher = weapon as GrenadeLauncher;
+            Launcher = weapon as Shooter;
         }
         else
         {
             Debug.LogError("Bomber has no shooter weapon");
         }
         shootTimer = shootUpdate;
-        gapBossAbility = (GapBossAbility)Ability<BossEnemy>.Attach(gapBossAbilityPrefab, Owner);
+        gapBossAbility = (GapBossAbility)Ability<BossEnemy>.AttachTo(gapBossAbilityPrefab, Owner);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

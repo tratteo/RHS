@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : LoadSceneEventBus.cs
+//
+// All Rights Reserved
+
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "LoadSceneBus", menuName = "Scriptable Objects/Bus/LoadSceneBus", order = 0)]

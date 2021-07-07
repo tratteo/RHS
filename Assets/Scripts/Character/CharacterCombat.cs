@@ -51,7 +51,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             transform.localScale = new Vector3(lookSign, 1F, 1F);
             sword.ClearTarget();
         }
-        else if (focusedTarget as Component)
+        else if (focusedTarget is Component componentTarget)
         {
             if (focusedTarget.GetSightPoint().x > transform.position.x)
             {
@@ -61,7 +61,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             {
                 transform.localScale = new Vector3(-1F, 1F, 1F);
             }
-            sword.SetTarget(focusedTarget);
+            sword.SetTarget(componentTarget.transform);
         }
     }
 
@@ -135,7 +135,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     {
         base.Awake();
         sword = GetComponentInChildren<Sword>();
-        elemetsOfInterestBuf = new Collider2D[8];
+        elemetsOfInterestBuf = new Collider2D[32];
         detectElementsOfInterestJob = new UpdateJob(new Callback(DetectCloseElementsOfInterest), 0.125F);
         sword.SetOwner(this, baseDamage);
         healthSystem = new ValueContainerSystem(maxHealth);
@@ -147,11 +147,11 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         base.Start();
         if (Assets.Abilities.TryGetAbilityPrefabById(Character.GetEquippedAbility(), out GameObject ability))
         {
-            EquippedAbility = Ability<CharacterManager>.Attach(ability, Manager);
+            EquippedAbility = Ability<CharacterManager>.AttachTo(ability, Manager);
         }
         else
         {
-            EquippedAbility = Ability<CharacterManager>.Attach(defaultAbility, Manager);
+            EquippedAbility = Ability<CharacterManager>.AttachTo(defaultAbility, Manager);
         }
         Manager.GUI.BindCooldown(EquippedAbility);
     }
@@ -191,7 +191,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     private void DetectCloseElementsOfInterest()
     {
-        int res = Physics2D.OverlapCircleNonAlloc(transform.position, senseRadius, elemetsOfInterestBuf, ~0);
+        int res = Physics2D.OverlapCircleNonAlloc(transform.position, senseRadius, elemetsOfInterestBuf, ~LayerMask.GetMask(Layers.NOT_FOCUSABLE));
 
         IElementOfInterest selected = null;
         float minDistance = float.MaxValue;

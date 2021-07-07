@@ -24,11 +24,13 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     [SerializeField, Guarded] private GameObject phaseIndicatorPrefab;
     [Header("Bus")]
     [SerializeField] private CameraTargetGroupEventBus targetGroupEventBus;
-    [SerializeField] private TransformEventBus indicatorEventBus;
+    [SerializeField, Guarded] private IndicatorEventBus indicatorEventBus;
     private List<Statistic> intermediateStatistics;
     private int currentPhase = 0;
 
     private Image[] phaseIndicators;
+
+    public bool Invulnerable { get; set; }
 
     protected AnimatorDriver AnimatorDriver { get; private set; }
 
@@ -80,15 +82,21 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     public override void CommonUpdate(float deltaTime)
     {
         base.CommonUpdate(deltaTime);
-        Vector2 viewPos = Camera.main.WorldToViewportPoint(transform.position);
-        if (viewPos.x > 0F && viewPos.x < 1F && viewPos.y > 0F && viewPos.y < 1F)
-        {
-            targetGroupEventBus.Broadcast(transform, true);
-        }
-        else
-        {
-            targetGroupEventBus.Broadcast(transform, false);
-        }
+        //Vector2 viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        //if (viewPos.x > 0F && viewPos.x < 1F && viewPos.y > 0F && viewPos.y < 1F)
+        //{
+        //    targetGroupEventBus.Broadcast(transform, true);
+        //}
+        //else
+        //{
+        //    targetGroupEventBus.Broadcast(transform, false);
+        //}
+    }
+
+    public override void Damage(IHealthHolder.Data data)
+    {
+        if (Invulnerable) return;
+        base.Damage(data);
     }
 
     protected override void Awake()
@@ -112,6 +120,7 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         base.EngageBattle(target);
         if (TargetContext != null)
         {
+            targetGroupEventBus.Broadcast(transform, true);
             stateMachine.SetBool(idleTransitionId, false);
             stateMachine.SetBool((++currentPhase).ToString(), true);
         }
@@ -151,13 +160,14 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         }
         else
         {
+            indicatorEventBus?.Broadcast(new IndicatorEventBus.IndicatorData(transform, false));
             base.Die();
         }
     }
 
     private void Start()
     {
-        indicatorEventBus?.Broadcast(transform);
+        indicatorEventBus?.Broadcast(new IndicatorEventBus.IndicatorData(transform, true, IndicatorsGUI.IndicatorType.BOSS));
     }
 
     private bool ShouldAnimBeMirrored() => hasMirror && transform.localScale.x < 1F;

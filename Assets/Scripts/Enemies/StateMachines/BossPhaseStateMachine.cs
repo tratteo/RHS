@@ -39,7 +39,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
         abilityTimer = 0F;
 
         abilities = new List<Ability<BossEnemy>>();
-        abilitiesPrefabs.ForEach(p => abilities.Add(Ability<BossEnemy>.Attach(p, Owner)));
+        abilitiesPrefabs.ForEach(p => abilities.Add(Ability<BossEnemy>.AttachTo(p, Owner)));
     }
 
     public bool TryGetAbility(out Ability<BossEnemy> ability)
@@ -86,7 +86,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
                 abilityTimer = 1F;
             }
         }
-        if (Owner.EnableSelfMovement)
+        if (CanExecute() && Owner.EnableSelfMovement && !Owner.IsStationary)
         {
             if (movementTimer <= 0F)
             {

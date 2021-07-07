@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2074266510182001143}
   - component: {fileID: 6952478793228242509}
   - component: {fileID: 7736206838423945980}
+  - component: {fileID: -3306944093649442713}
   m_Layer: 0
   m_Name: p_clustergrenade
   m_TagString: Untagged
@@ -135,19 +136,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 0
-  cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  explosionEffect: {fileID: 0}
-  canBeDeflected: 1
-  detonationTime:
-    min: 0.75
-    max: 1
-  explosionRadius: 0
+  speed: 1
+  homingRatio: 0
   torqueOnLaunch: 1
   randomTorque:
     min: 200
     max: 360
-  clusterDimension: 3
+  isDeflectable: 0
+  deflectForce: 1
+  onDestroyedEffect: {fileID: 0}
+  hasLifeSpan: 1
+  lifeSpan:
+    min: 1
+    max: 1
+  cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
+  explosionRadius: 0
   detonationForce:
-    min: 2
-    max: 4
-  clusterGrenadePrefab: {fileID: 8474679064271465605, guid: 8df5860129c20a041bc4f18705352f49, type: 3}
+    min: 1
+    max: 2
+--- !u!114 &-3306944093649442713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7736206838423945981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e016a7a2ae2654cb5c3dd625e5436d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateOnDestroy: 1
+  continuousGeneration: 0
+  generationTime: 0.5
+  prefab: {fileID: 8474679064271465605, guid: 8df5860129c20a041bc4f18705352f49, type: 3}
+  amount:
+    min: 3
+    max: 3
+  force: 1

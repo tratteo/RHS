@@ -26,7 +26,7 @@ public abstract class Ability<TParent> : MonoBehaviour, ICooldownOwner, IDescrib
 
     public event Action OnPerform = delegate { };
 
-    public static Ability<TParent> Attach(GameObject abilityPrefab, TParent parent)
+    public static Ability<TParent> AttachTo(GameObject abilityPrefab, TParent parent)
     {
         Ability<TParent> ability;
         GameObject obj = Instantiate(abilityPrefab, Vector3.zero, Quaternion.identity);

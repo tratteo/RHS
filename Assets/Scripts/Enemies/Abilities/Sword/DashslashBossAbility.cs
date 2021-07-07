@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : DashAreaSlashBossAbility.cs
+// Package com.Siamango.RHS : DashslashBossAbility.cs
 //
 // All Rights Reserved
 

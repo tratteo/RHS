@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : AreaStunBossAbility.cs
+// Package com.Siamango.RHS : StunExplosionBossAbility.cs
 //
 // All Rights Reserved
 

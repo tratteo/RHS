@@ -33,7 +33,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     public Animator Animator { get; private set; }
 
-    public IElementOfInterest Target { get; private set; }
+    public Transform Target { get; private set; }
 
     protected float IdleRotation => idleRotation;
 
@@ -66,7 +66,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
 
     public bool HasTarget()
     {
-        return Target != null && (Target as Component);
+        return Target;
     }
 
     public virtual void CommonUpdate(float deltaTime)
@@ -79,7 +79,7 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         {
             if (HasTarget())
             {
-                targetRotation = ScaleSign * Vector3.SignedAngle(Vector2.right, Target.GetSightPoint() - OwnerObj.transform.position, Vector3.forward);
+                targetRotation = ScaleSign * Vector3.SignedAngle(Vector2.right, Target.position - OwnerObj.transform.position, Vector3.forward);
                 targetRotation += (ScaleSign * offsetRotation) + (ScaleSign * idleRotation);
                 spriteRenderer.flipX = Flipped * ScaleSign < 0;
             }
@@ -106,9 +106,12 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         }
     }
 
-    public void SetTarget(IElementOfInterest target)
+    public void SetTarget(Transform target)
     {
-        Target = target;
+        if (Target != target)
+        {
+            Target = target;
+        }
     }
 
     public void ClearTarget()

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4795667551068045335}
   - component: {fileID: 4483561012593305517}
   - component: {fileID: 5791758889025176016}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: p_linear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,6 +134,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ec80bc1d3a7704682a90c8b9743dfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 1
-  canBeDeflected: 1
-  speed: 20
+  baseDamage: 30
+  speed: 5
+  homingRatio: 0
+  torqueOnLaunch: 0
+  randomTorque:
+    min: 0
+    max: 0
+  isDeflectable: 0
+  deflectForce: 1
+  onDestroyedEffect: {fileID: 0}
+  hasLifeSpan: 0
+  lifeSpan:
+    min: 1.25
+    max: 1.25

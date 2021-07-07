@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : DoubleParamEventBus.cs
+//
+// All Rights Reserved
+
+using System;
 using UnityEngine;
 
 public abstract class DoubleParamEventBus<Type1, Type2> : ScriptableObject

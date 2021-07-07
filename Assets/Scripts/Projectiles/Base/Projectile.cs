@@ -4,28 +4,61 @@
 //
 // All Rights Reserved
 
+using GibFrame;
 using GibFrame.ObjectPooling;
+using GibFrame.Performance;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
+public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, ICommonUpdate, IDeflectable
 {
     protected List<StatusEffect> onHitEffects;
-    protected List<string> collideTagExceptions;
     [Header("Projectile")]
     [SerializeField] private float baseDamage = 1F;
+    [Header("Kinematic")]
+    [SerializeField] private float speed = 1F;
+    [Range(0F, 0.5F)] [SerializeField] private float homingRatio = 0F;
+    [SerializeField] private bool torqueOnLaunch = false;
+    [SerializeField] private RandomizedFloat randomTorque;
+    [Header("Deflect")]
+    [SerializeField] private bool isDeflectable = false;
+    [SerializeField] private float deflectForce = 1F;
+
+    [Header("FX")]
+    [SerializeField] private ParticleSystem onDestroyedEffect;
+
+    [Header("Life span")]
+    [SerializeField] private bool hasLifeSpan = false;
+    [SerializeField] private RandomizedFloat lifeSpan;
+
     private float counterAttackDamageMultiplier = 1F;
     private bool critical = false;
     private float criticalMultiplier;
     private float damage;
+    private float currentLifeSpan = 0F;
+    private bool destroyed = false;
 
-    public bool Grounded { get; private set; }
+    public IAgent Owner { get; private set; }
+
+    public Transform Target { get; private set; }
+
+    public Rigidbody2D Rigidbody { get; private set; } = null;
 
     protected SpriteRenderer Renderer { get; private set; }
 
     protected Collider2D Collider { get; private set; } = null;
 
-    protected Rigidbody2D Rigidbody { get; private set; } = null;
+    public event Action OnDestroy = delegate { };
+
+    public Projectile Generate(string childId, Vector2 position, Quaternion rotation)
+    {
+        GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, childId, position, rotation);
+        obj.layer = gameObject.layer;
+        Projectile projectile = obj.GetComponent<Projectile>();
+        projectile.Setup(Owner, Target);
+        return projectile;
+    }
 
     public void AddEffects(params StatusEffect[] effects)
     {
@@ -50,22 +83,28 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         this.counterAttackDamageMultiplier = counterAttackDamageMultiplier;
     }
 
-    public void SetupLayer(IAgent spawner)
+    public virtual void DelegateLaunch(float param = 1F)
     {
-        if (spawner.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
+        Rigidbody.AddForce((Rigidbody.drag + 1F) * speed * param * transform.right, UnityEngine.ForceMode2D.Impulse);
+        if (torqueOnLaunch)
+        {
+            Rigidbody.AddTorque(randomTorque * Mathf.Deg2Rad * Rigidbody.inertia, ForceMode2D.Impulse);
+        }
+    }
+
+    public void Setup(IAgent owner, Transform target)
+    {
+        Owner = owner;
+        Target = target;
+        if (owner.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
         {
             gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
         }
-        else if (spawner.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
+        else if (owner.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
         {
             gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
         }
         //Collider.enabled = true;
-    }
-
-    public void ClearTagExceptions()
-    {
-        collideTagExceptions.Clear();
     }
 
     public void DamageMultiplier(float multiplier)
@@ -77,19 +116,52 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
     {
         Renderer.enabled = true;
         Rigidbody.velocity = Vector3.zero;
-        collideTagExceptions.Clear();
         onHitEffects.Clear();
         damage = baseDamage;
         critical = false;
         criticalMultiplier = 1F;
+        if (hasLifeSpan)
+        {
+            currentLifeSpan = lifeSpan;
+        }
+        destroyed = false;
     }
 
-    public void AddTagException(string tag)
+    public void CommonUpdate(float deltaTime)
     {
-        if (!collideTagExceptions.Contains(tag))
+        if (currentLifeSpan > 0)
         {
-            collideTagExceptions.Add(tag);
+            currentLifeSpan -= deltaTime;
+            if (currentLifeSpan <= 0)
+            {
+                currentLifeSpan = 0;
+                Destroy();
+            }
         }
+        if (Target)
+        {
+            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, (Target.position - transform.position).normalized * speed, homingRatio);
+        }
+    }
+
+    public void Deflect(IAgent agent)
+    {
+        if (isDeflectable)
+        {
+            DeflectBehaviour(agent);
+        }
+    }
+
+    protected virtual void DeflectBehaviour(IAgent agent)
+    {
+        Owner = agent;
+        Target = null;
+        Rigidbody.velocity = -Rigidbody.velocity * deflectForce;
+    }
+
+    protected virtual void OnChildSplit(GameObject obj)
+    {
+        obj.layer = gameObject.layer;
     }
 
     protected virtual void Awake()
@@ -98,26 +170,24 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         Collider = GetComponent<Collider2D>();
         Renderer = GetComponent<SpriteRenderer>();
         onHitEffects = new List<StatusEffect>();
-        collideTagExceptions = new List<string>();
+
         damage = baseDamage;
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collideTagExceptions.Contains(collision.collider.tag))
+        IHealthHolder healthHolder;
+        if ((healthHolder = collision.gameObject.GetComponent<IHealthHolder>()) != null)
         {
-            IHealthHolder healthHolder;
-            if ((healthHolder = collision.gameObject.GetComponent<IHealthHolder>()) != null)
-            {
-                healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
-            }
-            IEffectsReceiverHolder effectReceiver;
-            if ((effectReceiver = collision.gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
-            {
-                effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
-            }
-            gameObject.SetActive(false);
+            healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
         }
+        IEffectsReceiverHolder effectReceiver;
+        if ((effectReceiver = collision.gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
+        {
+            effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
+        }
+
+        Destroy();
     }
 
     protected float GetDamage()
@@ -125,5 +195,42 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer
         float damage = critical ? this.damage * criticalMultiplier * counterAttackDamageMultiplier : this.damage * counterAttackDamageMultiplier;
         counterAttackDamageMultiplier = 1F;
         return damage;
+    }
+
+    protected virtual void OnDestroyed()
+    {
+        OnDestroy?.Invoke();
+        OnDestroy = null;
+    }
+
+    protected virtual void OnDestroyEffectPlay(ParticleSystem destroyEffect)
+    {
+        onDestroyedEffect.Play();
+    }
+
+    protected void Destroy()
+    {
+        if (destroyed) return;
+        destroyed = true;
+        OnDestroyed();
+        if (onDestroyedEffect)
+        {
+            OnDestroyEffectPlay(onDestroyedEffect);
+            new Timer(this, onDestroyedEffect.main.duration, false, true, new Callback(() => gameObject.SetActive(false)));
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void OnEnable()
+    {
+        CommonUpdateManager.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        CommonUpdateManager.Unregister(this);
     }
 }

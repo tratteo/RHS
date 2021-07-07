@@ -21,7 +21,7 @@ public class Shooter : Weapon
         }
     }
 
-    public Projectile TriggerShoot()
+    public Projectile TriggerShoot(float param = 1F)
     {
         // Debug.Log(firePoint == null);
         GameObject obj = PoolManager.Instance.Spawn(Layers.PROJECTILES, projectilePrefabs[prefabIndex].name, firePoint.position, firePoint.rotation);
@@ -32,8 +32,9 @@ public class Shooter : Weapon
         }
         else
         {
+            projectile.DelegateLaunch(param);
             projectile.DamageMultiplier(GeneralDamageMultiplier);
-            projectile.SetupLayer(Owner);
+            projectile.Setup(Owner, Target);
         }
         return projectile;
     }
@@ -43,7 +44,7 @@ public class Shooter : Weapon
         base.Awake();
         for (int i = 0; i < projectilePrefabs.Length; i++)
         {
-            PoolDispatcher.Instance.RequestPool(Layers.PROJECTILES, projectilePrefabs[i], 50);
+            PoolDispatcher.Instance.RequestPool(Layers.PROJECTILES, projectilePrefabs[i], 250);
         }
     }
 }

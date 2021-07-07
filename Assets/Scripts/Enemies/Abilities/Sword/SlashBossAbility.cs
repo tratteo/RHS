@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : ChargedslashBossAbility.cs
+// Package com.Siamango.RHS : SlashBossAbility.cs
 //
 // All Rights Reserved
 

@@ -205,7 +205,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
 
             if (Target != null)
             {
-                effect.transform.right = Target.GetSightPoint() - OwnerObj.transform.position;
+                effect.transform.right = Target.position - OwnerObj.transform.position;
             }
             else
             {
@@ -231,7 +231,7 @@ public partial class Sword : Weapon, ICommonFixedUpdate
         bool hasTarget = HasTarget();
         if (hasTarget)
         {
-            axis = (Target.GetSightPoint() - OwnerObj.transform.position).normalized * LastSlash.Range;
+            axis = (Target.position - OwnerObj.transform.position).normalized * LastSlash.Range;
         }
         else
         {

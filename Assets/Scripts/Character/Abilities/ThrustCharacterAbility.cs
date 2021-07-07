@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : ChargedSlashCharacterAbility.cs
+// Package com.Siamango.RHS : ThrustCharacterAbility.cs
 //
 // All Rights Reserved
 
@@ -31,7 +31,7 @@ public class ThrustCharacterAbility : Ability<CharacterManager>
                 yield return new WaitForSeconds(chargeTime);
                 if (sword.HasTarget())
                 {
-                    sword.OverrideRotation(sword.Target.GetSightPoint() - Parent.transform.position);
+                    sword.OverrideRotation(sword.Target.position - Parent.transform.position);
                 }
                 else
                 {

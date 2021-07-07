@@ -19,7 +19,7 @@ public class MinePlantBossAbility : Ability<BossEnemy>
         Mine mine = obj.GetComponent<Mine>();
         if (mine)
         {
-            mine.SetupLayer(Parent);
+            mine.Setup(Parent, Parent.TargetContext.Transform);
         }
         Complete();
         yield break;

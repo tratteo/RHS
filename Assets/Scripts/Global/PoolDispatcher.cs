@@ -50,7 +50,7 @@ public class PoolDispatcher : MonoSingleton<PoolDispatcher>, ICommonUpdate
             PoolCategory category = PoolManager.Instance.GetCategory(request.Category);
             if (category == null)
             {
-                category = new PoolCategory(Layers.PROJECTILES);
+                category = new PoolCategory(request.Category);
             }
             Pool pool = category.GetPool(request.Prefab.name);
             if (pool == null)

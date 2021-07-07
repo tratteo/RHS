@@ -137,14 +137,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6257cb05984a6494bb5c6761152ba250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 75
+  baseDamage: 50
+  damageOnDirectHit: 0
+  onDestroyedEffect: {fileID: 5788072866807528377}
+  hasLifeSpan: 1
+  lifeSpan:
+    min: 0.5
+    max: 1
+  splitOnDestroy: 0
+  amount:
+    min: 0
+    max: 0
+  splitPrefab: {fileID: 0}
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  explosionEffect: {fileID: 5788072866807528377}
   canBeDeflected: 0
-  detonationTime:
-    min: 5
-    max: 6
-  explosionRadius: 2
+  explosionRadius: 1.5
   torqueOnLaunch: 1
   randomTorque:
     min: 200

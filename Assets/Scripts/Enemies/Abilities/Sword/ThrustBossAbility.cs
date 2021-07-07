@@ -37,7 +37,7 @@ public class ThrustBossAbility : Ability<BossEnemy>
                 yield return new WaitForSeconds(chargeTime);
                 if (sword.HasTarget())
                 {
-                    sword.OverrideRotation(sword.Target.GetSightPoint() - Parent.transform.position);
+                    sword.OverrideRotation(sword.Target.position - Parent.transform.position);
                 }
                 else
                 {

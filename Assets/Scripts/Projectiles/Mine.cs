@@ -9,8 +9,6 @@ using UnityEngine;
 
 public class Mine : Projectile
 {
-    [Header("FX")]
-    [SerializeField] protected ParticleSystem explosionEffect;
     private readonly Collider2D[] buf = new Collider2D[8];
     [Header("Channels")]
     [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
@@ -18,8 +16,15 @@ public class Mine : Projectile
     [SerializeField] private float explosionRadius = 6F;
     [SerializeField] private float explosionForce = 2500F;
 
-    public void Detonate()
+    protected override void OnDestroyEffectPlay(ParticleSystem destroyEffect)
     {
+        base.OnDestroyEffectPlay(destroyEffect);
+        destroyEffect.transform.localScale = Vector3.one * explosionRadius;
+    }
+
+    protected override void OnDestroyed()
+    {
+        base.OnDestroyed();
         cameraShakeChannel.Broadcast(new CameraShakeEventBus.Shake(CameraShakeEventBus.HEAVY_EXPLOSION, transform.position));
 
         int amount = Physics2D.OverlapCircleNonAlloc(transform.position, explosionRadius, buf, LayerMask.GetMask(GetActionLayer()));
@@ -37,22 +42,13 @@ public class Mine : Projectile
                 effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
             }
         }
-        if (explosionEffect)
-        {
-            explosionEffect.Play();
-            explosionEffect.transform.localScale = Vector3.one * explosionRadius;
-        }
+
         Renderer.enabled = false;
-        new Timer(this, explosionEffect.main.duration, false, true, new Callback(() => gameObject.SetActive(false)));
-        //gameObject.SetActive(false);
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collideTagExceptions.Contains(collision.collider.tag))
-        {
-            Detonate();
-        }
+        Destroy();
     }
 
     private void OnDrawGizmos()

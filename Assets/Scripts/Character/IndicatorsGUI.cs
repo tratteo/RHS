@@ -1,4 +1,10 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : IndicatorsGUI.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using GibFrame.Performance;
 using System;
 using System.Collections.Generic;
@@ -7,15 +13,12 @@ using UnityEngine.UI;
 
 public class IndicatorsGUI : MonoBehaviour, ICommonUpdate
 {
+    public enum IndicatorType { BOSS, MINION, INFO }
+
     private List<Indicator> indicators;
     private Camera referenceCamera;
-    [SerializeField] private TransformEventBus indicatorsEventBus;
+    [SerializeField] private IndicatorEventBus indicatorsEventBus;
     [SerializeField] private Parameters parameters;
-
-    public static Indicator.Builder GetDefaulted(Transform transform)
-    {
-        return Indicator.Of(transform).Color(Color.red).Rotate(true).WithSize(100, 100).WithIcon(Assets.Sprites.Arrow);
-    }
 
     public void InflateNew(Indicator.Builder factory)
     {
@@ -49,6 +52,17 @@ public class IndicatorsGUI : MonoBehaviour, ICommonUpdate
         }
 
         indicators.RemoveAll((i) => !i.Target);
+    }
+
+    private Indicator.Builder GetDefaulted(Transform transform, IndicatorType type)
+    {
+        return type switch
+        {
+            IndicatorType.INFO => Indicator.Of(transform).Color(Color.white).Rotate(true).WithSize(35, 75).WithIcon(Assets.Sprites.Arrow),
+            IndicatorType.MINION => Indicator.Of(transform).Color(Color.red).Rotate(true).WithSize(35, 75).WithIcon(Assets.Sprites.Arrow),
+            IndicatorType.BOSS => Indicator.Of(transform).Color(Color.red).Rotate(true).WithSize(75, 100).WithIcon(Assets.Sprites.Arrow),
+            _ => Indicator.Of(transform).Color(Color.white).Rotate(true).WithSize(25, 75).WithIcon(Assets.Sprites.Arrow)
+        };
     }
 
     private void Awake()
@@ -154,9 +168,21 @@ public class IndicatorsGUI : MonoBehaviour, ICommonUpdate
         indicatorsEventBus.OnEvent += Inflate;
     }
 
-    private void Inflate(Transform transform)
+    private void Inflate(IndicatorEventBus.IndicatorData data)
     {
-        InflateNew(GetDefaulted(transform));
+        if (data.Add)
+        {
+            InflateNew(GetDefaulted(data.Target, data.Type));
+        }
+        else
+        {
+            List<Indicator> matches = indicators.FindAll((i) => ReferenceEquals(data.Target, i.Target));
+            foreach (Indicator match in matches)
+            {
+                indicators.Remove(match);
+                UnityEngine.Object.Destroy(match.Image.gameObject);
+            }
+        }
     }
 
     private void OnDisable()
@@ -212,28 +238,28 @@ public class IndicatorsGUI : MonoBehaviour, ICommonUpdate
 
         public class Builder
         {
-            private readonly Indicator indicator;
+            public Indicator Indicator { get; private set; }
 
             public Builder(Transform target)
             {
-                indicator = new Indicator(target);
+                Indicator = new Indicator(target);
             }
 
             public Builder Color(Color color)
             {
-                indicator.Image.color = color;
+                Indicator.Image.color = color;
                 return this;
             }
 
             public Builder WithIcon(Sprite icon)
             {
-                indicator.Image.sprite = icon;
+                Indicator.Image.sprite = icon;
                 return this;
             }
 
             public Builder WithSize(Vector2 sizeDelta)
             {
-                indicator.Image.rectTransform.sizeDelta = sizeDelta;
+                Indicator.Image.rectTransform.sizeDelta = sizeDelta;
                 return this;
             }
 
@@ -244,21 +270,21 @@ public class IndicatorsGUI : MonoBehaviour, ICommonUpdate
 
             public Builder Rotate(bool rotate)
             {
-                indicator.Rotate = rotate;
+                Indicator.Rotate = rotate;
                 return this;
             }
 
             public Builder UpdateCallback(Action<Indicator> UpdateCallback)
             {
-                indicator.UpdateCallback = UpdateCallback;
+                Indicator.UpdateCallback = UpdateCallback;
                 return this;
             }
 
             public Indicator Concretize(Transform parent)
             {
-                indicator.Image.transform.SetParent(parent);
-                indicator.Image.gameObject.SetActive(true);
-                return indicator;
+                Indicator.Image.transform.SetParent(parent);
+                Indicator.Image.gameObject.SetActive(true);
+                return Indicator;
             }
         }
     }

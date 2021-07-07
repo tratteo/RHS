@@ -29,8 +29,8 @@ public class BombBarrageBossAbility : Ability<BossEnemy>
             {
                 GameObject obj = PoolManager.Instance.Spawn(Categories.PROJECTILES, delayedExplosionPrefab.name, Parent.TargetContext.Transform.position.Perturbate(3F), Quaternion.identity);
                 Grenade grenade = obj.GetComponent<Grenade>();
-                grenade.SetupLayer(Parent);
-                grenade.Launch(0F);
+                grenade.Setup(Parent, Parent.TargetContext.Transform);
+                grenade.DelegateLaunch(0F);
                 explosionTimer = explosionInterval;
             }
             yield return wait;

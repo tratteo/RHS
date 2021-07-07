@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : GapCloserBossAbility.cs
+// Package com.Siamango.RHS : GapBossAbility.cs
 //
 // All Rights Reserved
 

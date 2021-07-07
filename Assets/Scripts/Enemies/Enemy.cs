@@ -21,6 +21,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     [SerializeField] private float maxHealth;
     [SerializeField] private float senseRadius = 5F;
     [Header("Kinematic")]
+    [SerializeField] private bool stationary = false;
     [SerializeField] private float idleSpeed = 2F;
     [SerializeField] private float runSpeed = 5F;
     [SerializeField] private float obstacleDistanceThreshold = 1F;
@@ -41,6 +42,8 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     private IHealthHolder targetHealth;
 
     public Collider2D Collider { get; private set; }
+
+    public bool IsStationary => stationary;
 
     public AttackContext TargetContext { get; private set; }
 
@@ -71,7 +74,6 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     public virtual float Dash(Vector2 direction, float force)
     {
         IsDashing = true;
-
         float duration = ((dashDuration.y - dashDuration.x) * 0.01F) * direction.magnitude * force + dashDuration.x;
         duration = Mathf.Clamp(duration, dashDuration.x, dashDuration.y);
         Rigidbody.AddForce(force * Rigidbody.mass * direction, ForceMode2D.Impulse);
@@ -156,7 +158,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public float GetHealthPercentage() => HealthSystem.GetPercentage();
 
-    public virtual IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MANDATORY;
+    public virtual IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MAJOR;
 
     public Vector3 GetSightPoint() => transform.position;
 
@@ -164,6 +166,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public virtual void Move(Vector2 direction, float speed = 1F)
     {
+        if (stationary) return;
         TargetVelocity = direction.normalized * movementSpeed * speed;
     }
 
@@ -208,7 +211,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
                 Move(Vector2.zero);
                 TargetContext = null;
                 targetHealth = null;
-                GetWeapon().ClearTarget();
+                GetWeapon()?.ClearTarget();
                 break;
 
             case Status.ATTACKING:
@@ -227,7 +230,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
             SetStatus(Status.ATTACKING);
             Move(Vector2.zero);
             Rigidbody.velocity = Vector2.zero;
-            GetWeapon().SetTarget(target.GetComponent<IElementOfInterest>());
+            GetWeapon()?.SetTarget(target);
             TargetContext = new AttackContext(target, targetHealth);
         }
     }
@@ -241,28 +244,28 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     protected virtual void DetectBounds()
     {
         RaycastHit2D hit;
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.right, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.right, obstacleDistanceThreshold, LayerMask.GetMask(Layers.ENVIROMENT, Layers.FRIENDLIES))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.left, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.left, obstacleDistanceThreshold, LayerMask.GetMask(Layers.ENVIROMENT, Layers.FRIENDLIES))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.up, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.up, obstacleDistanceThreshold, LayerMask.GetMask(Layers.ENVIROMENT, Layers.FRIENDLIES))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {
                 Move((new Vector2(transform.position.x, transform.position.y) - hit.point).Perturbate().normalized);
             }
         }
-        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.down, obstacleDistanceThreshold, ~LayerMask.GetMask(Layers.HOSTILES, Layers.WEAPONS))).collider != null)
+        if ((hit = Physics2D.BoxCast(transform.position, new Vector2(1F, 1F), 0F, Vector2.down, obstacleDistanceThreshold, LayerMask.GetMask(Layers.ENVIROMENT, Layers.FRIENDLIES))).collider != null)
         {
             if (!hit.collider.isTrigger)
             {

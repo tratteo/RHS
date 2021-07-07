@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : Sword.Slash.cs
+// Package com.Siamango.RHS : Sword.Attack.cs
 //
 // All Rights Reserved
 

@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "e47ffcd6",
         "name": "com.Siamango.RoguelikeHS",
-        "processId": 8159,
+        "processId": 8594,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -216,6 +216,24 @@
             "deviceId": "e47ffcd6",
             "name": "com.Siamango.RoguelikeHS",
             "processId": 8159,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 8593,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 8598,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 8594,
             "exited": false
         }
     ],

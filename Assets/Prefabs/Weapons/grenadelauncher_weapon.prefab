@@ -39,8 +39,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5552184355056075340}
-  - component: {fileID: 9174745093445586111}
   - component: {fileID: -3376122945528044687}
+  - component: {fileID: 1252004349973733605}
   m_Layer: 0
   m_Name: grenadelauncher_weapon
   m_TagString: Untagged
@@ -63,26 +63,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9174745093445586111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058954011550902120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bde678191c323554cb2e5955545e7a7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  idleRotation: 0
-  keepWeaponTransformUpVector: 1
-  weaponTransform: {fileID: 4489651639985287314}
-  spriteRenderer: {fileID: 7896442306833426594}
-  firePoint: {fileID: 8207450202454115193}
-  projectilePrefabs:
-  - {fileID: 8474679064271465605, guid: 2c0cc5b0138962e40b85fede9d8b4eba, type: 3}
-  - {fileID: 7736206838423945981, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
 --- !u!95 &-3376122945528044687
 Animator:
   serializedVersion: 3
@@ -102,6 +82,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1252004349973733605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058954011550902120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cbc67919a32b834fb6fa81fbe1eb8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleRotation: 0
+  keepWeaponTransformUpVector: 1
+  weaponTransform: {fileID: 4489651639985287314}
+  spriteRenderer: {fileID: 7896442306833426594}
+  firePoint: {fileID: 8207450202454115193}
+  projectilePrefabs:
+  - {fileID: 8474679064271465605, guid: 2c0cc5b0138962e40b85fede9d8b4eba, type: 3}
+  - {fileID: 7736206838423945981, guid: a09d61c94d31587479b1cc8b9143f6a6, type: 3}
 --- !u!1 &3696853279241459673
 GameObject:
   m_ObjectHideFlags: 0

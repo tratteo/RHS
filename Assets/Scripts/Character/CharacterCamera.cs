@@ -13,6 +13,7 @@ public class CharacterCamera : CharacterComponent
     [Header("Channels")]
     [SerializeField, Guarded] private CameraTargetGroupEventBus targetGroupEventBus;
     [SerializeField, Guarded] private CameraShakeEventBus cameraShakeChannel;
+    [Header("References")]
     [SerializeField, Guarded] private CinemachineVirtualCamera cinemachineCamera;
     [SerializeField, Guarded] private CinemachineTargetGroup targetGroup;
     private Camera mainCamera;

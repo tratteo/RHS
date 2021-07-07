@@ -28,7 +28,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 546231561847912914}
+  - {fileID: 3320348861978711933}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -59,18 +59,22 @@ MonoBehaviour:
       isParriable: 0
       offset: {x: 0, y: 0, z: 0}
       overrideEffect: 1
-      effectOverride: {fileID: 8899499589864755145}
+      effectOverride: {fileID: 5909279876364345702}
       overrideEffectScale: 1
       effectScale: {x: 1, y: 0.2, z: 1}
       overrideColliderAngle: 1
       colliderAngle: 30
---- !u!1001 &4760911139573955280
+--- !u!1001 &7751401332918015103
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 3072105819026466128}
     m_Modifications:
+    - target: {fileID: 4148792502345725209, guid: b72b782b29bb4ed4ebbd8bf7ad3a56ae, type: 3}
+      propertyPath: UVModule.tilesX
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5009900281258590978, guid: b72b782b29bb4ed4ebbd8bf7ad3a56ae, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -121,13 +125,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b72b782b29bb4ed4ebbd8bf7ad3a56ae, type: 3}
---- !u!4 &546231561847912914 stripped
+--- !u!4 &3320348861978711933 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5009900281258590978, guid: b72b782b29bb4ed4ebbd8bf7ad3a56ae, type: 3}
-  m_PrefabInstance: {fileID: 4760911139573955280}
+  m_PrefabInstance: {fileID: 7751401332918015103}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &8899499589864755145 stripped
+--- !u!198 &5909279876364345702 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4148792502345725209, guid: b72b782b29bb4ed4ebbd8bf7ad3a56ae, type: 3}
-  m_PrefabInstance: {fileID: 4760911139573955280}
+  m_PrefabInstance: {fileID: 7751401332918015103}
   m_PrefabAsset: {fileID: 0}

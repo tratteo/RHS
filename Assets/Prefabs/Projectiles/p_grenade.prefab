@@ -137,12 +137,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 100
-  cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  explosionEffect: {fileID: 9208941064896006379}
-  canBeDeflected: 1
-  detonationTime:
-    min: 0.75
+  damageOnDirectHit: 0
+  isDeflectable: 1
+  deflectForce: 1.5
+  onDestroyedEffect: {fileID: 9208941064896006379}
+  hasLifeSpan: 1
+  lifeSpan:
+    min: 0.5
     max: 1
+  splitOnDestroy: 0
+  amount:
+    min: 0
+    max: 0
+  splitPrefab: {fileID: 0}
+  cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
   explosionRadius: 3
   torqueOnLaunch: 1
   randomTorque:
