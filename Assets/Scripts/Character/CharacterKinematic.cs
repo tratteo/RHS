@@ -9,7 +9,7 @@ using GibFrame.Performance;
 using System;
 using UnityEngine;
 
-public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody, IStatisticsProvider
+public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IManagedRigidbody, IStatisticsProvider, ISpeedOwner
 {
     [Header("Physics")]
     [SerializeField] private float movementSpeed = 5F;
@@ -35,6 +35,8 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
     public bool IsInvulnerable => invulnerabilityCurrentSteps > 0;
 
     public bool IsDodging => dodgeTimer > 0F;
+
+    public float SpeedMultiplier { get; set; } = 1F;
 
     public event Action<bool> OnInvulnerability;
 
@@ -64,9 +66,9 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         }
     }
 
-    public void Move(Vector2 direction, float speedMultiplier = 1F)
+    public void Move(Vector2 direction)
     {
-        traslation = movementSpeed * speedMultiplier * direction.normalized;
+        traslation = movementSpeed * SpeedMultiplier * direction.normalized;
     }
 
     public override void CommonUpdate(float deltaTime)
@@ -88,8 +90,7 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         {
             AnimatorDriver.DriveAnimation(new AnimatorDriver.AnimationData(AnimatorDriver.RUN, false, GetRelativeTraslationSign(traslation)));
         }
-
-        rechargeDodgesJob.Step(deltaTime);
+        rechargeDodgesJob.CommonUpdate(deltaTime);
         if (dodgesCharges >= dodgesCount) rechargeDodgesJob.Suspend();
     }
 

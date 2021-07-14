@@ -44,7 +44,7 @@ public class Shooter : Weapon
         base.Awake();
         for (int i = 0; i < projectilePrefabs.Length; i++)
         {
-            PoolDispatcher.Instance.RequestPool(Layers.PROJECTILES, projectilePrefabs[i], 250);
+            PoolDispatcher.Instance.RequestPool(Layers.PROJECTILES, projectilePrefabs[i], 25);
         }
     }
 }

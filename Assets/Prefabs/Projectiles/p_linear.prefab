@@ -148,3 +148,6 @@ MonoBehaviour:
   lifeSpan:
     min: 1.25
     max: 1.25
+  statusEffects:
+  - {fileID: -5592050846295070755, guid: 788a82c90c0e2d441b8fde7e473b207c, type: 3}
+  - {fileID: 3044962965339312212, guid: 0db8e46da85c80e4199279e55c831c94, type: 3}

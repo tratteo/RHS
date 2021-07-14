@@ -65,7 +65,7 @@ public class SpawnMinionBossAbility : Ability<BossEnemy>
 
     private void Awake()
     {
-        PoolDispatcher.Instance.RequestPool(Categories.ENEMY_MINIONS, prefab, 50);
+        PoolDispatcher.Instance.RequestPool(Categories.ENEMY_MINIONS, prefab, maxAmount * 2);
     }
 
     private void Start()

@@ -132,15 +132,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7736206838423945981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3de3ba21faf05074b8c2c94ff78c123f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6257cb05984a6494bb5c6761152ba250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 0
+  baseDamage: 1
   speed: 1
   homingRatio: 0
   torqueOnLaunch: 1
   randomTorque:
-    min: 200
+    min: 250
     max: 360
   isDeflectable: 0
   deflectForce: 1
@@ -149,11 +149,9 @@ MonoBehaviour:
   lifeSpan:
     min: 1
     max: 1
+  statusEffects: []
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  explosionRadius: 0
-  detonationForce:
-    min: 1
-    max: 2
+  explosionRadius: 2
 --- !u!114 &-3306944093649442713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +168,7 @@ MonoBehaviour:
   continuousGeneration: 0
   generationTime: 0.5
   prefab: {fileID: 8474679064271465605, guid: 8df5860129c20a041bc4f18705352f49, type: 3}
+  randomizeStartAxis: 0
   amount:
     min: 3
     max: 3

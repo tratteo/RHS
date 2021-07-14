@@ -24,6 +24,6 @@ public class ResistanceMinion : EnemyMinion
 
     private void Awake()
     {
-        PoolDispatcher.Instance.RequestPool(Categories.INTERACTABLES, spawnOnDestroyPrefab, 50);
+        PoolDispatcher.Instance.RequestPool(Categories.INTERACTABLES, spawnOnDestroyPrefab, 1);
     }
 }

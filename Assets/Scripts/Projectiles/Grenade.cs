@@ -40,11 +40,6 @@ public class Grenade : Projectile
                 {
                     healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
                 }
-                IEffectsReceiverHolder effectReceiver;
-                if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
-                {
-                    effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
-                }
             }
         }
         Collider.enabled = false;

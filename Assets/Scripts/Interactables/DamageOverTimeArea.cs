@@ -22,7 +22,7 @@ public class DamageOverTimeArea : MonoBehaviour, ICommonUpdate, IPooledObject
 
     public void CommonUpdate(float deltaTime)
     {
-        damageJob.Step(deltaTime);
+        damageJob.CommonUpdate(deltaTime);
         if (timer > 0)
         {
             timer -= deltaTime;

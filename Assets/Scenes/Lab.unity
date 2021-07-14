@@ -1780,6 +1780,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: mildewer
       objectReference: {fileID: 0}
+    - target: {fileID: 3706265349256165496, guid: 1b205bd05326531438a6fc5855012446, type: 3}
+      propertyPath: projectilePrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706265349256165496, guid: 1b205bd05326531438a6fc5855012446, type: 3}
+      propertyPath: projectilePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 3825917274784623389, guid: 69df838cdba4cfd4f844381f2c9f6136, type: 3}
+    - target: {fileID: 3706265349256165496, guid: 1b205bd05326531438a6fc5855012446, type: 3}
+      propertyPath: projectilePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3825917274784623389, guid: b22bedde94bf5234da27ef101a773df0, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b205bd05326531438a6fc5855012446, type: 3}
 --- !u!1001 &4613988603779883790

@@ -11,9 +11,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, ICommonUpdate, IDeflectable
+public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, IDeflectable
 {
-    protected List<StatusEffect> onHitEffects;
     [Header("Projectile")]
     [SerializeField] private float baseDamage = 1F;
     [Header("Kinematic")]
@@ -31,6 +30,9 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, 
     [Header("Life span")]
     [SerializeField] private bool hasLifeSpan = false;
     [SerializeField] private RandomizedFloat lifeSpan;
+
+    [Header("Status effects")]
+    [SerializeField] private List<StatusEffect> statusEffects;
 
     private float counterAttackDamageMultiplier = 1F;
     private bool critical = false;
@@ -58,11 +60,6 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, 
         Projectile projectile = obj.GetComponent<Projectile>();
         projectile.Setup(Owner, Target);
         return projectile;
-    }
-
-    public void AddEffects(params StatusEffect[] effects)
-    {
-        onHitEffects.AddRange(effects);
     }
 
     public string GetActionLayer()
@@ -116,7 +113,6 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, 
     {
         Renderer.enabled = true;
         Rigidbody.velocity = Vector3.zero;
-        onHitEffects.Clear();
         damage = baseDamage;
         critical = false;
         criticalMultiplier = 1F;
@@ -159,19 +155,16 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, 
         Rigidbody.velocity = -Rigidbody.velocity * deflectForce;
     }
 
-    protected virtual void OnChildSplit(GameObject obj)
-    {
-        obj.layer = gameObject.layer;
-    }
-
     protected virtual void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         Collider = GetComponent<Collider2D>();
         Renderer = GetComponent<SpriteRenderer>();
-        onHitEffects = new List<StatusEffect>();
-
         damage = baseDamage;
+        foreach (StatusEffect effect in statusEffects)
+        {
+            PoolDispatcher.Instance.RequestPool(Categories.STATUS_EFFECTS, effect.gameObject, 1);
+        }
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -181,13 +174,16 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, IEffectBearer, 
         {
             healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
         }
-        IEffectsReceiverHolder effectReceiver;
-        if ((effectReceiver = collision.gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
-        {
-            effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
-        }
-
+        ApplyStatusEffects(collision.gameObject);
         Destroy();
+    }
+
+    protected void ApplyStatusEffects(GameObject target)
+    {
+        foreach (StatusEffect effect in statusEffects)
+        {
+            StatusEffect.Apply(target.transform, effect);
+        }
     }
 
     protected float GetDamage()

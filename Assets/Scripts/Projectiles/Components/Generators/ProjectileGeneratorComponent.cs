@@ -23,10 +23,7 @@ public abstract class ProjectileGeneratorComponent : ProjectileComponent
     public override void CommonUpdate(float deltaTime)
     {
         base.CommonUpdate(deltaTime);
-        if (continuousGeneration)
-        {
-            generateJob?.Step(deltaTime);
-        }
+        generateJob?.CommonUpdate(deltaTime);
     }
 
     protected override void Awake()
@@ -38,7 +35,7 @@ public abstract class ProjectileGeneratorComponent : ProjectileComponent
         }
         if (prefab)
         {
-            PoolDispatcher.Instance.RequestPool(Categories.PROJECTILES, Prefab, 250);
+            PoolDispatcher.Instance.RequestPool(Categories.PROJECTILES, Prefab, 10);
         }
     }
 

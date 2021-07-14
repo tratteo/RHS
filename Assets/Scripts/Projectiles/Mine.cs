@@ -36,11 +36,6 @@ public class Mine : Projectile
             {
                 healthHolder.Damage(new IHealthHolder.Data(gameObject, GetDamage()));
             }
-            IEffectsReceiverHolder effectReceiver;
-            if ((effectReceiver = buf[i].gameObject.GetComponent<IEffectsReceiverHolder>()) != null)
-            {
-                effectReceiver.GetEffectsReceiver().AddEffects(onHitEffects.ToArray());
-            }
         }
 
         Renderer.enabled = false;

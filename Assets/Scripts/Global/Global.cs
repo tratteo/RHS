@@ -21,6 +21,7 @@ public static class Categories
     public static readonly string ENEMY_MINIONS = "EnemyMinions";
     public static readonly string PROJECTILES = "Projectiles";
     public static readonly string FX = "FX";
+    public static readonly string STATUS_EFFECTS = "StatusEffects";
 }
 
 public static class UIPrefs

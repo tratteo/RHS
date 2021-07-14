@@ -7,33 +7,48 @@
 using GibFrame;
 using GibFrame.ObjectPooling;
 using GibFrame.Performance;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PoolDispatcher : MonoSingleton<PoolDispatcher>, ICommonUpdate
 {
-    private readonly Queue<PoolRequest> poolRequests = new Queue<PoolRequest>();
+    private readonly List<PoolRequest> requests = new List<PoolRequest>();
+    [SerializeField] private int maxPoolSize = 1000;
 
     public void RequestPool(string categoryId, GameObject prefab, int size)
     {
-        poolRequests.Enqueue(new PoolRequest(categoryId, prefab, size));
+        PoolRequest find = requests.Find(r => r.Category.Equals(categoryId) && r.Prefab.Equals(prefab));
+        if (find != null)
+        {
+            if (find.Size < maxPoolSize)
+            {
+                find.Size += size;
+            }
+        }
+        else
+        {
+            find = new PoolRequest(categoryId, prefab, size);
+            requests.Add(find);
+        }
     }
 
     public void CommonUpdate(float deltaTime)
     {
-        while (poolRequests.Count > 0)
+        while (requests.Count > 0)
         {
-            PoolRequest request = poolRequests.Dequeue();
+            PoolRequest request = requests[requests.Count - 1];
+            requests.RemoveAt(requests.Count - 1);
             ExecutePoolRequest(request);
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
         CommonUpdateManager.Register(this);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         CommonUpdateManager.Unregister(this);
     }
@@ -64,19 +79,24 @@ public class PoolDispatcher : MonoSingleton<PoolDispatcher>, ICommonUpdate
         }
     }
 
-    private class PoolRequest
+    private class PoolRequest : IEquatable<PoolRequest>
     {
         public string Category { get; private set; }
 
         public GameObject Prefab { get; private set; }
 
-        public int Size { get; private set; }
+        public int Size { get; set; }
 
         public PoolRequest(string category, GameObject prefab, int size)
         {
             Category = category;
             Prefab = prefab;
             Size = size;
+        }
+
+        public bool Equals(PoolRequest other)
+        {
+            return Category.Equals(other.Category) && Prefab.Equals(other.Prefab);
         }
     }
 }
