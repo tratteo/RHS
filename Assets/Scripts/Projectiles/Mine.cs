@@ -16,6 +16,11 @@ public class Mine : Projectile
     [SerializeField] private float explosionRadius = 6F;
     [SerializeField] private float explosionForce = 2500F;
 
+    public override void DelegateLaunch(float param = 1)
+    {
+        //TODO mines are not launched!
+    }
+
     protected override void OnDestroyEffectPlay(ParticleSystem destroyEffect)
     {
         base.OnDestroyEffectPlay(destroyEffect);

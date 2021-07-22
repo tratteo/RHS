@@ -431,7 +431,9 @@ MonoBehaviour:
     max: 0
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilitiesPrefabs: []
+  abilitiesPrefabs:
+  - {fileID: 279351994972937365, guid: 300eccd2593d87c499bff4004c9d3ba6, type: 3}
+  - {fileID: 279351994972937365, guid: f1e236bc9a588d843bd7f5624eae7f6b, type: 3}
   shootUpdate:
     min: 1
     max: 2
@@ -658,7 +660,10 @@ MonoBehaviour:
     max: 0
   damageMultiplier: 1
   abilityInitialTime: 4
-  abilitiesPrefabs: []
+  abilitiesPrefabs:
+  - {fileID: 279351994972937365, guid: 300eccd2593d87c499bff4004c9d3ba6, type: 3}
+  - {fileID: 279351994972937365, guid: f1e236bc9a588d843bd7f5624eae7f6b, type: 3}
+  - {fileID: 279351994972937365, guid: 09fad656f02b48e449a5552bb9f42aca, type: 3}
   shootUpdate:
     min: 0.75
     max: 1.25

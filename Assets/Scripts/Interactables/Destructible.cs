@@ -5,11 +5,12 @@
 // All Rights Reserved
 
 using GibFrame;
+using GibFrame.ObjectPooling;
 using UnityEngine;
 using UnityEngine.Events;
 using static IHealthHolder;
 
-public class Destructible : MonoBehaviour, IHealthHolder
+public class Destructible : MonoBehaviour, IHealthHolder, IPooledObject
 {
     [SerializeField] private float resistance = 5F;
 
@@ -26,6 +27,11 @@ public class Destructible : MonoBehaviour, IHealthHolder
     public void Heal(Data amount)
     {
         //resistanceSystem.Increase(amount);
+    }
+
+    public void OnObjectSpawn()
+    {
+        resistanceSystem.Refull();
     }
 
     private void OnExhaust()

@@ -50,12 +50,9 @@ public class BomberPhase : BossPhaseStateMachine
                 shootTimer = shootUpdate;
             }
         }
-        if (CanExecute())
+        if (CanExecute() && !IsPerformingAbility && gapBossAbility.CanPerform())
         {
-            if (gapBossAbility.CanPerform())
-            {
-                gapBossAbility.Perform();
-            }
+            gapBossAbility.Perform();
         }
     }
 

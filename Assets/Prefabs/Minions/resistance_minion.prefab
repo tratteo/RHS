@@ -152,5 +152,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   indicatorEventBus: {fileID: 11400000, guid: 2d4596ff5691d8d499339b443fbe61f0, type: 2}
-  damage: 150
+  damage: 200
   spawnOnDestroyPrefab: {fileID: 4851402720089113734, guid: 06ff440b2bd55704193e563dad21be2b, type: 3}

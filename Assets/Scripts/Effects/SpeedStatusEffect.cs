@@ -2,10 +2,10 @@
 
 public class SpeedStatusEffect : StatusEffect
 {
-    [SerializeField, Range(0F, 10F)] private float multiplier = 1F;
+    [SerializeField] [Range(0F, 10F)] private float multiplier = 1F;
     private ISpeedOwner speedOwner;
 
-    protected void Start()
+    protected override void OnSpawn()
     {
         if (!GetStatusEffectFunctionalInterface(out speedOwner))
         {

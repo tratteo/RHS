@@ -13,9 +13,11 @@ public class Shooter : Weapon
     [SerializeField] private GameObject[] projectilePrefabs;
     private int prefabIndex = 0;
 
+    public int ProjectileIndex => prefabIndex;
+
     public void SetPrefabIndex(int index)
     {
-        if (index > 0 && index < projectilePrefabs.Length)
+        if (index >= 0 && index < projectilePrefabs.Length)
         {
             prefabIndex = index;
         }

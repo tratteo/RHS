@@ -695,7 +695,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7562008376191570877}
   firePoint: {fileID: 8395504120013600870}
   projectilePrefabs:
-  - {fileID: 3825917274784623389, guid: b22bedde94bf5234da27ef101a773df0, type: 3}
+  - {fileID: 8474679064271465605, guid: 1c19ea159e39dce468e8950dac0187ee, type: 3}
+  - {fileID: 3825917274784623389, guid: 56a1435efc9f8d24a923a589732ec48a, type: 3}
 --- !u!95 &2651704280614315241
 Animator:
   serializedVersion: 3

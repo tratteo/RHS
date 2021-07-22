@@ -50,7 +50,7 @@ MonoBehaviour:
     icon: {fileID: 0}
     description: 
   cooldown: 8
-  chargeTime: 0.85
+  chargeTime: 0.7
   attack:
     attack:
       duration: 0.02

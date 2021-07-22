@@ -1,20 +1,28 @@
 ﻿using GibFrame.ObjectPooling;
 using GibFrame.Performance;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StatusEffect : MonoBehaviour, ICommonUpdate, IEquatable<StatusEffect>, IPooledObject
 {
-    [SerializeField] private bool stackable = false;
-    [SerializeField] private bool resetDuration = true;
+    public enum Behaviour { RESET, SINGLE, STACK }
+
+    [Tooltip("RESET: when applying the status effect while the target already has a status effect of the same type active, reset the time of the active effect instead of instantiating a new one" +
+        "\n\nSINGLE: apply the status effect only if there are no active effects of the same type" +
+        "\n\nSTACK: instantiate this effect even if there is already one of the same type active")]
+    [SerializeField] private Behaviour behaviour;
     [SerializeField] private float duration = 0F;
     private float currentTime = 0F;
 
+    protected float Duration => duration;
+
     protected Transform Parent { get; private set; } = null;
 
-    public static void Apply(Transform parent, StatusEffect statusEffectPrefab)
+    public void ApplyTo(Transform parent)
     {
         Transform holder;
+        // The target has never been hit by a status effect, green pass
         if (!(holder = parent.Find("StatusEffectsHolder")))
         {
             GameObject holderObj = new GameObject()
@@ -24,24 +32,43 @@ public class StatusEffect : MonoBehaviour, ICommonUpdate, IEquatable<StatusEffec
             holderObj.transform.SetParent(parent);
             holderObj.transform.localPosition = Vector3.zero;
             holder = holderObj.transform;
-            StatusEffect obj = PoolManager.Instance.Spawn(Categories.STATUS_EFFECTS, statusEffectPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<StatusEffect>();
-            obj.transform.SetParent(holder);
-            obj.transform.localPosition = Vector3.zero;
-            obj.Parent = parent;
+            InstantiateEffectCopy(holder, parent);
         }
         else
         {
-            StatusEffect eff = (StatusEffect)parent.GetComponentInChildren(Type.GetType(statusEffectPrefab.GetType().ToString()));
-            if (eff != null && statusEffectPrefab.resetDuration)
+            // Get all the active effects of the same type
+            List<StatusEffect> activeEffects = new List<StatusEffect>();
+            Component[] components = parent.GetComponentsInChildren(Type.GetType(GetType().ToString()));
+            foreach (Component component in components)
             {
-                eff.ResetDuration(statusEffectPrefab.duration);
+                if (component is StatusEffect effect)
+                {
+                    activeEffects.Add(effect);
+                }
             }
-            if (statusEffectPrefab.stackable || eff == null)
+            switch (behaviour)
             {
-                StatusEffect obj = PoolManager.Instance.Spawn(Categories.STATUS_EFFECTS, statusEffectPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<StatusEffect>();
-                obj.transform.SetParent(holder);
-                obj.transform.localPosition = Vector3.zero;
-                obj.Parent = parent;
+                case Behaviour.STACK:
+                    InstantiateEffectCopy(holder, parent);
+                    break;
+
+                case Behaviour.RESET:
+                    if (activeEffects.Count > 0)
+                    {
+                        activeEffects.ForEach(e => e.ResetDuration(duration));
+                    }
+                    else
+                    {
+                        InstantiateEffectCopy(holder, parent);
+                    }
+                    break;
+
+                case Behaviour.SINGLE:
+                    if (activeEffects.Count <= 0)
+                    {
+                        InstantiateEffectCopy(holder, parent);
+                    }
+                    break;
             }
         }
     }
@@ -65,6 +92,10 @@ public class StatusEffect : MonoBehaviour, ICommonUpdate, IEquatable<StatusEffec
         currentTime = duration;
     }
 
+    protected virtual void OnSpawn()
+    {
+    }
+
     protected virtual void Destroy()
     {
         gameObject.SetActive(false);
@@ -75,6 +106,15 @@ public class StatusEffect : MonoBehaviour, ICommonUpdate, IEquatable<StatusEffec
     {
         functional = Parent.GetComponentInChildren<T>();
         return functional != null;
+    }
+
+    private void InstantiateEffectCopy(Transform holder, Transform parent)
+    {
+        StatusEffect effect = PoolManager.Instance.Spawn(Categories.STATUS_EFFECTS, name, Vector3.zero, Quaternion.identity).GetComponent<StatusEffect>();
+        effect.transform.SetParent(holder);
+        effect.transform.localPosition = Vector3.zero;
+        effect.Parent = parent;
+        effect.OnSpawn();
     }
 
     private void ResetDuration(float newDuration = -1F)

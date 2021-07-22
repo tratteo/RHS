@@ -48,4 +48,6 @@ MonoBehaviour:
     name: 
     icon: {fileID: 0}
     description: 
-  cooldown: 4
+  cooldown: 4.5
+  towards: 1
+  triggerDistance: 11

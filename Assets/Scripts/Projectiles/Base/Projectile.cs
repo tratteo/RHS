@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, IDeflectable
+public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, IDeflectable, ICommonFixedUpdate
 {
     [Header("Projectile")]
     [SerializeField] private float baseDamage = 1F;
@@ -32,8 +32,8 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     [SerializeField] private RandomizedFloat lifeSpan;
 
     [Header("Status effects")]
-    [SerializeField] private List<StatusEffect> statusEffects;
-
+    [SerializeField] private List<GameObject> statusEffectsPrefabs;
+    private List<StatusEffect> statusEffects;
     private float counterAttackDamageMultiplier = 1F;
     private bool critical = false;
     private float criticalMultiplier;
@@ -52,6 +52,23 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     protected Collider2D Collider { get; private set; } = null;
 
     public event Action OnDestroy = delegate { };
+
+    public static Projectile Create(string prefabName, Vector2 position, Quaternion rotation, IAgent owner, Transform target, float param = 1F)
+    {
+        GameObject obj = PoolManager.Instance.Spawn(Categories.PROJECTILES, prefabName, position, rotation);
+        Projectile projectile = obj.GetComponent<Projectile>();
+        if (!projectile)
+        {
+            Debug.LogError("Trying to instantiate a non projectile as a projectile");
+        }
+        else
+        {
+            projectile.Setup(owner, target);
+            projectile.DelegateLaunch(param);
+            return projectile;
+        }
+        return null;
+    }
 
     public Projectile Generate(string childId, Vector2 position, Quaternion rotation)
     {
@@ -134,10 +151,6 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
                 Destroy();
             }
         }
-        if (Target)
-        {
-            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, (Target.position - transform.position).normalized * speed, homingRatio);
-        }
     }
 
     public void Deflect(IAgent agent)
@@ -145,6 +158,14 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
         if (isDeflectable)
         {
             DeflectBehaviour(agent);
+        }
+    }
+
+    public void CommonFixedUpdate(float fixedDeltaTime)
+    {
+        if (Target)
+        {
+            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, Rigidbody.velocity.magnitude * (Target.position - transform.position).normalized * speed, homingRatio);
         }
     }
 
@@ -161,6 +182,16 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
         Collider = GetComponent<Collider2D>();
         Renderer = GetComponent<SpriteRenderer>();
         damage = baseDamage;
+
+        statusEffects = new List<StatusEffect>();
+        foreach (GameObject obj in statusEffectsPrefabs)
+        {
+            StatusEffect effect = obj.GetComponent<StatusEffect>();
+            if (effect)
+            {
+                statusEffects.Add(effect);
+            }
+        }
         foreach (StatusEffect effect in statusEffects)
         {
             PoolDispatcher.Instance.RequestPool(Categories.STATUS_EFFECTS, effect.gameObject, 1);
@@ -182,7 +213,7 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     {
         foreach (StatusEffect effect in statusEffects)
         {
-            StatusEffect.Apply(target.transform, effect);
+            effect.ApplyTo(target.transform);
         }
     }
 

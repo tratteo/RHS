@@ -33,6 +33,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     private float attackTimer = 0F;
     private float lookSign = 1F;
     private float stunTimer = 0F;
+    private bool isDead = false;
 
     public bool IsStunned => stunTimer > 0F;
 
@@ -100,7 +101,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
             gameObject.AddForce2D(3F * data.Amount * axis);
             bloodFxh.Display(gameObject, transform.position, axis, Vector3.zero, FxHandler.Space.WORLD);
             healthSystem.Decrease(data.Amount);
-            if (healthSystem.GetPercentage() <= 0)
+            if (healthSystem.GetPercentage() <= 0 && !isDead)
             {
                 Die();
                 GameEndedBus.Broadcast(false);
@@ -135,7 +136,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     {
         base.Awake();
         sword = GetComponentInChildren<Sword>();
-        elemetsOfInterestBuf = new Collider2D[32];
+        elemetsOfInterestBuf = new Collider2D[128];
         detectElementsOfInterestJob = new UpdateJob(new Callback(DetectCloseElementsOfInterest), 0.125F);
         sword.SetOwner(this, baseDamage);
         healthSystem = new ValueContainerSystem(maxHealth);
@@ -185,6 +186,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     private void Die()
     {
+        isDead = true;
         Rigidbody.velocity = Vector2.zero;
         Collider.enabled = false;
     }

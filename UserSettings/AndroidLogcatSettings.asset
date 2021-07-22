@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "e47ffcd6",
         "name": "com.Siamango.RoguelikeHS",
-        "processId": 8594,
+        "processId": 19542,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -234,6 +234,66 @@
             "deviceId": "e47ffcd6",
             "name": "com.Siamango.RoguelikeHS",
             "processId": 8594,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 9845,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 9846,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 17355,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 17356,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 9843,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 17357,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 17358,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 17359,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 19538,
+            "exited": false
+        },
+        {
+            "deviceId": "e47ffcd6",
+            "name": "com.Siamango.RoguelikeHS",
+            "processId": 19542,
             "exited": false
         }
     ],

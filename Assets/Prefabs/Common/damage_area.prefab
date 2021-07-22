@@ -113,6 +113,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 0
-  damageOverTime: 5
+  damageOverTime: 8
   damageInterval: 0.25
-  duration: 10
+  duration: 15
