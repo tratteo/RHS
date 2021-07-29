@@ -2046,7 +2046,7 @@ GameObject:
   - component: {fileID: 7465014462829220773}
   - component: {fileID: 1976913845}
   m_Layer: 6
-  m_Name: character
+  m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2266,7 +2266,7 @@ MonoBehaviour:
   gameEndedBus: {fileID: 11400000, guid: 14560a0078ae3ab46afe6db20c31a168, type: 2}
   inputBus: {fileID: 11400000, guid: dc6711bf8a102104abfd839b1d08c74d, type: 2}
   cameraShakeChannel: {fileID: 11400000, guid: e42cdd2aa8bd00f4e9950f775ec2654b, type: 2}
-  maxHealth: 500
+  maxHealth: 600
   baseDamage: 40
   senseRadius: 50
   attackCooldown: 0.3

@@ -68,7 +68,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     public override void CommonUpdate(float deltaTime)
     {
-        detectElementsOfInterestJob.CommonUpdate(deltaTime);
+        detectElementsOfInterestJob.Step(deltaTime);
         if (attackTimer > 0)
         {
             attackTimer -= deltaTime;

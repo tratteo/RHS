@@ -90,7 +90,7 @@ public class CharacterKinematic : CharacterComponent, IMultiCooldownOwner, IMana
         {
             AnimatorDriver.DriveAnimation(new AnimatorDriver.AnimationData(AnimatorDriver.RUN, false, GetRelativeTraslationSign(traslation)));
         }
-        rechargeDodgesJob.CommonUpdate(deltaTime);
+        rechargeDodgesJob.Step(deltaTime);
         if (dodgesCharges >= dodgesCount) rechargeDodgesJob.Suspend();
     }
 

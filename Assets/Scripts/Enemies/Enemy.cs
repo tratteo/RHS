@@ -111,7 +111,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
 
     public virtual void CommonUpdate(float deltaTime)
     {
-        senseJob.CommonUpdate(deltaTime);
+        senseJob.Step(deltaTime);
         if (CurrentStatus == Status.ATTACKING)
         {
             if (TargetContext == null || targetHealth == null || targetHealth.GetHealthPercentage() <= 0F)

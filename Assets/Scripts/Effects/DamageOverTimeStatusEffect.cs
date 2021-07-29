@@ -13,7 +13,7 @@ public class DamageOverTimeStatusEffect : StatusEffect
     public override void CommonUpdate(float deltaTime)
     {
         base.CommonUpdate(deltaTime);
-        damageJob.CommonUpdate(deltaTime);
+        damageJob.Step(deltaTime);
     }
 
     protected override void OnSpawn()

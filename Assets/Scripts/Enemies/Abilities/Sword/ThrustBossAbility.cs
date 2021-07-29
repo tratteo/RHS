@@ -66,4 +66,13 @@ public class ThrustBossAbility : Ability<BossEnemy>
             Parent.SetInteraction();
         }
     }
+
+    protected override void OnStopped()
+    {
+        base.OnStopped();
+        if (Parent.GetWeapon() is Sword sword)
+        {
+            sword.ResetOverrideRotation();
+        }
+    }
 }

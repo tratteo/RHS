@@ -23,7 +23,7 @@ public abstract class ProjectileGeneratorComponent : ProjectileComponent
     public override void CommonUpdate(float deltaTime)
     {
         base.CommonUpdate(deltaTime);
-        generateJob?.CommonUpdate(deltaTime);
+        generateJob?.Step(deltaTime);
     }
 
     protected override void Awake()

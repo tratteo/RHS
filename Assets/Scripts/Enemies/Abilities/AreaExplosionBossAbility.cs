@@ -79,6 +79,7 @@ public class AreaExplosionBossAbility : Ability<BossEnemy>
             if (effect)
             {
                 effects.Add(effect);
+                PoolDispatcher.Instance.RequestPool(Categories.STATUS_EFFECTS, obj, 1);
             }
         }
     }
