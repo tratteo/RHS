@@ -42,12 +42,12 @@ public abstract class MildewerPhase : BossPhaseStateMachine
                 shootTimer -= Time.deltaTime;
                 if (shootTimer < 0F)
                 {
-                    (Owner.GetWeapon() as Shooter).TriggerShoot(Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) * 0.825F);
+                    (Owner.Weapon as Shooter).TriggerShoot(Vector2.Distance(Owner.BattleContext.Transform.position, Owner.transform.position) * 0.825F);
                     shootTimer = shootUpdate;
                 }
             }
         }
     }
 
-    protected override float GetAttackRange() => 0F;
+    protected override float GetRange() => 0F;
 }

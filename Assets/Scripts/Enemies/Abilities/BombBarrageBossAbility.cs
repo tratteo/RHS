@@ -26,7 +26,7 @@ public class BombBarrageBossAbility : Ability<BossEnemy>
             explosionTimer -= Time.fixedDeltaTime;
             if (explosionTimer <= 0F)
             {
-                Projectile.Create(delayedExplosionPrefab.name, Parent.TargetContext.Transform.position.Perturbate(3F), Quaternion.identity, Parent, Parent.TargetContext.Transform, 0F);
+                Projectile.Create(delayedExplosionPrefab.name, Parent.BattleContext.Transform.position.Perturbate(3F), Quaternion.identity, Parent, Parent.BattleContext.Transform, 0F);
                 explosionTimer = explosionInterval;
             }
             yield return wait;

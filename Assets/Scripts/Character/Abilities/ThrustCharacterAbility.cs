@@ -15,7 +15,7 @@ public class ThrustCharacterAbility : Ability<CharacterManager>
 
     protected override IEnumerator Execute_C()
     {
-        Weapon weapon = Parent.Combat.GetWeapon();
+        Weapon weapon = Parent.Combat.Weapon;
         if (weapon is Sword sword)
         {
             AnimationClip clip = Array.Find(sword.Animator.runtimeAnimatorController.animationClips, (c) => c.name.Equals("thrust"));

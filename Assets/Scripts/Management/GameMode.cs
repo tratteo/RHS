@@ -13,7 +13,7 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
 {
     [SerializeField, Guarded] private BoolEventBus gameEndedBus;
     [SerializeField, Guarded] private GameObject characterPrefab;
-
+    [SerializeField] private bool instantiateBossOnStart = true;
     private float time = 0;
 
     public event Action<BossEnemy> OnBossSpawned = delegate { };
@@ -28,6 +28,17 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
         return new Statistic[] { new Statistic(Statistic.TIME, time) };
     }
 
+    public void InstantiateLoadedBoss()
+    {
+        if (GameDaemon.Instance.TryGetResource(GameDaemon.LOADED_LEVEL, out Level loadedLevel, false) && loadedLevel.Boss)
+        {
+            GameObject obj = Instantiate(loadedLevel.Boss.gameObject, Vector2.up * 12F, Quaternion.identity);
+            BossEnemy boss = obj.GetComponent<BossEnemy>();
+            boss.OnDeath += () => gameEndedBus.Broadcast(true);
+            OnBossSpawned?.Invoke(boss);
+        }
+    }
+
     private void OnEnable()
     {
         CommonUpdateManager.Register(this);
@@ -40,17 +51,13 @@ public class GameMode : MonoSingleton<GameMode>, ICommonUpdate, IStatisticsProvi
 
     private void Start()
     {
-        if (!GameDaemon.Instance.TryGetResource(GameDaemon.LOADED_LEVEL, out Level loadedLevel, false))
-        {
-            Debug.LogError("Unable to load the level from the game mode!");
-        }
-        else
+        if (characterPrefab)
         {
             Instantiate(characterPrefab, Vector2.zero, Quaternion.identity);
-            GameObject obj = Instantiate(loadedLevel.Boss.gameObject, Vector2.up * 12F, Quaternion.identity);
-            BossEnemy boss = obj.GetComponent<BossEnemy>();
-            boss.OnDeath += () => gameEndedBus.Broadcast(true);
-            OnBossSpawned?.Invoke(boss);
+        }
+        if (instantiateBossOnStart)
+        {
+            InstantiateLoadedBoss();
         }
     }
 }

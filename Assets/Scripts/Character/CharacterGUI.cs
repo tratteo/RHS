@@ -15,8 +15,8 @@ public partial class CharacterGUI : CharacterComponent
 {
     [Header("Channels")]
     [SerializeField, Guarded] private SessionStatisticsEventBus statisticsEventBus;
-    [Header("Prefabs")]
-    [SerializeField, Guarded] private CooldownUI cooldownUIPrefab;
+    //[Header("Prefabs")]
+    //[SerializeField, Guarded] private CooldownUI cooldownUIPrefab;
     [Header("UI")]
     [SerializeField, Guarded] private Image interactionIndicator;
     [SerializeField, Guarded] private Transform cooldownsParent;
@@ -49,9 +49,10 @@ public partial class CharacterGUI : CharacterComponent
         SetInteraction(icon != null ? icon : Assets.Sprites.Transparent, Color.black);
     }
 
-    public void BindCooldown(ICooldownOwner owner)
+    public void BindAbilityCooldown(ICooldownOwner owner)
     {
-        CooldownUI.Attach(owner, cooldownUIPrefab, cooldownsParent);
+        attackButton.gameObject.GetComponentInChildren<CooldownUI>(true).Bind(owner);
+        //CooldownUI.Attach(owner, cooldownUIPrefab, cooldownsParent);
     }
 
     protected override void OnGameEnded(bool win)

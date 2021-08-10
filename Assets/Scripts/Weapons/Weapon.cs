@@ -58,12 +58,6 @@ public abstract class Weapon : MonoBehaviour, ICommonUpdate
         OwnerObj = (owner as MonoBehaviour).gameObject;
     }
 
-    public virtual void SetActive(bool state)
-    {
-        if (IsActive == state) return;
-        IsActive = state;
-    }
-
     public bool HasTarget()
     {
         return Target;

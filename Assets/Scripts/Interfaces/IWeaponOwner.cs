@@ -6,5 +6,5 @@
 
 public interface IWeaponOwner
 {
-    Weapon GetWeapon();
+    Weapon Weapon { get; set; }
 }

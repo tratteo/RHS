@@ -10,7 +10,7 @@ public class SuccessionShotsBossAbility : Ability<BossEnemy>
 
     protected override IEnumerator Execute_C()
     {
-        Weapon weapon = Parent.GetWeapon();
+        Weapon weapon = Parent.Weapon;
         if (weapon is Shooter shooter)
         {
             int current = shooter.ProjectileIndex;

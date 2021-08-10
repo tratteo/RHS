@@ -20,10 +20,4 @@ public class BossPhaseTransitionStateMachine : BossStateMachine
         Owner.Move(Vector2.zero);
         Owner.Rigidbody.velocity = Vector2.zero;
     }
-
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        base.OnStateExit(animator, stateInfo, layerIndex);
-        Owner.HealthSystem.Refull();
-    }
 }

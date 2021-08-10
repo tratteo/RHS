@@ -16,7 +16,7 @@ public class SpiralProjectileBossAbility : Ability<BossEnemy>
         float stride = 360F * turns / amount;
         for (int i = 0; i < amount; i++)
         {
-            Projectile projectile = Projectile.Create(projectilePrefab.name, Parent.transform.position, Quaternion.LookRotation(Vector3.forward, axis), Parent, Parent.TargetContext.Transform);
+            Projectile projectile = Projectile.Create(projectilePrefab.name, Parent.transform.position, Quaternion.LookRotation(Vector3.forward, axis), Parent, Parent.BattleContext.Transform);
             //projectile.transform.right = axis;
             axis = Quaternion.AngleAxis(stride, Vector3.forward) * axis;
             yield return wait;

@@ -14,12 +14,12 @@ public class SlashBossAbility : Ability<BossEnemy>
 
     public override bool CanPerform()
     {
-        return base.CanPerform() && Vector3.Distance(Parent.transform.position, Parent.TargetContext.Transform.position) < slash.Build().Range;
+        return base.CanPerform() && Vector3.Distance(Parent.transform.position, Parent.BattleContext.Transform.position) < slash.Build().Range;
     }
 
     protected override IEnumerator Execute_C()
     {
-        Weapon weapon = Parent.GetWeapon();
+        Weapon weapon = Parent.Weapon;
         if (weapon is Sword sword)
         {
             bool wasBlocking = sword.IsBlocking;

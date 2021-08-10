@@ -357,6 +357,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 27c68a62bc321c444bc01d958e4e3f63, type: 2}
   - {fileID: 11400000, guid: c9c02a604464ee343b3f940f65aad2e2, type: 2}
   - {fileID: 11400000, guid: 2e92dcd8ba6dcb14e9b7cd838b02dd1e, type: 2}
+  - {fileID: 11400000, guid: b88afba3f9a230f41aebbeeeaa297ae4, type: 2}
   content: {fileID: 1786193607}
   levelObjectPrefab: {fileID: 4169836642497010005, guid: 23b83e4ff41ad0e49909654cb53f6a72, type: 3}
 --- !u!1001 &1786193606

@@ -64,3 +64,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.render-pipelines.universal from version 10.4.0 to 10.5.0
+
+=== Thu Jul 29 16:12:07 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.2d.psdimporter from version 4.0.2 to 4.1.0

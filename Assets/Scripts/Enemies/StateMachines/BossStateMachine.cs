@@ -10,12 +10,12 @@ public class BossStateMachine : StateMachineBehaviour
 {
     protected BossEnemy Owner { get; private set; }
 
-    protected Vector3 TargetDirection => Owner.TargetContext.Transform.position - Owner.transform.position;
+    protected Vector3 TargetDirection => Owner.BattleContext.Transform.position - Owner.transform.position;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         Owner = animator.gameObject.GetComponentInChildren<BossEnemy>();
     }
 
-    protected float GetDistanceToTarget() => Vector2.Distance(Owner.transform.position, Owner.TargetContext.Transform.position);
+    protected float GetDistanceToTarget() => Vector2.Distance(Owner.transform.position, Owner.BattleContext.Transform.position);
 }

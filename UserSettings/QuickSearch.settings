@@ -16,7 +16,7 @@ filters = {
 	settings = true
 }
 scopes = {
-	"last_search.AB59B443" = "p_"
+	"last_search.AB59B443" = "CHARAC"
 }
 providers = {
 	asset = {

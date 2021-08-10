@@ -23,7 +23,7 @@ public class MultislashBossAbility : Ability<BossEnemy>
     protected override IEnumerator Execute_C()
     {
         parried = 0;
-        Weapon weapon = Parent.GetWeapon();
+        Weapon weapon = Parent.Weapon;
         if (weapon is Sword sword)
         {
             bool wasBlocking = sword.IsBlocking;
@@ -35,8 +35,8 @@ public class MultislashBossAbility : Ability<BossEnemy>
             yield return new WaitForSeconds(channelTime);
             foreach (Multislash multislash in slashes)
             {
-                if (Parent.CurrentStatus != Enemy.Status.ATTACKING && Parent.TargetContext == null) break;
-                Parent.Move(Quaternion.AngleAxis(UnityEngine.Random.value > 0.5F ? 90F : -90F, Vector3.forward) * (Parent.TargetContext.Transform.position - Parent.transform.position).normalized);
+                if (Parent.CurrentStatus != Enemy.Status.ATTACKING && Parent.BattleContext == null) break;
+                Parent.Move(Quaternion.AngleAxis(UnityEngine.Random.value > 0.5F ? 90F : -90F, Vector3.forward) * (Parent.BattleContext.Transform.position - Parent.transform.position).normalized);
                 multislash.Slash.OnStart(() => Parent.SetInteraction(Assets.Sprites.Exclamation));
                 multislash.Slash.OnComplete(() => Parent.SetInteraction());
                 yield return new WaitForSeconds(multislash.Delay);
@@ -73,7 +73,7 @@ public class MultislashBossAbility : Ability<BossEnemy>
     protected override void OnStopped()
     {
         base.OnStopped();
-        Weapon weapon = Parent.GetWeapon();
+        Weapon weapon = Parent.Weapon;
         if (weapon is Sword sword)
         {
             sword.OnBlocked -= OnBlock;
@@ -92,10 +92,10 @@ public class MultislashBossAbility : Ability<BossEnemy>
 
     private float AdjustPosition(BossEnemy parent, Sword.Attack currentSlash)
     {
-        Vector2 directionToTarget = parent.TargetContext.Transform.position - parent.transform.position;
-        if (parent.CurrentStatus == Enemy.Status.ATTACKING && parent.TargetContext != null)
+        Vector2 directionToTarget = parent.BattleContext.Transform.position - parent.transform.position;
+        if (parent.CurrentStatus == Enemy.Status.ATTACKING && parent.BattleContext != null)
         {
-            float distance = Vector2.Distance(parent.transform.position, parent.TargetContext.Transform.position);
+            float distance = Vector2.Distance(parent.transform.position, parent.BattleContext.Transform.position);
             if (distance > currentSlash.Range)
             {
                 return parent.Dash(directionToTarget.Perturbate((Quaternion.AngleAxis(90F, Vector3.forward) * directionToTarget).normalized, currentSlash.Range * 0.75F).normalized * directionToTarget.magnitude, 2.75F);

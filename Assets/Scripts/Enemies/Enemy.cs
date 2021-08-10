@@ -16,36 +16,57 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     public enum Status { ATTACKING, IDLING }
 
     private readonly Collider2D[] senseBuffer = new Collider2D[8];
+
     [SerializeField] private SerializedDescribable describable;
+
     [Header("Parameters")]
     [SerializeField] private float maxHealth;
+
     [SerializeField] private float senseRadius = 5F;
+
     [Header("Kinematic")]
     [SerializeField] private bool stationary = false;
+
     [SerializeField] private float idleSpeed = 2F;
+
     [SerializeField] private float runSpeed = 5F;
+
     [SerializeField] private float obstacleDistanceThreshold = 1F;
+
     [SerializeField] private Vector2 dashDuration = new Vector2(0.1F, 0.35F);
+
     [Header("HUD")]
     [SerializeField, Guarded] private ValueContainerBar healthBar;
+
     [SerializeField, Guarded] private Image interactionImage;
+
     [Header("FX")]
     [SerializeField] private FxHandler footstepsFx;
+
     [SerializeField] private FxHandler dashFx;
+
     [SerializeField] private FxHandler bloodFx;
+
     [Header("Debug")]
     [SerializeField] private bool debugRender = true;
+
     private float currentSpeed;
+
     private float movementSpeed;
+
     private float currentMovementSpeedMultiplier = 1F;
+
     private UpdateJob senseJob;
+
     private IHealthHolder targetHealth;
+
+    public abstract Weapon Weapon { get; set; }
 
     public Collider2D Collider { get; private set; }
 
     public bool IsStationary => stationary;
 
-    public AttackContext TargetContext { get; private set; }
+    public AttackContext BattleContext { get; private set; }
 
     public bool EnableSelfMovement { get; set; } = true;
 
@@ -114,13 +135,13 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
         senseJob.Step(deltaTime);
         if (CurrentStatus == Status.ATTACKING)
         {
-            if (TargetContext == null || targetHealth == null || targetHealth.GetHealthPercentage() <= 0F)
+            if (BattleContext == null || targetHealth == null || targetHealth.GetHealthPercentage() <= 0F)
             {
                 SetStatus(Status.IDLING);
             }
             else
             {
-                if (TargetContext.Transform.position.x > transform.position.x)
+                if (BattleContext.Transform.position.x > transform.position.x)
                 {
                     transform.localScale = new Vector3(1F, 1F, 1F);
                 }
@@ -161,8 +182,6 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
     public virtual IElementOfInterest.InterestPriority GetInterestPriority() => IElementOfInterest.InterestPriority.MAJOR;
 
     public Vector3 GetSightPoint() => transform.position;
-
-    public abstract Weapon GetWeapon();
 
     public virtual void Move(Vector2 direction, float speed = 1F)
     {
@@ -209,9 +228,9 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
                 currentSpeed = idleSpeed;
                 movementSpeed = idleSpeed * currentMovementSpeedMultiplier;
                 Move(Vector2.zero);
-                TargetContext = null;
+                BattleContext = null;
                 targetHealth = null;
-                GetWeapon()?.ClearTarget();
+                Weapon?.ClearTarget();
                 break;
 
             case Status.ATTACKING:
@@ -230,8 +249,7 @@ public abstract class Enemy : MonoBehaviour, ICommonUpdate, ICommonFixedUpdate, 
             SetStatus(Status.ATTACKING);
             Move(Vector2.zero);
             Rigidbody.velocity = Vector2.zero;
-            GetWeapon()?.SetTarget(target);
-            TargetContext = new AttackContext(target, targetHealth);
+            BattleContext = new AttackContext(target, targetHealth);
         }
     }
 

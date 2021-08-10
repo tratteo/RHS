@@ -416,7 +416,9 @@ MonoBehaviour:
   dashFx: {fileID: 8564850957781709957}
   bloodFx: {fileID: 6291688969309166781}
   debugRender: 1
-  weapon: {fileID: 8065138681569945707}
+  phasesWeapons:
+  - {fileID: 4068125241748383675, guid: dfe3eb541e1d02d46b72bf1ba5a547f2, type: 3}
+  - {fileID: 4068125241748383675, guid: dfe3eb541e1d02d46b72bf1ba5a547f2, type: 3}
   stateMachine: {fileID: 2139005779912535605}
   phaseIndicatorsParent: {fileID: 4888392647098387245}
   idleTransitionId: idle
@@ -20353,17 +20355,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6334802672530131579, guid: dfe3eb541e1d02d46b72bf1ba5a547f2, type: 3}
   m_PrefabInstance: {fileID: 6312290469255270352}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8065138681569945707 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4068125241748383675, guid: dfe3eb541e1d02d46b72bf1ba5a547f2, type: 3}
-  m_PrefabInstance: {fileID: 6312290469255270352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 366ed4ebb5d9ab648926bf9b241b0595, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2013063060090168876 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5509613816199637500, guid: dfe3eb541e1d02d46b72bf1ba5a547f2, type: 3}

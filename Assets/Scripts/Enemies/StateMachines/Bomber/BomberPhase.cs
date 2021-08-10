@@ -22,7 +22,7 @@ public class BomberPhase : BossPhaseStateMachine
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-        Weapon weapon = Owner.GetWeapon();
+        Weapon weapon = Owner.Weapon;
         if (weapon is Shooter)
         {
             Launcher = weapon as Shooter;
@@ -44,9 +44,9 @@ public class BomberPhase : BossPhaseStateMachine
             {
                 shootTimer -= Time.deltaTime;
             }
-            else if (GetDistanceToTarget() <= GetAttackRange() * 1.75F)
+            else if (GetDistanceToTarget() <= GetRange() * 1.75F)
             {
-                Launcher.TriggerShoot(Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) * 0.825F);
+                Launcher.TriggerShoot(Vector2.Distance(Owner.BattleContext.Transform.position, Owner.transform.position) * 0.825F);
                 shootTimer = shootUpdate;
             }
         }
@@ -56,17 +56,17 @@ public class BomberPhase : BossPhaseStateMachine
         }
     }
 
-    protected override float GetAttackRange() => 10F;
+    protected override float GetRange() => 10F;
 
     protected override Vector3 GetMovementDirection()
     {
-        Vector2 dir = (Owner.transform.position - Owner.TargetContext.Transform.position).normalized;
-        float distance = Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position);
-        if (distance > GetAttackRange())
+        Vector2 dir = (Owner.transform.position - Owner.BattleContext.Transform.position).normalized;
+        float distance = Vector2.Distance(Owner.BattleContext.Transform.position, Owner.transform.position);
+        if (distance > GetRange())
         {
             return -dir.Perturbate();
         }
-        else if (distance < GetAttackRange() * 0.75F)
+        else if (distance < GetRange() * 0.75F)
         {
             return dir.Perturbate();
         }

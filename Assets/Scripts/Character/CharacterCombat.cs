@@ -43,6 +43,8 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
 
     public float ThresholdDistance => 50F;
 
+    public Weapon Weapon { get => sword; set => sword = (Sword)value; }
+
     public event Action<bool> OnStun;
 
     public override void CommonFixedUpdate(float fixedDeltaTime)
@@ -89,8 +91,6 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
     }
 
     public IAgent.FactionRelation GetFactionRelation() => IAgent.FactionRelation.FRIENDLY;
-
-    public Weapon GetWeapon() => sword;
 
     public void Damage(Data data)
     {
@@ -154,7 +154,7 @@ public class CharacterCombat : CharacterComponent, IAgent, IHealthHolder, IStunn
         {
             EquippedAbility = Ability<CharacterManager>.AttachTo(defaultAbility, Manager);
         }
-        Manager.GUI.BindCooldown(EquippedAbility);
+        Manager.GUI.BindAbilityCooldown(EquippedAbility);
     }
 
     protected override void OnInput(Inputs.InputData data)

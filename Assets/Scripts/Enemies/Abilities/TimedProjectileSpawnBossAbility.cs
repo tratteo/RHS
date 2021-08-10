@@ -14,7 +14,7 @@ public class TimedProjectileSpawnBossAbility : Ability<BossEnemy>
 
     protected override IEnumerator Execute_C()
     {
-        Projectile.Create(projectilePrefab.name, Parent.transform.position, Quaternion.identity, Parent, Parent.TargetContext.Transform);
+        Projectile.Create(projectilePrefab.name, Parent.transform.position, Quaternion.identity, Parent, Parent.BattleContext.Transform);
         Complete();
         yield break;
     }

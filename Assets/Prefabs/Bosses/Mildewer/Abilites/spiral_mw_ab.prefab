@@ -50,6 +50,6 @@ MonoBehaviour:
     description: 
   cooldown: 6
   projectilePrefab: {fileID: 3825917274784623389, guid: 69df838cdba4cfd4f844381f2c9f6136, type: 3}
-  amount: 26
-  turns: 5
+  amount: 32
+  turns: 6
   delay: 0.1

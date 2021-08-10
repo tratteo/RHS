@@ -28,7 +28,7 @@ public class AreaExplosionBossAbility : Ability<BossEnemy>
 
     public override bool CanPerform()
     {
-        return base.CanPerform() && Vector2.Distance(Parent.TargetContext.Transform.position, Parent.transform.position) < explosionRadius * 0.8F;
+        return base.CanPerform() && Vector2.Distance(Parent.BattleContext.Transform.position, Parent.transform.position) < explosionRadius * 0.8F;
     }
 
     protected override IEnumerator Execute_C()

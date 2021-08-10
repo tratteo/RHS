@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
 {
     [Header("Boss")]
-    [SerializeField, Guarded] private Weapon weapon;
+    [SerializeField] private Weapon[] phasesWeapons;
     [SerializeField, Guarded] private Animator stateMachine;
     [SerializeField, Guarded] private Transform phaseIndicatorsParent;
     [SerializeField, Guarded] private string idleTransitionId = "idle";
@@ -30,11 +30,11 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
 
     private Image[] phaseIndicators;
 
+    public override Weapon Weapon { get; set; }
+
     public bool Invulnerable { get; set; }
 
     protected AnimatorDriver AnimatorDriver { get; private set; }
-
-    public override Weapon GetWeapon() => weapon;
 
     public void NotifyStatistic(int hash, Func<object, object> UpdateAction)
     {
@@ -104,7 +104,12 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         base.Awake();
         AnimatorDriver = GetComponent<AnimatorDriver>();
         intermediateStatistics = new List<Statistic>();
-        weapon.SetOwner(this);
+        if (phasesWeapons.Length <= 0) Debug.LogError("No Weapons");
+        phasesWeapons.ForEach(w =>
+        {
+            w.SetOwner(this);
+            w.gameObject.SetActive(false);
+        });
         phaseIndicators = new Image[phasesAmount];
         for (int i = 0; i < phasesAmount; i++)
         {
@@ -118,11 +123,12 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     protected override void EngageBattle(Transform target)
     {
         base.EngageBattle(target);
-        if (TargetContext != null)
+        if (BattleContext != null)
         {
             targetGroupEventBus.Broadcast(transform, true);
             stateMachine.SetBool(idleTransitionId, false);
             stateMachine.SetBool((++currentPhase).ToString(), true);
+            UpdateWeapon();
         }
     }
 
@@ -157,11 +163,23 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
                 }
             }
             stateMachine.SetBool((++currentPhase).ToString(), true);
+            UpdateWeapon();
         }
         else
         {
             indicatorEventBus?.Broadcast(new IndicatorEventBus.IndicatorData(transform, false));
             base.Die();
+        }
+    }
+
+    private void UpdateWeapon()
+    {
+        if (phasesWeapons.Length > currentPhase - 1 && BattleContext != null)
+        {
+            Weapon?.gameObject.SetActive(false);
+            Weapon = phasesWeapons[currentPhase - 1];
+            Weapon.gameObject.SetActive(true);
+            Weapon.SetTarget(BattleContext.Transform);
         }
     }
 

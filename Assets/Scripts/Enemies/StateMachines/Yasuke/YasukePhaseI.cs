@@ -14,7 +14,7 @@ public class YasukePhaseI : BossPhaseStateMachine
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         Owner.Move(Vector2.zero);
-        sword = Owner.GetWeapon() as Sword;
+        sword = Owner.Weapon as Sword;
         sword.ToggleBlock(true, 1F);
         if (!sword)
         {
@@ -22,5 +22,5 @@ public class YasukePhaseI : BossPhaseStateMachine
         }
     }
 
-    protected override float GetAttackRange() => 5F;
+    protected override float GetRange() => 5F;
 }

@@ -30,8 +30,9 @@ public abstract class BossPhaseStateMachine : BossStateMachine
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+        Owner.HealthSystem.Refull();
         Owner.Collider.enabled = true;
-        Owner.GetWeapon().GeneralDamageMultiplier = damageMultiplier;
+        Owner.Weapon.GeneralDamageMultiplier = damageMultiplier;
         Owner.MovementSpeedMultiplier(movementSpeedMultiplier);
         Owner.AccelerationMultiplier = accelerationMultiplier;
         movementTimer = movementUpdate;
@@ -59,7 +60,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!IsPerformingAbility && CanExecute())
+        if (!IsPerformingAbility && CanExecute() && CanExecuteAbilities())
         {
             if (abilityTimer > 0F)
             {
@@ -102,7 +103,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
 
     public bool CanExecute()
     {
-        return Owner.CurrentStatus == Enemy.Status.ATTACKING && Owner.TargetContext != null;
+        return Owner.CurrentStatus == Enemy.Status.ATTACKING && Owner.BattleContext != null;
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -117,11 +118,13 @@ public abstract class BossPhaseStateMachine : BossStateMachine
         Owner.Move(Vector2.zero);
     }
 
-    protected abstract float GetAttackRange();
+    protected virtual bool CanExecuteAbilities() => true;
+
+    protected abstract float GetRange();
 
     protected virtual Vector3 GetMovementDirection()
     {
-        if (Vector2.Distance(Owner.TargetContext.Transform.position, Owner.transform.position) > GetAttackRange())
+        if (Vector2.Distance(Owner.BattleContext.Transform.position, Owner.transform.position) > GetRange())
         {
             if (Random.Range(0F, 1F) < 0.2F)
             {
@@ -129,7 +132,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
             }
             else
             {
-                Vector2 dir = (Owner.TargetContext.Transform.position - Owner.transform.position).normalized;
+                Vector2 dir = (Owner.BattleContext.Transform.position - Owner.transform.position).normalized;
 
                 dir = Quaternion.AngleAxis(UnityEngine.Random.Range(-50F, 50F), Vector3.forward) * dir;
                 Debug.DrawRay(Owner.transform.position, dir, Color.red, 0.5F);
@@ -138,7 +141,7 @@ public abstract class BossPhaseStateMachine : BossStateMachine
         }
         else
         {
-            Vector2 dir = (Owner.transform.position - Owner.TargetContext.Transform.position).normalized;
+            Vector2 dir = (Owner.transform.position - Owner.BattleContext.Transform.position).normalized;
             if (UnityEngine.Random.value < 0.5F)
             {
                 dir = Quaternion.AngleAxis(90F, Vector3.forward) * dir;

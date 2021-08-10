@@ -165,7 +165,23 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     {
         if (Target)
         {
-            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, Rigidbody.velocity.magnitude * (Target.position - transform.position).normalized * speed, homingRatio);
+            Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, (Target.position - transform.position).normalized * speed, homingRatio);
+        }
+    }
+
+    public void Destroy()
+    {
+        if (destroyed) return;
+        destroyed = true;
+        OnDestroyed();
+        if (onDestroyedEffect)
+        {
+            OnDestroyEffectPlay(onDestroyedEffect);
+            new Timer(this, onDestroyedEffect.main.duration, false, true, new Callback(() => gameObject.SetActive(false)));
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -173,6 +189,14 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     {
         Owner = agent;
         Target = null;
+        if (agent.GetFactionRelation() == IAgent.FactionRelation.HOSTILE)
+        {
+            gameObject.layer = LayerMask.NameToLayer(Layers.ENEMY_PROJECTILES);
+        }
+        else if (agent.GetFactionRelation() == IAgent.FactionRelation.FRIENDLY)
+        {
+            gameObject.layer = LayerMask.NameToLayer(Layers.PROJECTILES);
+        }
         Rigidbody.velocity = -Rigidbody.velocity * deflectForce;
     }
 
@@ -233,22 +257,6 @@ public abstract class Projectile : MonoBehaviour, IPooledObject, ICommonUpdate, 
     protected virtual void OnDestroyEffectPlay(ParticleSystem destroyEffect)
     {
         onDestroyedEffect.Play();
-    }
-
-    protected void Destroy()
-    {
-        if (destroyed) return;
-        destroyed = true;
-        OnDestroyed();
-        if (onDestroyedEffect)
-        {
-            OnDestroyEffectPlay(onDestroyedEffect);
-            new Timer(this, onDestroyedEffect.main.duration, false, true, new Callback(() => gameObject.SetActive(false)));
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     private void OnEnable()

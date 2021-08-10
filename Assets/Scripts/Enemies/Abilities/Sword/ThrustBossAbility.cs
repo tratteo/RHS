@@ -15,12 +15,12 @@ public class ThrustBossAbility : Ability<BossEnemy>
 
     public override bool CanPerform()
     {
-        return base.CanPerform() && Vector3.Distance(Parent.transform.position, Parent.TargetContext.Transform.position) < attack.Build().Range;
+        return base.CanPerform() && Vector3.Distance(Parent.transform.position, Parent.BattleContext.Transform.position) < attack.Build().Range;
     }
 
     protected override IEnumerator Execute_C()
     {
-        Weapon weapon = Parent.GetWeapon();
+        Weapon weapon = Parent.Weapon;
         if (weapon is Sword sword)
         {
             AnimationClip clip = Array.Find(sword.Animator.runtimeAnimatorController.animationClips, (c) => c.name.Equals("thrust"));
@@ -70,7 +70,7 @@ public class ThrustBossAbility : Ability<BossEnemy>
     protected override void OnStopped()
     {
         base.OnStopped();
-        if (Parent.GetWeapon() is Sword sword)
+        if (Parent.Weapon is Sword sword)
         {
             sword.ResetOverrideRotation();
         }
