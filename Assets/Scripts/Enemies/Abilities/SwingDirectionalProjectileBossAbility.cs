@@ -1,4 +1,10 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : SwingDirectionalProjectileBossAbility.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using System.Collections;
 using UnityEngine;
 

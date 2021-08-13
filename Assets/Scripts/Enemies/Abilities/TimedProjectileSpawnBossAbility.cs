@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : MinePlantBossAbility.cs
+// Package com.Siamango.RHS : TimedProjectileSpawnBossAbility.cs
 //
 // All Rights Reserved
 

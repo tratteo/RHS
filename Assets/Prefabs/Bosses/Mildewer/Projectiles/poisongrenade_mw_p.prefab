@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseDamage: 85
-  speed: 0.935
+  speed: 2.25
   homingRatio: 0.05
   torqueOnLaunch: 0
   randomTorque:

@@ -1,4 +1,10 @@
-﻿using GibFrame;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : DamageOverTimeStatusEffect.cs
+//
+// All Rights Reserved
+
+using GibFrame;
 using GibFrame.Performance;
 using UnityEngine;
 

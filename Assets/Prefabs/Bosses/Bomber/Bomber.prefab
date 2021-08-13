@@ -410,7 +410,8 @@ MonoBehaviour:
   dashFx: {fileID: 3228786360446752241}
   bloodFx: {fileID: 2392764265260465554}
   debugRender: 1
-  weapon: {fileID: 3669818540623335425}
+  phasesWeapons:
+  - {fileID: 3669818540623335425}
   stateMachine: {fileID: 2779607593840281966}
   phaseIndicatorsParent: {fileID: 8847819303676206377}
   idleTransitionId: idle

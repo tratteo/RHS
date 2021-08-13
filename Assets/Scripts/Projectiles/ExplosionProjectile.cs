@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Matteo Beltrame
 //
-// Package com.Siamango.RHS : Grenade.cs
+// Package com.Siamango.RHS : ExplosionProjectile.cs
 //
 // All Rights Reserved
 

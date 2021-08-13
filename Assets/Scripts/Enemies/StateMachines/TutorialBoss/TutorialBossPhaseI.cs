@@ -1,3 +1,9 @@
+// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : TutorialBossPhaseI.cs
+//
+// All Rights Reserved
+
 using GibFrame;
 using UnityEngine;
 

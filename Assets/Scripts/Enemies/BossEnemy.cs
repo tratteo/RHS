@@ -104,12 +104,7 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         base.Awake();
         AnimatorDriver = GetComponent<AnimatorDriver>();
         intermediateStatistics = new List<Statistic>();
-        if (phasesWeapons.Length <= 0) Debug.LogError("No Weapons");
-        phasesWeapons.ForEach(w =>
-        {
-            w.SetOwner(this);
-            w.gameObject.SetActive(false);
-        });
+
         phaseIndicators = new Image[phasesAmount];
         for (int i = 0; i < phasesAmount; i++)
         {
@@ -125,10 +120,11 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
         base.EngageBattle(target);
         if (BattleContext != null)
         {
+            currentPhase++;
+            UpdateWeapon();
             targetGroupEventBus.Broadcast(transform, true);
             stateMachine.SetBool(idleTransitionId, false);
-            stateMachine.SetBool((++currentPhase).ToString(), true);
-            UpdateWeapon();
+            stateMachine.SetBool(currentPhase.ToString(), true);
         }
     }
 
@@ -186,6 +182,12 @@ public class BossEnemy : Enemy, IWeaponOwner, IStatisticsProvider
     private void Start()
     {
         indicatorEventBus?.Broadcast(new IndicatorEventBus.IndicatorData(transform, true, IndicatorsGUI.IndicatorType.BOSS));
+        if (phasesWeapons.Length <= 0) Debug.LogError("No Weapons");
+        phasesWeapons.ForEach(w =>
+        {
+            w.SetOwner(this);
+            w.gameObject.SetActive(false);
+        });
     }
 
     private bool ShouldAnimBeMirrored() => hasMirror && transform.localScale.x < 1F;

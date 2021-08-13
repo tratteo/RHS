@@ -1,4 +1,10 @@
-﻿using GibFrame.ObjectPooling;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : StatusEffect.cs
+//
+// All Rights Reserved
+
+using GibFrame.ObjectPooling;
 using GibFrame.Performance;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : TutorialEventBus.cs
+//
+// All Rights Reserved
+
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "TutorialEventBus", menuName = "Scriptable Objects/Bus/TutorialBus", order = 0)]

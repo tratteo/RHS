@@ -1,1 +1,1 @@
-{"defaultSceneName":"Assets/Scenes/Initializer.unity","loadDefaultSceneOnPlay":false,"restoreOpenedScenes":true,"enableCommonUpdate":true,"enableCommonFixedUpdate":true,"enableCommonLateUpdate":false,"runtimeCommonUpdateInstantiate":true}
+{"defaultSceneName":"Assets/Scenes/Initializer.unity","loadDefaultSceneOnPlay":false,"restoreOpenedScenes":true,"enableLogging":true,"enableCommonUpdate":true,"enableCommonFixedUpdate":true,"enableCommonLateUpdate":false,"runtimeCommonUpdateInstantiate":true}

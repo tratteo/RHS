@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// Copyright (c) Matteo Beltrame
+//
+// Package com.Siamango.RHS : StunStatusEffect.cs
+//
+// All Rights Reserved
+
+using UnityEngine;
 
 public class StunStatusEffect : StatusEffect
 {

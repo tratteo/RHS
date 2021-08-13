@@ -16,6 +16,7 @@ public class Blocker : MonoBehaviour
 
     public void EnableBlock(float probability = -1F)
     {
+        //collider ??= GetComponent<Collider2D>();
         collider.enabled = true;
         Active = true;
         blockProbability = probability > 0F ? probability : blockProbability;
